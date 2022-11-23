@@ -8,7 +8,6 @@ import io.ktor.network.sockets.openWriteChannel
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.util.reflect.instanceOf
 import io.ktor.utils.io.ByteReadChannel
-import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.ClosedWriteChannelException
 import io.ktor.utils.io.close
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +26,8 @@ class Session constructor(
     private val cache: Cache
 ) {
     private val logger = InlineLogger()
-    private val readChannel: ByteReadChannel = socket.openReadChannel()
-    private val writeChannel: ByteWriteChannel = socket.openWriteChannel()
+    private val readChannel = socket.openReadChannel()
+    private val writeChannel = socket.openWriteChannel()
     private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
     private val serverBuild = environment.config.property("game.build.major").getString().toInt()
 

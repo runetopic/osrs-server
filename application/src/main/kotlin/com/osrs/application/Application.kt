@@ -1,24 +1,24 @@
-package com.osrs.game
+package com.osrs.application
 
 import com.google.inject.Guice
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule
-import com.osrs.http.HttpServer
+import com.osrs.game.GameModule
+import com.osrs.http.HttpModule
+import com.osrs.http.HttpRouting
 import com.osrs.network.Network
 import com.osrs.network.NetworkModule
 import dev.misfitlabs.kotlinguice4.getInstance
-import io.ktor.server.application.Application
-import io.ktor.server.engine.commandLineEnvironment
 
-fun main(args: Array<String>) = commandLineEnvironment(args).start()
-
-fun Application.module() {
+fun main(args: Array<String>) {
     val injector = Guice.createInjector(
-        GameModule(this),
+        ApplicationModule(args),
+        HttpModule,
+        GameModule,
         CacheModule,
         NetworkModule
     )
-    injector.getInstance<HttpServer>().start()
     injector.getInstance<Cache>().load()
+    injector.getInstance<HttpRouting>().bind()
     injector.getInstance<Network>().bind()
 }
