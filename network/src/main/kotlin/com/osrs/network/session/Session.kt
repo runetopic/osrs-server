@@ -15,11 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.SocketException
 import java.nio.ByteBuffer
-import kotlinx.coroutines.isActive
 
 class Session constructor(
     private val socket: Socket,
@@ -140,16 +140,6 @@ class Session constructor(
             writeOffset++
         }
     }.flush()
-
-//    private fun checksumsNoRSA(store: Store): ByteArray {
-//        println("Calling checksums")
-//        val checksums = ByteBuffer.allocate(store.indexes.size * 8)
-//        store.indexes.forEach {
-//            checksums.putInt(it.crc)
-//            checksums.putInt(it.revision)
-//        }
-//        return checksums.array()
-//    }
 
     private fun handleSessionException(exception: Exception) = when {
         exception.instanceOf(TimeoutCancellationException::class) -> disconnect("Client timed out.")
