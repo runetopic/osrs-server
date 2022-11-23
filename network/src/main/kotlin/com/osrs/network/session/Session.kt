@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.SocketException
 import java.nio.ByteBuffer
+import kotlinx.coroutines.isActive
 
 class Session constructor(
     private val socket: Socket,
@@ -100,14 +101,13 @@ class Session constructor(
 
     private suspend fun readJS5Request(readChannel: ByteReadChannel) = coroutineScope {
         try {
-            while (true) {
+            while (this.isActive) {
                 when (val opcode = readChannel.readByte().toInt()) {
                     JS5_HIGH_PRIORITY_OPCODE, JS5_LOW_PRIORITY_OPCODE -> {
                         val uid = readChannel.readUMedium()
                         val indexId = uid shr 16
                         val groupId = uid and 0xFFFF
                         val masterRequest = indexId == 0xFF && groupId == 0xFF
-                        logger.info { "Request from client $indexId $groupId" }
                         ByteBuffer.wrap(if (masterRequest) checksums else cache.store.groupReferenceTable(indexId, groupId)).apply {
                             if (capacity() == 0 || limit() == 0) return@coroutineScope
                             val compression = if (masterRequest) 0 else get().toInt() and 0xff

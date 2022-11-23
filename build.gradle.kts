@@ -14,7 +14,7 @@ allprojects {
             implementation("io.ktor:ktor-server-netty:2.1.3")
             // Runetopic
             implementation("com.runetopic.cryptography:cryptography:1.0.10-SNAPSHOT")
-            implementation("com.runetopic.cache:cache:1.3.0")
+            implementation("com.runetopic.cache:cache:1.6.0")
             // Logger
             implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.4")
             implementation("org.slf4j:slf4j-simple:2.0.3")
