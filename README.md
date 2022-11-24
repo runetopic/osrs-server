@@ -10,7 +10,7 @@ Revision 209 OSRS server written in Kotlin.
 
 # Project structure
 
-The server is broken up into multiple modules to make things easier to manage and test indivudual components.
+The server is broken up into multiple modules to make things easier to manage and test individual components.
 
 - [application](/application) (This is used to bootstrap and launch the server. This ties all of the modules together using guice)
 - [cache](/cache) (This is the module responsible for managing the game files)
