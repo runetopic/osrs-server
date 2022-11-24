@@ -17,6 +17,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.math.BigInteger
 import java.net.SocketException
 import java.nio.ByteBuffer
 
@@ -26,12 +27,15 @@ class Session constructor(
     private val cache: Cache
 ) {
     private val logger = InlineLogger()
+
     private val readChannel = socket.openReadChannel()
     private val writeChannel = socket.openWriteChannel()
-    private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
-    private val serverBuild = environment.config.property("game.build.major").getString().toInt()
 
-    private val checksums get() = cache.store.checksumsWithoutRSA()
+    private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
+
+    private val serverBuild = environment.config.property("game.build.major").getString().toInt()
+    private val exponent = environment.config.property("game.rsa.exponent").getString()
+    private val modulus = environment.config.property("game.rsa.modulus").getString()
 
     suspend fun connect() = when (val opcode = readChannel.readByte().toInt()) {
         HANDSHAKE_JS5_OPCODE, HANDSHAKE_LOGIN_OPCODE -> preformHandshake(opcode)
@@ -88,8 +92,29 @@ class Session constructor(
             return
         }
 
-        val clientType = readChannel.readByte().toInt()
-        readChannel.discard(1) // Discarding unknown byte
+        readChannel.discard(3) // Discarding 3 unknown byte
+
+        when (opcode) {
+            LOGIN_NORMAL_OPCODE -> {
+                val rsaBuffer = ByteArray(readChannel.readShort().toInt() and 0xFFFF)
+
+                if (rsaBuffer.size != readChannel.readAvailable(rsaBuffer, 0, rsaBuffer.size)) {
+                    writeAndFLush(BAD_SESSION_OPCODE)
+                    disconnect("Session RSA buffer is not correct. Disconnecting.")
+                    return
+                }
+
+                logger.info { "Exponent $exponent" }
+                logger.info { "Modulus $modulus" }
+                val rsaBlock = ByteBuffer.wrap(BigInteger(rsaBuffer).modPow(BigInteger(exponent, 16), BigInteger(modulus, 16)).toByteArray())
+
+                if (rsaBlock.readByte() != 1) {
+                    writeAndFLush(BAD_SESSION_OPCODE)
+                    disconnect("Session RSA match key was not 1. Disconnecting.")
+                    return
+                }
+            }
+        }
         logger.info { "Incoming login opcode $opcode with client build $clientBuild.$clientSubBuild" }
     }
 
@@ -107,10 +132,10 @@ class Session constructor(
                         val indexId = uid shr 16
                         val groupId = uid and 0xFFFF
                         val masterRequest = indexId == 0xFF && groupId == 0xFF
-                        ByteBuffer.wrap(if (masterRequest) checksums else cache.store.groupReferenceTable(indexId, groupId)).apply {
+                        ByteBuffer.wrap(if (masterRequest) cache.checksums else cache.groupReferenceTable(indexId, groupId)).apply {
                             if (capacity() == 0 || limit() == 0) return@coroutineScope
                             val compression = if (masterRequest) 0 else get().toInt() and 0xff
-                            val size = if (masterRequest) checksums.size else int
+                            val size = if (masterRequest) cache.checksums.size else int
                             writeJS5File(indexId, groupId, compression, size, this)
                         }
                     }
@@ -175,6 +200,7 @@ class Session constructor(
     }
 }
 
+fun ByteBuffer.readByte() = get().toInt()
 suspend fun ByteReadChannel.readUByte() = readByte().toInt() and 0xff
 suspend fun ByteReadChannel.readUShort() = readShort().toInt() and 0xffff
 suspend fun ByteReadChannel.readUMedium() = (readUByte() shl 16) or readUShort()
