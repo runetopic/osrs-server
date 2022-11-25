@@ -106,7 +106,7 @@ class Session constructor(
 
                 logger.info { "Exponent $exponent" }
                 logger.info { "Modulus $modulus" }
-                val rsaBlock = ByteBuffer.wrap(BigInteger(rsaBuffer).modPow(BigInteger(exponent, 16), BigInteger(modulus, 16)).toByteArray())
+                val rsaBlock = ByteBuffer.wrap(BigInteger(rsaBuffer).modPow(BigInteger(exponent), BigInteger(modulus)).toByteArray())
 
                 if (rsaBlock.readByte() != 1) {
                     writeAndFLush(BAD_SESSION_OPCODE)
