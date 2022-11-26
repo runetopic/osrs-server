@@ -17,3 +17,12 @@ The server is broken up into multiple modules to make things easier to manage an
 - [game](/game) (This is used to hold all of the core game related code)
 - [http](/http) (This is used to setup an HTTP server to serve the OSRS client the static files. For example: jav_config.ws and latest gamepack.jar)
 - [network](/network) (This is the main netcode responsible for handling client sessions and communication between the two)
+
+# Info
+
+**Packet sizes for 202:**
+```
+packet {
+    sizes = [ 0,9,14,-1,-1,3,8,0,-2,3,-1,7,8,-1,7,7,8,3,15,8,8,8,8,8,7,7,13,4,8,-1,7,3,7,4,-1,-1,4,8,-2,1,-1,-1,3,2,6,3,0,8,15,-1,3,5,8,4,15,6,3,16,16,8,-1,3,7,-1,8,8,-1,3,8,-2,6,3,11,-1,8,-1,-1,8,-1,-1,11,8,7,3,15,2,9,2,0,-1,4,8,3,7,-1,-1,-1,0,-1,2,2,10,3,16,11,7,11,22 ]
+}
+```

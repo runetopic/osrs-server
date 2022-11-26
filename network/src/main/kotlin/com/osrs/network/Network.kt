@@ -11,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -31,13 +30,6 @@ class Network @Inject constructor(
 
     fun bind() = runBlocking {
         logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
-        handleClientSessions(server, environment)
-    }
-
-    private suspend fun handleClientSessions(
-        server: ServerSocket,
-        environment: ApplicationEnvironment
-    ) = coroutineScope {
         with(scope) {
             while (this.isActive) {
                 val session = Session(server.accept(), environment, cache)
