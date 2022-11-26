@@ -3,7 +3,6 @@ package com.osrs.network
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.Cache
-import com.osrs.network.session.Session
 import io.ktor.network.sockets.ServerSocket
 import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -32,7 +31,7 @@ class Network @Inject constructor(
         logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
         with(scope) {
             while (this.isActive) {
-                val session = Session(server.accept(), environment, cache)
+                val session = Session(server.accept(), cache, environment)
                 launch(Dispatchers.IO) { session.connect() }
             }
         }
