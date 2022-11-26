@@ -1,7 +1,6 @@
 package com.osrs.network.codec.impl
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.cache.Cache
 import com.osrs.network.Session
 import com.osrs.network.codec.ByteChannelCodec
 import com.osrs.network.io.readPacketOpcode
@@ -14,7 +13,6 @@ import kotlinx.coroutines.isActive
 
 class GameCodec(
     private val session: Session,
-    cache: Cache,
     environment: ApplicationEnvironment
 ) : ByteChannelCodec {
     private val logger = InlineLogger()

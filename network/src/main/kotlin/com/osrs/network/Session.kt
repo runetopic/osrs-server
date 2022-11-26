@@ -16,6 +16,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import java.io.IOException
 import java.net.SocketException
+import kotlin.reflect.KFunction2
 
 class Session constructor(
     private val socket: Socket,
@@ -60,13 +61,18 @@ class Session constructor(
         writeChannel.flush()
     }
 
+    suspend fun <T : ByteChannelCodec> setCodec(function: (Session, Cache, ApplicationEnvironment) -> T) {
+        this.codec = function.invoke(this, cache, environment)
+        this.codec.handle(readChannel, writeChannel)
+    }
+
     suspend fun <T : ByteChannelCodec> setCodec(function: (Session, Cache) -> T) {
         this.codec = function.invoke(this, cache)
         this.codec.handle(readChannel, writeChannel)
     }
 
-    suspend fun <T : ByteChannelCodec> setCodec(function: (Session, Cache, ApplicationEnvironment) -> T) {
-        this.codec = function.invoke(this, cache, environment)
+    suspend fun <T : ByteChannelCodec> setCodec(function: KFunction2<Session, ApplicationEnvironment, T>) {
+        this.codec = function.invoke(this, environment)
         this.codec.handle(readChannel, writeChannel)
     }
 
