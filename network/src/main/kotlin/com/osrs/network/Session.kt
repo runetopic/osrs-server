@@ -33,9 +33,7 @@ class Session constructor(
 
     private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
 
-    suspend fun connect() {
-        codec.handle(readChannel, writeChannel)
-    }
+    suspend fun connect() = codec.handle(readChannel, writeChannel)
 
     fun getIsaacCiphers(): Pair<ISAAC, ISAAC> = this.clientCipher to serverCipher
 
