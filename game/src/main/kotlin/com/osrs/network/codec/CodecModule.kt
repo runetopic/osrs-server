@@ -13,9 +13,9 @@ object CodecModule : KotlinModule() {
     override fun configure() {
         val codecs = KotlinMultibinder.newSetBinder<CodecChannelHandler>(kotlinBinder)
 
-        codecs.addBinding().to<Js5Codec>()
-        codecs.addBinding().to<HandshakeCodec>()
-        codecs.addBinding().to<LoginCodec>()
-        codecs.addBinding().to<GameCodec>()
+        codecs.addBinding().to<Js5Codec>().asEagerSingleton()
+        codecs.addBinding().to<HandshakeCodec>().asEagerSingleton()
+        codecs.addBinding().to<LoginCodec>().asEagerSingleton()
+        codecs.addBinding().to<GameCodec>().asEagerSingleton()
     }
 }

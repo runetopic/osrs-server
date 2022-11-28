@@ -21,6 +21,9 @@ class GameTick(private val world: World) : Runnable {
             ++tick
         }
 
+        world.players.parallelStream().forEach {
+            it?.session?.invokeAndClearWritePool()
+        }
         logger.info { "Game Tick #$tick Players=${world.players.size} took $time ms." }
     }
 }

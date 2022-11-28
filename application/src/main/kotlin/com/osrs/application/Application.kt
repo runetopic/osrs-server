@@ -9,12 +9,14 @@ import com.osrs.http.HttpModule
 import com.osrs.http.HttpRouting
 import com.osrs.network.Network
 import com.osrs.network.NetworkModule
+import com.osrs.service.ServiceModule
 import dev.misfitlabs.kotlinguice4.getInstance
 
 fun main(args: Array<String>) {
     val injector = Guice.createInjector(
         ApplicationModule(args),
         HttpModule,
+        ServiceModule,
         GameModule,
         CacheModule,
         NetworkModule

@@ -1,4 +1,4 @@
-package com.osrs.network.io
+package com.osrs.network.buffer
 
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.utils.io.ByteReadChannel

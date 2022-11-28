@@ -8,8 +8,8 @@ import com.osrs.network.SessionRequestOpcode.JS5_HIGH_PRIORITY_OPCODE
 import com.osrs.network.SessionRequestOpcode.JS5_LOGGED_IN_OPCODE
 import com.osrs.network.SessionRequestOpcode.JS5_LOW_PRIORITY_OPCODE
 import com.osrs.network.SessionRequestOpcode.JS5_SWITCH_OPCODE
+import com.osrs.network.buffer.readUMedium
 import com.osrs.network.codec.CodecChannelHandler
-import com.osrs.network.io.readUMedium
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 import kotlinx.coroutines.coroutineScope

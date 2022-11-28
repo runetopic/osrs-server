@@ -3,9 +3,9 @@ package com.osrs.network.codec.impl
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.network.Session
+import com.osrs.network.buffer.readPacketOpcode
+import com.osrs.network.buffer.readPacketSize
 import com.osrs.network.codec.CodecChannelHandler
-import com.osrs.network.io.readPacketOpcode
-import com.osrs.network.io.readPacketSize
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel

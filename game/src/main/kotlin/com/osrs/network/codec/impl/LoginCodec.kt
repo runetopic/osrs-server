@@ -3,32 +3,35 @@ package com.osrs.network.codec.impl
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.Cache
+import com.osrs.game.actor.player.Player
+import com.osrs.game.world.World
 import com.osrs.network.Session
 import com.osrs.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
 import com.osrs.network.SessionResponseOpcode.BAD_SESSION_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
 import com.osrs.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
 import com.osrs.network.codec.CodecChannelHandler
-import com.osrs.network.io.readInt
-import com.osrs.network.io.readIntLittleEndian
-import com.osrs.network.io.readIntV1
-import com.osrs.network.io.readIntV2
-import com.osrs.network.io.readStringCp1252NullCircumfixed
-import com.osrs.network.io.readStringCp1252NullTerminated
-import com.osrs.network.io.readUByte
-import com.osrs.network.io.readUMedium
-import com.osrs.network.io.readUShort
 import com.runetopic.cryptography.fromXTEA
 import com.runetopic.cryptography.toISAAC
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
+import xlitekt.shared.buffer.readInt
+import xlitekt.shared.buffer.readIntLittleEndian
+import xlitekt.shared.buffer.readIntV1
+import xlitekt.shared.buffer.readIntV2
+import xlitekt.shared.buffer.readStringCp1252NullCircumfixed
+import xlitekt.shared.buffer.readStringCp1252NullTerminated
+import xlitekt.shared.buffer.readUByte
+import xlitekt.shared.buffer.readUMedium
+import xlitekt.shared.buffer.readUShort
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
 class LoginCodec @Inject constructor(
     private val cache: Cache,
-    environment: ApplicationEnvironment
+    environment: ApplicationEnvironment,
+    val world: World
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -135,6 +138,11 @@ class LoginCodec @Inject constructor(
                 session.setIsaacCiphers(clientKeys.toISAAC(), serverKeys.toISAAC())
                 logger.info { "Finished decoding login for $username. Display type: $displayType Canvas width: $canvasWidth Canvas height: $canvasHeight" }
                 writeChannel.writeLoginAndFlush(session, LOGIN_SUCCESS_OPCODE)
+
+                val player = Player(username)
+
+                player.login(session, world)
+
                 session.setCodec(GameCodec::class)
             }
         }
@@ -277,13 +285,16 @@ class LoginCodec @Inject constructor(
 
     private suspend fun ByteWriteChannel.writeLoginAndFlush(session: Session, response: Int) {
         session.writeAndFlush(response)
-        writeByte(11)
+        writeByte(29)
         writeByte(0)
         writeInt(0)
         writeByte(2) // Rights
-        writeByte(0)
+        writeByte(1) // Rights > 0
         writeShort(1) // Index
         writeByte(0)
+        writeLong(session.seed())
+        logger.info { "session seed = ${session.seed()}" }
+        writeLong(0) // Unique player UUID
         flush()
     }
 }

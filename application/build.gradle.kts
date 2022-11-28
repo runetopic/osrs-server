@@ -12,5 +12,6 @@ application {
 dependencies {
     implementation(project(":cache"))
     implementation(project(":game"))
+    implementation(project(":service"))
     implementation(project(":http"))
 }
