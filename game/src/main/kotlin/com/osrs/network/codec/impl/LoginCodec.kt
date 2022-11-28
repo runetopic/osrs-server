@@ -1,6 +1,7 @@
-package com.osrs.network.codec.login
+package com.osrs.network.codec.impl
 
 import com.github.michaelbull.logging.InlineLogger
+import com.google.inject.Inject
 import com.osrs.cache.Cache
 import com.osrs.network.Session
 import com.osrs.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
@@ -8,7 +9,6 @@ import com.osrs.network.SessionResponseOpcode.BAD_SESSION_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
 import com.osrs.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
 import com.osrs.network.codec.CodecChannelHandler
-import com.osrs.network.codec.game.GameCodec
 import com.osrs.network.io.readInt
 import com.osrs.network.io.readIntLittleEndian
 import com.osrs.network.io.readIntV1
@@ -26,7 +26,7 @@ import io.ktor.utils.io.ByteWriteChannel
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-class LoginCodec(
+class LoginCodec @Inject constructor(
     private val cache: Cache,
     environment: ApplicationEnvironment
 ) : CodecChannelHandler {

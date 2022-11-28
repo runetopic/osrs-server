@@ -1,7 +1,13 @@
-package com.osrs.network.codec.js5
+package com.osrs.network.codec.impl
 
+import com.google.inject.Inject
 import com.osrs.cache.Cache
 import com.osrs.network.Session
+import com.osrs.network.SessionRequestOpcode.JS5_ENCRYPTION_OPCODE
+import com.osrs.network.SessionRequestOpcode.JS5_HIGH_PRIORITY_OPCODE
+import com.osrs.network.SessionRequestOpcode.JS5_LOGGED_IN_OPCODE
+import com.osrs.network.SessionRequestOpcode.JS5_LOW_PRIORITY_OPCODE
+import com.osrs.network.SessionRequestOpcode.JS5_SWITCH_OPCODE
 import com.osrs.network.codec.CodecChannelHandler
 import com.osrs.network.io.readUMedium
 import io.ktor.utils.io.ByteReadChannel
@@ -10,7 +16,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import java.nio.ByteBuffer
 
-class Js5Codec constructor(
+class Js5Codec @Inject constructor(
     private val cache: Cache,
 ) : CodecChannelHandler {
 
@@ -56,13 +62,5 @@ class Js5Codec constructor(
         }
 
         flush()
-    }
-
-    private companion object {
-        const val JS5_HIGH_PRIORITY_OPCODE = 0
-        const val JS5_LOW_PRIORITY_OPCODE = 1
-        const val JS5_LOGGED_IN_OPCODE = 2
-        const val JS5_SWITCH_OPCODE = 3
-        const val JS5_ENCRYPTION_OPCODE = 4
     }
 }

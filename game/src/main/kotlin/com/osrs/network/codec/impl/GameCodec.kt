@@ -1,6 +1,7 @@
-package com.osrs.network.codec.game
+package com.osrs.network.codec.impl
 
 import com.github.michaelbull.logging.InlineLogger
+import com.google.inject.Inject
 import com.osrs.network.Session
 import com.osrs.network.codec.CodecChannelHandler
 import com.osrs.network.io.readPacketOpcode
@@ -11,7 +12,7 @@ import io.ktor.utils.io.ByteWriteChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 
-class GameCodec(
+class GameCodec @Inject constructor(
     environment: ApplicationEnvironment
 ) : CodecChannelHandler {
     private val logger = InlineLogger()

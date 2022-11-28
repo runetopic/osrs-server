@@ -8,4 +8,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(listOf("application", "cache", "http", "network", "game"))
+include(listOf("application", "cache", "http", "game", "service"))
