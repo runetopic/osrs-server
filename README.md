@@ -2,6 +2,8 @@
 
 Revision 209 OSRS server written in Kotlin.
 
+[![Discord](https://img.shields.io/discord/212385463418355713?color=%237289DA&logo=Discord&logoColor=%237289DA)](https://discord.gg/3scgBkrfMG)
+[![wakatime](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89.svg)](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89)
 # Dependencies
 - [Kotlin](https://kotlinlang.org/docs/home.html) (Language)
 - [Kotlin-guice](https://github.com/misfitlabsdev/kotlin-guice) (Dependecy injection)
