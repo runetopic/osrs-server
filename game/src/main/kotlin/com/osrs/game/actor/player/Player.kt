@@ -16,14 +16,14 @@ class Player(
 
     private val viewport = Viewport(this)
 
-    fun login(session: Session, world: World, initialize: Boolean) {
+    fun login(session: Session, world: World) {
         this.session = session
         this.session?.player = this
         session.write(
             RebuildNormalPacket(
                 viewport,
                 location,
-                initialize,
+                true,
                 world.players
             )
         )

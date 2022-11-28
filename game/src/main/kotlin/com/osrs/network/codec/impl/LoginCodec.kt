@@ -150,7 +150,7 @@ class LoginCodec @Inject constructor(
                 val player = Player(username) // TODO create an account service to load accounts and a login service to process login request.
                 world.players.add(player)
                 writeChannel.writeLoginAndFlush(player, session, LOGIN_SUCCESS_OPCODE)
-                player.login(session, world, true)
+                player.login(session, world)
                 session.setCodec(GameCodec::class)
             }
         }
