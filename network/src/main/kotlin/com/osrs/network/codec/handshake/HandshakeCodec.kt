@@ -6,6 +6,7 @@ import com.osrs.network.SessionRequestOpcode.HANDSHAKE_LOGIN_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
 import com.osrs.network.SessionResponseOpcode.HANDSHAKE_SUCCESS_OPCODE
 import com.osrs.network.codec.CodecChannelHandler
+import com.osrs.network.codec.js5.Js5Codec
 import com.osrs.network.codec.login.LoginCodec
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.utils.io.ByteReadChannel
@@ -25,7 +26,7 @@ class HandshakeCodec(
                     return
                 }
                 session.writeAndFlush(HANDSHAKE_SUCCESS_OPCODE)
-                session.setCodec(LoginCodec::class)
+                session.setCodec(Js5Codec::class)
             }
             HANDSHAKE_LOGIN_OPCODE -> {
                 session.writeAndFlush(HANDSHAKE_SUCCESS_OPCODE)
