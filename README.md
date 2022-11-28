@@ -18,7 +18,7 @@ The server is broken up into multiple modules to make things easier to manage an
 - [cache](/cache) (This is the module responsible for managing the game files)
 - [game](/game) (This is used to hold all of the core game related code)
 - [http](/http) (This is used to setup an HTTP server to serve the OSRS client the static files. For example: jav_config.ws and latest gamepack.jar)
-- [network](/network) (This is the main netcode responsible for handling client sessions and communication between the two)
+- [service](/service) (This is responsible for connecting to external services for data like runelite, or our own internal databases)
 
 # Info
 
