@@ -7,6 +7,7 @@ import com.osrs.game.actor.player.Player
 import com.osrs.game.world.World
 import com.osrs.network.Session
 import com.osrs.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
+import com.osrs.network.SessionRequestOpcode.LOGIN_RECONNECTING_OPCODE
 import com.osrs.network.SessionResponseOpcode.BAD_SESSION_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
 import com.osrs.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
@@ -70,7 +71,7 @@ class LoginCodec @Inject constructor(
         readChannel.discard(3) // Discarding 3 unknown bytes
 
         when (opcode) {
-            LOGIN_NORMAL_OPCODE -> {
+            LOGIN_NORMAL_OPCODE, LOGIN_RECONNECTING_OPCODE -> {
                 val rsaBuffer = ByteArray(readChannel.readShort().toInt() and 0xFFFF)
 
                 if (rsaBuffer.size != readChannel.readAvailable(rsaBuffer, 0, rsaBuffer.size)) {
@@ -96,19 +97,28 @@ class LoginCodec @Inject constructor(
                     return
                 }
 
-                // TODO: implement the different authentication types and reconnection
-                when (val authenticationType = rsaBlock.get().toInt()) {
-                    1, 2 -> rsaBlock.position(rsaBlock.position() + 4)
-                    0, 3 -> rsaBlock.position(rsaBlock.position() + 3)
-                    else -> {
-                        session.writeAndFlush(BAD_SESSION_OPCODE)
-                        session.disconnect("Unknown authentication type $authenticationType Disconnecting.")
-                        return
+                var reconnectXteas: IntArray? = null
+                var password: String? = null
+
+                if (opcode == LOGIN_RECONNECTING_OPCODE) {
+                    reconnectXteas = IntArray(4) { rsaBlock.readInt() }
+                } else {
+                    // TODO: implement the different authentication types and reconnection
+                    when (val authenticationType = rsaBlock.get().toInt()) {
+                        1, 2 -> rsaBlock.position(rsaBlock.position() + 4)
+                        0, 3 -> rsaBlock.position(rsaBlock.position() + 3)
+                        else -> {
+                            session.writeAndFlush(BAD_SESSION_OPCODE)
+                            session.disconnect("Unknown authentication type $authenticationType Disconnecting.")
+                            return
+                        }
                     }
+
+                    // Password type? Not entirely sure
+                    rsaBlock.position(rsaBlock.position() + 1)
+
+                    password = rsaBlock.readStringCp1252NullTerminated()
                 }
-                // Password type? Not entirely sure
-                rsaBlock.position(rsaBlock.position() + 1)
-                val password = rsaBlock.readStringCp1252NullTerminated()
 
                 val availableBuffer = ByteArray(readChannel.availableForRead)
                 readChannel.readAvailable(availableBuffer, 0, availableBuffer.size)
@@ -137,12 +147,10 @@ class LoginCodec @Inject constructor(
                 val serverKeys = IntArray(clientKeys.size) { clientKeys[it] + 50 }
                 session.setIsaacCiphers(clientKeys.toISAAC(), serverKeys.toISAAC())
                 logger.info { "Finished decoding login for $username. Display type: $displayType Canvas width: $canvasWidth Canvas height: $canvasHeight" }
-                writeChannel.writeLoginAndFlush(session, LOGIN_SUCCESS_OPCODE)
-
-                val player = Player(username)
-
-                player.login(session, world)
-
+                val player = Player(username) // TODO create an account service to load accounts and a login service to process login request.
+                world.players.add(player)
+                writeChannel.writeLoginAndFlush(player, session, LOGIN_SUCCESS_OPCODE)
+                player.login(session, world, true)
                 session.setCodec(GameCodec::class)
             }
         }
@@ -283,14 +291,14 @@ class LoginCodec @Inject constructor(
         }
     }
 
-    private suspend fun ByteWriteChannel.writeLoginAndFlush(session: Session, response: Int) {
+    private suspend fun ByteWriteChannel.writeLoginAndFlush(player: Player, session: Session, response: Int) {
         session.writeAndFlush(response)
         writeByte(29)
         writeByte(0)
         writeInt(0)
         writeByte(2) // Rights
         writeByte(1) // Rights > 0
-        writeShort(1) // Index
+        writeShort(player.index.toShort()) // Index
         writeByte(0)
         writeLong(session.seed())
         logger.info { "session seed = ${session.seed()}" }

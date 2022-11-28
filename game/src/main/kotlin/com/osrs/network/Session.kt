@@ -1,7 +1,10 @@
 package com.osrs.network
 
 import com.github.michaelbull.logging.InlineLogger
+import com.osrs.game.actor.player.Player
+import com.osrs.game.world.World
 import com.osrs.network.codec.CodecChannelHandler
+import com.osrs.network.codec.impl.GameCodec
 import com.osrs.network.codec.impl.HandshakeCodec
 import com.osrs.network.packet.Packet
 import com.osrs.network.packet.builder.PacketBuilder
@@ -27,6 +30,7 @@ class Session(
     private val socket: Socket,
     private val codecs: Set<CodecChannelHandler>,
     private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    private val world: World,
 ) {
     private val logger = InlineLogger()
 
@@ -35,9 +39,11 @@ class Session(
 
     private lateinit var clientCipher: ISAAC
     private lateinit var serverCipher: ISAAC
-    private var codec: CodecChannelHandler? = codecs.find { it.instanceOf(HandshakeCodec::class) }
+    private var codec = codecs.find { it.instanceOf(HandshakeCodec::class) }
 
     private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
+
+    var player: Player? = null
 
     private val writePool = ByteBuffer.allocateDirect(40000)
 
@@ -112,10 +118,10 @@ class Session(
     }
 
     fun seed() = seed
-
     fun disconnect(reason: String) {
-        logger.info { "Session has been disconnected for reason={$reason}." }
+        if (this.codec?.instanceOf(GameCodec::class) == true) player?.logout(world)
         writeChannel.close()
         socket.close()
+        logger.info { "Session has been disconnected for reason={$reason}." }
     }
 }

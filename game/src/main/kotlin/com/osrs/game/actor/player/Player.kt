@@ -5,6 +5,7 @@ import com.osrs.game.world.World
 import com.osrs.game.world.map.Location
 import com.osrs.network.Session
 import com.osrs.network.packet.RebuildNormalPacket
+import com.osrs.network.packet.server.IfOpenTopPacket
 
 class Player(
     val username: String,
@@ -15,17 +16,26 @@ class Player(
 
     private val viewport = Viewport(this)
 
-    fun login(session: Session, world: World) {
+    fun login(session: Session, world: World, initialize: Boolean) {
         this.session = session
-        world.players.add(this)
+        this.session?.player = this
         session.write(
             RebuildNormalPacket(
                 viewport,
                 location,
-                true,
+                initialize,
                 world.players
             )
         )
+        session.write(
+            IfOpenTopPacket(
+                548
+            )
+        )
         session.invokeAndClearWritePool()
+    }
+
+    fun logout(world: World) {
+        world.players.remove(this)
     }
 }

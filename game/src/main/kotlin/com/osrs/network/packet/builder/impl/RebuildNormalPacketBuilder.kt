@@ -1,8 +1,9 @@
-package com.osrs.network.packet.builder
+package com.osrs.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.network.packet.RebuildNormalPacket
+import com.osrs.network.packet.builder.PacketBuilder
 import com.osrs.service.xtea.XteaService
 import xlitekt.shared.buffer.writeInt
 import xlitekt.shared.buffer.writeShort
@@ -18,9 +19,7 @@ class RebuildNormalPacketBuilder @Inject constructor(
     size = -2
 ) {
     override fun build(packet: RebuildNormalPacket, writePool: ByteBuffer) {
-        if (packet.initialize) {
-            packet.viewport.init(writePool, packet.players)
-        }
+        if (packet.initialize) packet.viewport.init(writePool, packet.players)
 
         val zoneX = packet.location.zoneX
         val zoneZ = packet.location.zoneZ

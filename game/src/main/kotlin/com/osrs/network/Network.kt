@@ -2,6 +2,7 @@ package com.osrs.network
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
+import com.osrs.game.world.World
 import com.osrs.network.codec.CodecChannelHandler
 import com.osrs.network.packet.Packet
 import com.osrs.network.packet.builder.PacketBuilder
@@ -20,7 +21,8 @@ import kotlin.reflect.KClass
 class Network @Inject constructor(
     private val server: ServerSocket,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, PacketBuilder<Packet>>
+    private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    private val world: World
 ) {
     private val logger = InlineLogger()
 
@@ -34,7 +36,7 @@ class Network @Inject constructor(
         logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
         with(scope) {
             while (this.isActive) {
-                val session = Session(server.accept(), codecs, builders)
+                val session = Session(server.accept(), codecs, builders, world)
                 launch(Dispatchers.IO) { session.connect() }
             }
         }
