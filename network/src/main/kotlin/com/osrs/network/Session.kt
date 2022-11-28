@@ -1,14 +1,12 @@
 package com.osrs.network
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.cache.Cache
-import com.osrs.network.codec.ByteChannelCodec
-import com.osrs.network.codec.impl.HandshakeCodec
+import com.osrs.network.codec.Codec
+import com.osrs.network.codec.CodecChannelHandler
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
-import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.util.reflect.instanceOf
 import io.ktor.utils.io.ClosedWriteChannelException
 import io.ktor.utils.io.close
@@ -16,12 +14,11 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import java.io.IOException
 import java.net.SocketException
-import kotlin.reflect.KFunction2
+import kotlin.reflect.KClass
 
-class Session constructor(
+class Session(
     private val socket: Socket,
-    private val cache: Cache,
-    private val environment: ApplicationEnvironment,
+    private val codecs: Codec
 ) {
     private val logger = InlineLogger()
 
@@ -30,11 +27,11 @@ class Session constructor(
 
     private lateinit var clientCipher: ISAAC
     private lateinit var serverCipher: ISAAC
-    private var codec: ByteChannelCodec = HandshakeCodec(this, environment)
+    private var codec: CodecChannelHandler = codecs.handshakeCodec
 
     private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
 
-    suspend fun connect() = codec.handle(readChannel, writeChannel)
+    suspend fun connect() = codec.handle(this, readChannel, writeChannel)
 
     fun getIsaacCiphers(): Pair<ISAAC, ISAAC> = this.clientCipher to serverCipher
 
@@ -61,19 +58,18 @@ class Session constructor(
         writeChannel.flush()
     }
 
-    suspend fun <T : ByteChannelCodec> setCodec(function: (Session, Cache, ApplicationEnvironment) -> T) {
-        this.codec = function.invoke(this, cache, environment)
-        this.codec.handle(readChannel, writeChannel)
-    }
+    suspend fun setCodec(codec: KClass<out CodecChannelHandler>) {
+        val (handshakeCodec, js5Codec, loginCodec, gameCodec) = codecs
 
-    suspend fun <T : ByteChannelCodec> setCodec(function: (Session, Cache) -> T) {
-        this.codec = function.invoke(this, cache)
-        this.codec.handle(readChannel, writeChannel)
-    }
+        when (codec) {
+            codecs.handshakeCodec::class -> this.codec = handshakeCodec
+            codecs.js5Codec::class -> this.codec = js5Codec
+            codecs.loginCodec::class -> this.codec = loginCodec
+            codecs.gameCodec::class -> this.codec = gameCodec
+            else -> throw IllegalArgumentException("Unhandled codec provided. ${codec.qualifiedName} is not a valid codec.")
+        }
 
-    suspend fun <T : ByteChannelCodec> setCodec(function: KFunction2<Session, ApplicationEnvironment, T>) {
-        this.codec = function.invoke(this, environment)
-        this.codec.handle(readChannel, writeChannel)
+        this.codec.handle(this, readChannel, writeChannel)
     }
 
     fun seed() = seed

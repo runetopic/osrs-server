@@ -2,9 +2,8 @@ package com.osrs.network
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
-import com.osrs.cache.Cache
+import com.osrs.network.codec.Codec
 import io.ktor.network.sockets.ServerSocket
-import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,9 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class Network @Inject constructor(
-    private val cache: Cache,
     private val server: ServerSocket,
-    private val environment: ApplicationEnvironment,
+    private val codecs: Codec
 ) {
     private val logger = InlineLogger()
 
@@ -31,7 +29,7 @@ class Network @Inject constructor(
         logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
         with(scope) {
             while (this.isActive) {
-                val session = Session(server.accept(), cache, environment)
+                val session = Session(server.accept(), codecs)
                 launch(Dispatchers.IO) { session.connect() }
             }
         }

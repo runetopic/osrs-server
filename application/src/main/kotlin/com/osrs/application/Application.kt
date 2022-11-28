@@ -3,6 +3,7 @@ package com.osrs.application
 import com.google.inject.Guice
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule
+import com.osrs.game.Game
 import com.osrs.game.GameModule
 import com.osrs.http.HttpModule
 import com.osrs.http.HttpRouting
@@ -19,6 +20,7 @@ fun main(args: Array<String>) {
         NetworkModule
     )
     injector.getInstance<Cache>().load()
+    injector.getInstance<Game>().start()
     injector.getInstance<HttpRouting>().bind()
     injector.getInstance<Network>().bind()
 }

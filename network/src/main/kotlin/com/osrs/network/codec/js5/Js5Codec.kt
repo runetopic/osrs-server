@@ -1,8 +1,8 @@
-package com.osrs.network.codec.impl
+package com.osrs.network.codec.js5
 
 import com.osrs.cache.Cache
 import com.osrs.network.Session
-import com.osrs.network.codec.ByteChannelCodec
+import com.osrs.network.codec.CodecChannelHandler
 import com.osrs.network.io.readUMedium
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
@@ -11,11 +11,10 @@ import kotlinx.coroutines.isActive
 import java.nio.ByteBuffer
 
 class Js5Codec constructor(
-    private val session: Session,
     private val cache: Cache,
-) : ByteChannelCodec {
+) : CodecChannelHandler {
 
-    override suspend fun handle(readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {
+    override suspend fun handle(session: Session, readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {
         try {
             while (this.isActive) {
                 when (val opcode = readChannel.readByte().toInt()) {

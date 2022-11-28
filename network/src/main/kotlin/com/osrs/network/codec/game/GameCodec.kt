@@ -1,8 +1,8 @@
-package com.osrs.network.codec.impl
+package com.osrs.network.codec.game
 
 import com.github.michaelbull.logging.InlineLogger
 import com.osrs.network.Session
-import com.osrs.network.codec.ByteChannelCodec
+import com.osrs.network.codec.CodecChannelHandler
 import com.osrs.network.io.readPacketOpcode
 import com.osrs.network.io.readPacketSize
 import io.ktor.server.application.ApplicationEnvironment
@@ -12,13 +12,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 
 class GameCodec(
-    private val session: Session,
     environment: ApplicationEnvironment
-) : ByteChannelCodec {
+) : CodecChannelHandler {
     private val logger = InlineLogger()
     private val packetSizes = environment.config.property("game.packet.sizes").getList().map(String::toInt)
 
-    override suspend fun handle(readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {
+    override suspend fun handle(session: Session, readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {
         val (clientCipher, _) = session.getIsaacCiphers()
         try {
             while (this.isActive) {

@@ -1,4 +1,4 @@
-package com.osrs.network.codec.impl
+package com.osrs.network.codec.login
 
 import com.github.michaelbull.logging.InlineLogger
 import com.osrs.cache.Cache
@@ -7,7 +7,8 @@ import com.osrs.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
 import com.osrs.network.SessionResponseOpcode.BAD_SESSION_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
 import com.osrs.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
-import com.osrs.network.codec.ByteChannelCodec
+import com.osrs.network.codec.CodecChannelHandler
+import com.osrs.network.codec.game.GameCodec
 import com.osrs.network.io.readInt
 import com.osrs.network.io.readIntLittleEndian
 import com.osrs.network.io.readIntV1
@@ -26,17 +27,16 @@ import java.math.BigInteger
 import java.nio.ByteBuffer
 
 class LoginCodec(
-    private val session: Session,
     private val cache: Cache,
     environment: ApplicationEnvironment
-) : ByteChannelCodec {
+) : CodecChannelHandler {
     private val logger = InlineLogger()
 
     private val buildMajor = environment.config.property("game.build.major").getString().toInt()
     private val rsaExponent = environment.config.property("game.rsa.exponent").getString()
     private val rsaModulus = environment.config.property("game.rsa.modulus").getString()
 
-    override suspend fun handle(readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) {
+    override suspend fun handle(session: Session, readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) {
         val opcode = readChannel.readByte().toInt() and 0xFF
         val size = readChannel.readShort().toInt() and 0xFFFF
         val available = readChannel.availableForRead
@@ -64,7 +64,7 @@ class LoginCodec(
 
         logger.info { "Incoming login opcode $opcode with client build $clientBuild.$clientSubBuild" }
 
-        readChannel.discard(3) // Discarding 3 unknown byte
+        readChannel.discard(3) // Discarding 3 unknown bytes
 
         when (opcode) {
             LOGIN_NORMAL_OPCODE -> {
@@ -120,7 +120,7 @@ class LoginCodec(
                 xteaBuffer.readStringCp1252NullTerminated() // Client token
                 xteaBuffer.int
 
-                readMachineInfo(xteaBuffer)
+                readMachineInfo(session, xteaBuffer)
 
                 xteaBuffer.get().toInt() and 0xFF // Client type
 
@@ -130,17 +130,17 @@ class LoginCodec(
                     return
                 }
 
-                validateClientCRCs(xteaBuffer)
+                validateClientCRCs(session, xteaBuffer)
                 val serverKeys = IntArray(clientKeys.size) { clientKeys[it] + 50 }
                 session.setIsaacCiphers(clientKeys.toISAAC(), serverKeys.toISAAC())
                 logger.info { "Finished decoding login for $username. Display type: $displayType Canvas width: $canvasWidth Canvas height: $canvasHeight" }
-                writeChannel.writeLoginAndFlush(LOGIN_SUCCESS_OPCODE)
-                session.setCodec(::GameCodec)
+                writeChannel.writeLoginAndFlush(session, LOGIN_SUCCESS_OPCODE)
+                session.setCodec(GameCodec::class)
             }
         }
     }
 
-    private suspend fun readMachineInfo(xteaBuffer: ByteBuffer) {
+    private suspend fun readMachineInfo(session: Session, xteaBuffer: ByteBuffer) {
         // TODO Identify all of the machine info and actually parse it into something usable.
         val unknownByte1 = xteaBuffer.readUByte()
 
@@ -240,7 +240,7 @@ class LoginCodec(
         logger.debug { "Unknown string 8 $unknownString8" }
     }
 
-    private suspend fun validateClientCRCs(xteaBuffer: ByteBuffer) {
+    private suspend fun validateClientCRCs(session: Session, xteaBuffer: ByteBuffer) {
         val clientCRCs = IntArray(cache.validIndexCount()) { -1 }
 
         clientCRCs[13] = xteaBuffer.readIntV2()
@@ -275,7 +275,7 @@ class LoginCodec(
         }
     }
 
-    private suspend fun ByteWriteChannel.writeLoginAndFlush(response: Int) {
+    private suspend fun ByteWriteChannel.writeLoginAndFlush(session: Session, response: Int) {
         session.writeAndFlush(response)
         writeByte(11)
         writeByte(0)
