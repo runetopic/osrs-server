@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.21"
 }
 
 allprojects {
@@ -21,7 +21,6 @@ allprojects {
             implementation("org.slf4j:slf4j-simple:2.0.3")
             // Kotlin-guice
             implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
-
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
         }

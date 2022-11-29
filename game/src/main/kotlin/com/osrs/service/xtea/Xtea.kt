@@ -10,6 +10,7 @@ data class Xtea(
     @SerialName("name_hash")
     val nameHash: Int,
     val name: String,
-    val mapsquare: Int,
+    @SerialName("mapsquare")
+    val mapSquare: Int,
     val key: List<Int>
 )

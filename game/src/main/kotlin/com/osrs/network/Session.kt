@@ -118,6 +118,7 @@ class Session(
     }
 
     fun seed() = seed
+
     fun disconnect(reason: String) {
         if (this.codec?.instanceOf(GameCodec::class) == true) player?.logout(world)
         writeChannel.close()
