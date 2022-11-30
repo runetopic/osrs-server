@@ -1,6 +1,10 @@
 package com.osrs.game.world.map
 
+import com.osrs.database.account.serializer.LocationSerializer
+import kotlinx.serialization.Serializable
+
 @JvmInline
+@Serializable(with = LocationSerializer::class)
 value class Location(
     val packedLocation: Int
 ) {
@@ -23,6 +27,7 @@ value class Location(
 
     companion object {
         val None = Location(-1, -1, -1)
+        val Default = Location(3222, 3222, 322)
     }
 }
 

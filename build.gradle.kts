@@ -23,6 +23,11 @@ allprojects {
             implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+            implementation("org.litote.kmongo:kmongo-id-serialization:4.8.0")
+            implementation("org.litote.kmongo:kmongo-serialization:4.8.0")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
+            implementation("io.ktor:ktor-server-content-negotiation:2.1.3")
+            implementation("org.mindrot:jbcrypt:0.4")
         }
     }
 }

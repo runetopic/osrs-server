@@ -2,6 +2,7 @@ package com.osrs.game.actor
 
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
+import kotlinx.serialization.Serializable
 
 typealias PlayerList = ActorList<Player?>
 typealias NPCList = ActorList<NPC?>
@@ -9,6 +10,7 @@ typealias NPCList = ActorList<NPC?>
 /**
  * @author Tyler Telis
  */
+@Serializable
 class ActorList<T>(
     private val initialCapacity: Int,
     private val actors: MutableList<T?> = createMutableList<T?>(initialCapacity)

@@ -2,9 +2,9 @@ package com.osrs.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.osrs.database.xtea.XteaService
 import com.osrs.network.packet.RebuildNormalPacket
 import com.osrs.network.packet.builder.PacketBuilder
-import com.osrs.service.xtea.XteaService
 import xlitekt.shared.buffer.writeInt
 import xlitekt.shared.buffer.writeShort
 import xlitekt.shared.buffer.writeShortAdd

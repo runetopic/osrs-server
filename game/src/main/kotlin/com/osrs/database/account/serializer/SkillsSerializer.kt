@@ -1,4 +1,4 @@
-package com.osrs.service.account.serializer
+package com.osrs.database.account.serializer
 
 import com.osrs.game.actor.skills.Skill
 import com.osrs.game.actor.skills.Skills

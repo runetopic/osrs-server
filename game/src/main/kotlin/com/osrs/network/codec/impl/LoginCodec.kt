@@ -3,6 +3,7 @@ package com.osrs.network.codec.impl
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.Cache
+import com.osrs.database.account.AccountService
 import com.osrs.game.actor.player.Player
 import com.osrs.game.world.World
 import com.osrs.network.Session
@@ -10,6 +11,7 @@ import com.osrs.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
 import com.osrs.network.SessionRequestOpcode.LOGIN_RECONNECTING_OPCODE
 import com.osrs.network.SessionResponseOpcode.BAD_SESSION_OPCODE
 import com.osrs.network.SessionResponseOpcode.CLIENT_OUTDATED_OPCODE
+import com.osrs.network.SessionResponseOpcode.INVALID_USERNAME_PASSWORD_OPCODE
 import com.osrs.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
 import com.osrs.network.codec.CodecChannelHandler
 import com.runetopic.cryptography.fromXTEA
@@ -32,7 +34,8 @@ import java.nio.ByteBuffer
 class LoginCodec @Inject constructor(
     private val cache: Cache,
     environment: ApplicationEnvironment,
-    val world: World
+    val world: World,
+    private val accountService: AccountService
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -98,7 +101,7 @@ class LoginCodec @Inject constructor(
                 }
 
                 var reconnectXteas: IntArray? = null
-                var password: String? = null
+                var password: String = ""
 
                 if (opcode == LOGIN_RECONNECTING_OPCODE) {
                     reconnectXteas = IntArray(4) { rsaBlock.readInt() }
@@ -147,6 +150,13 @@ class LoginCodec @Inject constructor(
                 val serverKeys = IntArray(clientKeys.size) { clientKeys[it] + 50 }
                 session.setIsaacCiphers(clientKeys.toISAAC(), serverKeys.toISAAC())
                 logger.info { "Finished decoding login for $username. Display type: $displayType Canvas width: $canvasWidth Canvas height: $canvasHeight" }
+
+                if (opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateCredentials(username, password)) {
+                    session.writeAndFlush(INVALID_USERNAME_PASSWORD_OPCODE)
+                    session.disconnect("Invalid user credentials. Disconnecting client")
+                    return
+                }
+
                 val player = Player(username) // TODO create an account service to load accounts and a login service to process login request.
                 world.players.add(player)
                 writeChannel.writeLoginAndFlush(player, session, LOGIN_SUCCESS_OPCODE)

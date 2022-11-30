@@ -1,4 +1,4 @@
-package com.osrs.service.mongo
+package com.osrs.database.provider
 
 import com.google.inject.Inject
 import com.google.inject.Provider

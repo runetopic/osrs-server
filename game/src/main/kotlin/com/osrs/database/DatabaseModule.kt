@@ -1,14 +1,14 @@
-package com.osrs.service
+package com.osrs.database
 
 import com.google.inject.Singleton
 import com.mongodb.client.MongoClient
-import com.osrs.service.account.AccountService
-import com.osrs.service.mongo.MongoClientProvider
-import com.osrs.service.xtea.XteaService
+import com.osrs.database.account.AccountService
+import com.osrs.database.provider.MongoClientProvider
+import com.osrs.database.xtea.XteaService
 import dev.misfitlabs.kotlinguice4.KotlinModule
 
 @Singleton
-object ServiceModule : KotlinModule() {
+object DatabaseModule : KotlinModule() {
 
     override fun configure() {
         bind<MongoClient>().toProvider<MongoClientProvider>().asEagerSingleton()

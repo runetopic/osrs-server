@@ -1,4 +1,4 @@
-package com.osrs.service.xtea
+package com.osrs.database.xtea
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

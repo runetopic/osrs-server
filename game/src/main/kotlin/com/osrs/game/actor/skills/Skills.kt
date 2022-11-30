@@ -1,12 +1,15 @@
 package com.osrs.game.actor.skills
 
+import com.osrs.database.account.serializer.SkillsSerializer
 import com.osrs.game.actor.skills.Skill.Companion.DEFAULT_HERBLORE_LEVEL
 import com.osrs.game.actor.skills.Skill.Companion.DEFAULT_HITPOINTS_LEVEL
 import com.osrs.game.actor.skills.Skill.Companion.DEFAULT_LEVEL
 import com.osrs.game.actor.skills.Skill.Companion.MAX_SKILLS
 import com.osrs.game.actor.skills.Skill.Companion.getLevelForXp
 import com.osrs.game.actor.skills.Skill.Companion.getXpForLevel
+import kotlinx.serialization.Serializable
 
+@Serializable(with = SkillsSerializer::class)
 class Skills(
     private val levels: IntArray = defaultLevelsAndExperience.first,
     private val experience: DoubleArray = defaultLevelsAndExperience.second
@@ -26,7 +29,7 @@ class Skills(
         function.invoke(level, newExperience)
     }
 
-    private companion object {
+    companion object {
         fun defaultLevelsAndExperience(): Pair<IntArray, DoubleArray> {
             val defaultExperience = getXpForLevel(DEFAULT_LEVEL)
 

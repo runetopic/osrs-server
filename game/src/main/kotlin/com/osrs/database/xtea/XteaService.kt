@@ -1,4 +1,4 @@
-package com.osrs.service.xtea
+package com.osrs.database.xtea
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
@@ -18,5 +18,7 @@ class XteaService @Inject constructor(
         logger.info { "Finished loading ${xteas.size} xteas from the database." }
     }
 
+    fun toList(): List<Xtea> = xteas.values.toList()
+    fun findOrNull(regionId: Int): Xtea? = xteas[regionId]
     fun find(regionId: Int): List<Int> = xteas[regionId]?.key ?: throw IllegalStateException("Missing keys for $regionId")
 }
