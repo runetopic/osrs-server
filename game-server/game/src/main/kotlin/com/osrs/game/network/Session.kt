@@ -99,16 +99,15 @@ class Session(
     }
 
     internal fun invokeAndClearWritePool() {
-        writeChannel.let {
-            if (it.isClosedForWrite) return
+        with(writeChannel) {
+            if (isClosedForWrite) return@with
             // This way we only have to suspend once per client.
             runBlocking(Dispatchers.IO) {
-                it.writeFully(writePool.flip())
+                writeFully(writePool.flip())
             }
-            it.flush()
+            flush()
+            writePool.clear()
         }
-        // Set write pool back to default.
-        writePool.clear()
     }
 
     suspend fun setCodec(codec: KClass<*>) {

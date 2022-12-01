@@ -8,6 +8,5 @@ class Game @Inject constructor(
 ) {
 
     fun start() {
-        gameTick.start()
     }
 }

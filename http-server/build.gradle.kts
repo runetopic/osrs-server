@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":game-server:game"))
-    implementation(project(":game-server:database"))
+    implementation(project(":database"))
 }

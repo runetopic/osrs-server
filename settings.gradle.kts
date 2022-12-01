@@ -11,9 +11,9 @@ include(
     listOf(
         "application",
         "http-server",
+        "database",
         "game-server:common",
         "game-server:cache",
-        "game-server:game",
-        "game-server:database"
+        "game-server:game"
     )
 )
