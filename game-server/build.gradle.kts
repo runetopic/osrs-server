@@ -1,12 +1,5 @@
 plugins {
     kotlin("jvm")
-    application
-}
-
-application {
-    mainClass.set("com.osrs.application.Application")
-    applicationDefaultJvmArgs = listOf("-XX:+UseZGC")
-    tasks.run.get().workingDir = rootProject.projectDir
 }
 
 dependencies {
@@ -14,5 +7,4 @@ dependencies {
     implementation(project(":game-server:common"))
     implementation(project(":game-server:database"))
     implementation(project(":game-server:game"))
-    implementation(project(":http-server"))
 }

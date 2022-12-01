@@ -1,11 +1,19 @@
 rootProject.name = "osrs-server"
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") }
+pluginManagement {
+    plugins {
+        kotlin("jvm") version "1.7.21"
+        kotlin("plugin.serialization") version "1.7.21"
     }
 }
 
-include(listOf("application", "cache", "http", "game"))
+include(
+    listOf(
+        "application",
+        "http-server",
+        "game-server:common",
+        "game-server:cache",
+        "game-server:game",
+        "game-server:database"
+    )
+)
