@@ -15,9 +15,8 @@ Revision 209 OSRS server written in Kotlin.
 The server is broken up into multiple modules to make things easier to manage and test individual components.
 
 - [application](/application) (This is used to bootstrap and launch the server. This ties all the modules together using guice)
-- [cache](/) (This is the module responsible for managing the game files)
-- [game](/game) (This is used to hold all of the core game related code)
-- [http](/http) (This is used to setup an HTTP server to serve the OSRS client the static files. For example: jav_config.ws and latest gamepack.jar)
+- [game-server](/game-server) (This is used to hold all of the core game related code and submodules.)
+- [http-server](/http-server) (This is used to setup an HTTP server to serve the OSRS client the static files. For example: jav_config.ws and latest gamepack.jar)
 
 # Info
 
