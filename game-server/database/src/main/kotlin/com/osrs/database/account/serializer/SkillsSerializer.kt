@@ -1,7 +1,7 @@
 package com.osrs.database.account.serializer
 
-import com.osrs.api.skill.Skill
-import com.osrs.api.skill.Skills
+import com.osrs.common.skill.Skill
+import com.osrs.common.skill.Skills
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer

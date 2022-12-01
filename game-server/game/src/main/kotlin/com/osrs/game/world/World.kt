@@ -4,7 +4,7 @@ import com.osrs.game.actor.PlayerList
 
 data class World(
     val worldId: Int,
-    val players: com.osrs.game.actor.PlayerList = com.osrs.game.actor.PlayerList(MAX_PLAYERS)
+    val players: PlayerList = PlayerList(MAX_PLAYERS)
 ) {
     companion object {
         const val MAX_PLAYERS = 2048

@@ -1,7 +1,7 @@
 package com.osrs.database.account
 
-import com.osrs.api.location.Location
-import com.osrs.api.skill.Skills
+import com.osrs.common.location.Location
+import com.osrs.common.skill.Skills
 import com.osrs.database.account.serializer.InstantSerializer
 import com.osrs.database.account.serializer.LocationSerializer
 import com.osrs.database.account.serializer.SkillsSerializer

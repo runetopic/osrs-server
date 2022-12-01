@@ -1,6 +1,6 @@
 package com.osrs.game.actor.player
 
-import com.osrs.api.location.Location
+import com.osrs.common.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.RebuildNormalPacket

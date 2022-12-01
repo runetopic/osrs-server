@@ -1,6 +1,6 @@
 package com.osrs.game.actor
 
-import com.osrs.api.location.Location
+import com.osrs.common.location.Location
 
 abstract class Actor {
     abstract var location: Location
