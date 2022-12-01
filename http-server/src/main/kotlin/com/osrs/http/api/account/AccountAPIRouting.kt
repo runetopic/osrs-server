@@ -29,15 +29,15 @@ class AccountAPIRouting @Inject constructor(
 
                 try {
                     accountService.createAccount(request.username, request.email, request.password) ?: return@post call.response.status(HttpStatusCode.Conflict)
-                    call.response.status(HttpStatusCode.Created)
                     call.respond(
+                        status = HttpStatusCode.Created,
                         CreateAccountResponse(
                             message = "Account successfully created."
                         )
                     )
                 } catch (exception: Exception) {
-                    call.response.status(HttpStatusCode.InternalServerError)
                     call.respond(
+                        status = HttpStatusCode.InternalServerError,
                         CreateAccountResponse(
                             message = "Account failed during creation. Please try again later."
                         )
