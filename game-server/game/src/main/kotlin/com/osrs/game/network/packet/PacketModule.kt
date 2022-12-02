@@ -5,6 +5,7 @@ import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
 import com.osrs.game.network.packet.server.IfOpenTopPacket
+import com.osrs.game.network.packet.server.RebuildNormalPacket
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import dev.misfitlabs.kotlinguice4.multibindings.KotlinMapBinder
 import kotlin.reflect.KClass

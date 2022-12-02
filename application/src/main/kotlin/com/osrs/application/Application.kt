@@ -5,6 +5,7 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule
 import com.osrs.database.DatabaseModule
 import com.osrs.game.Game
+import com.osrs.game.GameModule
 import com.osrs.game.network.Network
 import com.osrs.game.network.NetworkModule
 import com.osrs.http.HttpModule
@@ -17,7 +18,7 @@ object Application {
             ApplicationModule(args),
             HttpModule,
             DatabaseModule,
-            com.osrs.game.GameModule,
+            GameModule,
             CacheModule,
             NetworkModule
         )

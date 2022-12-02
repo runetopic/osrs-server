@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.reflect.KClass
 
-@Suppress("UNCHECKED_CAST")
 class Network @Inject constructor(
     private val server: ServerSocket,
     private val codecs: Set<CodecChannelHandler>,

@@ -3,8 +3,8 @@ package com.osrs.game.actor.player
 import com.osrs.common.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.network.Session
-import com.osrs.game.network.packet.RebuildNormalPacket
 import com.osrs.game.network.packet.server.IfOpenTopPacket
+import com.osrs.game.network.packet.server.RebuildNormalPacket
 import com.osrs.game.world.World
 
 class Player(

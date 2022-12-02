@@ -3,8 +3,8 @@ package com.osrs.game.network.packet.builder.impl
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.database.xtea.XteaService
-import com.osrs.game.network.packet.RebuildNormalPacket
 import com.osrs.game.network.packet.builder.PacketBuilder
+import com.osrs.game.network.packet.server.RebuildNormalPacket
 import xlitekt.shared.buffer.writeInt
 import xlitekt.shared.buffer.writeShort
 import xlitekt.shared.buffer.writeShortAdd
