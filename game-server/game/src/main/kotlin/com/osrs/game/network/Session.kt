@@ -20,6 +20,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.runBlocking
 import xlitekt.shared.buffer.writeByte
+import xlitekt.shared.buffer.writeInt
 import xlitekt.shared.buffer.writeShort
 import java.io.IOException
 import java.net.SocketException
@@ -91,6 +92,22 @@ class Session(
         if (builder.size == -1) writePool.writeByte(size)
         else writePool.writeShort(size)
         writePool.position(endPos)
+    }
+
+    fun writeLoginResponse() {
+        val player = player ?: return run {
+            disconnect("Cannot write login response for a session that does not have a player set yet.")
+            return@run
+        }
+        writePool.writeByte(29)
+        writePool.writeByte(0)
+        writePool.writeInt(0)
+        writePool.writeByte(player.rights)
+        writePool.writeByte(if (player.rights > 0) 1 else 0)
+        writePool.writeShort(player.index)
+        writePool.writeByte(0)
+        writePool.putLong(seed())
+        writePool.putLong(0) // Player UUID.
     }
 
     suspend fun writeAndFlush(opcode: Int) {

@@ -4,8 +4,8 @@ import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
 import kotlinx.serialization.Serializable
 
-typealias PlayerList = com.osrs.game.actor.ActorList<Player?>
-typealias NPCList = com.osrs.game.actor.ActorList<NPC?>
+typealias PlayerList = ActorList<Player?>
+typealias NPCList = ActorList<NPC?>
 
 /**
  * @author Tyler Telis
@@ -20,16 +20,16 @@ class ActorList<T>(
     val capacity: Int get() = actors.size
 
     @Suppress("UNCHECKED_CAST")
-    fun add(actor: com.osrs.game.actor.Actor): Boolean {
+    fun add(actor: Actor): Boolean {
         val index = actors.freeIndex()
-        if (index == com.osrs.game.actor.ActorList.Companion.INVALID_INDEX) return false
+        if (index == INVALID_INDEX) return false
         actors[index] = actor as T
         actor.index = index
         return actors[actor.index] != null
     }
 
-    fun remove(actor: com.osrs.game.actor.Actor): Boolean = when {
-        actor.index == com.osrs.game.actor.ActorList.Companion.INVALID_INDEX -> false
+    fun remove(actor: Actor): Boolean = when {
+        actor.index == INVALID_INDEX -> false
         actors[actor.index] != actor -> false
         else -> {
             actors[actor.index] = null
@@ -39,7 +39,7 @@ class ActorList<T>(
 
     override fun isEmpty(): Boolean = size == 0
 
-    private fun <T> List<T>.freeIndex(): Int = (com.osrs.game.actor.ActorList.Companion.INDEX_PADDING until indices.last).firstOrNull { this[it] == null } ?: com.osrs.game.actor.ActorList.Companion.INVALID_INDEX
+    private fun <T> List<T>.freeIndex(): Int = (INDEX_PADDING until indices.last).firstOrNull { this[it] == null } ?: INVALID_INDEX
 
     private companion object {
         const val INVALID_INDEX = -1

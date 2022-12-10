@@ -18,26 +18,26 @@ class RebuildNormalPacketBuilder @Inject constructor(
     opcode = 103,
     size = -2
 ) {
-    override fun build(packet: RebuildNormalPacket, writePool: ByteBuffer) {
-        if (packet.initialize) packet.viewport.init(writePool, packet.players)
+    override fun build(packet: RebuildNormalPacket, buffer: ByteBuffer) {
+        if (packet.initialize) packet.viewport.init(buffer)
 
         val zoneX = packet.location.zoneX
         val zoneZ = packet.location.zoneZ
 
-        writePool.writeShortLittleEndian(zoneX)
-        writePool.writeShortLittleEndianAdd(zoneZ)
+        buffer.writeShortLittleEndian(zoneX)
+        buffer.writeShortLittleEndianAdd(zoneZ)
 
         val zonesX = ((zoneX - 6) / 8..(zoneX + 6) / 8)
         val zonesZ = ((zoneZ - 6) / 8..(zoneZ + 6) / 8)
 
-        writePool.writeShort(zonesX.count() * zonesZ.count())
+        buffer.writeShort(zonesX.count() * zonesZ.count())
 
         for (x in zonesX) {
             for (z in zonesZ) {
                 val regionId = z + (x shl 8)
                 val xteaKeys = xteaService.find(regionId)
                 for (key in xteaKeys) {
-                    writePool.writeInt(key)
+                    buffer.writeInt(key)
                 }
             }
         }

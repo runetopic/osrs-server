@@ -21,13 +21,13 @@ class Viewport(
 
     private var resizeTickCount = 0
 
-    fun init(builder: ByteBuffer, players: com.osrs.game.actor.PlayerList) = builder.withBitAccess {
+    fun init(builder: ByteBuffer) = builder.withBitAccess {
         writeBits(30, player.location.packedLocation)
-        this@Viewport.players[player.index] = player
+        players[player.index] = player
         highDefinitions[highDefinitionsCount++] = player.index
         for (index in 1 until MAX_PLAYERS) {
             if (index == player.index) continue
-            val otherRegionCoordinates = players[index]?.location?.regionLocation ?: 0
+            val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
             writeBits(18, otherRegionCoordinates)
             locations[index] = otherRegionCoordinates
             lowDefinitions[lowDefinitionsCount++] = index
@@ -59,11 +59,6 @@ class Viewport(
                 resizeTickCount = 0
             }
         }
-    }
-
-    fun isNsn(index: Int): Boolean = nsnFlags[index] and 0x1 != 0
-    fun setNsn(index: Int) {
-        nsnFlags[index] = nsnFlags[index] or 2
     }
 
     override fun equals(other: Any?): Boolean {

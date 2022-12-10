@@ -11,7 +11,5 @@ class IfOpenTopPacketBuilder : PacketBuilder<IfOpenTopPacket>(
     opcode = 25,
     size = 2
 ) {
-    override fun build(packet: IfOpenTopPacket, writePool: ByteBuffer) {
-        writePool.writeShortLittleEndian(packet.interfaceId)
-    }
+    override fun build(packet: IfOpenTopPacket, buffer: ByteBuffer) = buffer.writeShortLittleEndian(packet.interfaceId)
 }

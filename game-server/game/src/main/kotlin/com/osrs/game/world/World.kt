@@ -9,8 +9,7 @@ data class World(
     val worldId: Int,
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 ) {
-    val loginRequests = ConcurrentHashMap<Player, Session>()
-    val logoutRequests = mutableListOf<Player>()
+    private val loginRequests = ConcurrentHashMap<Player, Session>()
 
     fun requestLogin(session: Session, player: Player) {
         this.loginRequests[player] = session
@@ -18,12 +17,12 @@ data class World(
 
     fun processLoginRequest() {
         loginRequests.entries.take(150).onEach {
-            it.key.login(it.value, this)
+            players.add(it.key)
+            it.key.login(this)
         }.also(loginRequests.entries::removeAll)
     }
 
     companion object {
         const val MAX_PLAYERS = 2048
-        const val MAX_NPCS = Short.MAX_VALUE.toInt()
     }
 }

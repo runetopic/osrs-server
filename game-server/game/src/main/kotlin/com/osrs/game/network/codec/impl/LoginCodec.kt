@@ -157,12 +157,10 @@ class LoginCodec @Inject constructor(
                     return
                 }
 
-                val player = Player(username) // TODO create an account service to load accounts and a login service to process login request.
-
-                writeChannel.writeLoginAndFlush(player, session, LOGIN_SUCCESS_OPCODE).also {
-                    world.requestLogin(session, player)
-                    session.setCodec(GameCodec::class)
-                }
+                val player = Player(username, world, session) // TODO load account profiles from the database
+                world.requestLogin(session, player)
+                session.writeAndFlush(LOGIN_SUCCESS_OPCODE)
+                session.setCodec(GameCodec::class)
             }
         }
     }
@@ -300,20 +298,5 @@ class LoginCodec @Inject constructor(
                 return session.disconnect("Bad Session. Client and cache crc are mismatched.")
             }
         }
-    }
-
-    private suspend fun ByteWriteChannel.writeLoginAndFlush(player: Player, session: Session, response: Int) {
-        session.writeAndFlush(response)
-        writeByte(29)
-        writeByte(0)
-        writeInt(0)
-        writeByte(2) // Rights
-        writeByte(1) // Rights > 0
-        writeShort(player.index.toShort()) // Index
-        writeByte(0)
-        writeLong(session.seed())
-        logger.info { "session seed = ${session.seed()}" }
-        writeLong(0) // Unique player UUID
-        flush()
     }
 }

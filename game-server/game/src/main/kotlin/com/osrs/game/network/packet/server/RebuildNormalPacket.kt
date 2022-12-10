@@ -1,13 +1,11 @@
 package com.osrs.game.network.packet.server
 
 import com.osrs.common.location.Location
-import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.Packet
 
 data class RebuildNormalPacket(
     val viewport: Viewport,
     val location: Location,
-    val initialize: Boolean,
-    val players: PlayerList
+    val initialize: Boolean
 ) : Packet
