@@ -4,17 +4,16 @@ import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPart
 import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPartColor
 import java.util.EnumMap
 
-/**
- * @author Jordan Abraham
- */
-sealed class Render {
+sealed class RenderBlock {
     data class Appearance(
         val gender: Gender = Gender.MALE,
         val headIcon: Int,
         val skullIcon: Int,
         val transform: Int,
         val hidden: Boolean
-    ) : Render() {
+    ) : RenderBlock() {
+        enum class Gender(val mask: Int) { MALE(0x0), FEMALE(0x1); }
+
         val bodyParts = EnumMap<BodyPart, Int>(BodyPart::class.java)
         val bodyPartColors = EnumMap<BodyPartColor, Int>(BodyPartColor::class.java)
 
@@ -34,9 +33,6 @@ sealed class Render {
         }
 
         fun isMale(): Boolean = gender == Gender.MALE
-
         fun isFemale(): Boolean = gender == Gender.FEMALE
-
-        enum class Gender(val mask: Int) { MALE(0x0), FEMALE(0x1); }
     }
 }
