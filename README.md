@@ -1,6 +1,6 @@
 # OSRS-Server
 
-Revision 210 OSRS server written in Kotlin.
+Revision 210.3 OSRS server written in Kotlin.
 
 <a href="#"><img src="https://img.shields.io/badge/Build:%20-210-blue.svg"/></a>
 [![Discord](https://img.shields.io/discord/212385463418355713?color=%237289DA&logo=Discord&logoColor=%237289DA)](https://discord.gg/3scgBkrfMG)
