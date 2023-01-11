@@ -1,6 +1,6 @@
 package com.osrs.game.actor.player
 
-import com.osrs.common.location.Location
+import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.actor.render.impl.PlayerRenderer
@@ -8,7 +8,7 @@ import com.osrs.game.network.Session
 import com.osrs.game.network.packet.server.IfOpenTopPacket
 import com.osrs.game.network.packet.server.RebuildNormalPacket
 import com.osrs.game.world.World
-import java.util.Random
+import java.util.*
 
 class Player(
     val username: String,

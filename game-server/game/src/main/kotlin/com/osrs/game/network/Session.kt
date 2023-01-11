@@ -6,7 +6,6 @@ import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec
 import com.osrs.game.network.codec.impl.HandshakeCodec
 import com.osrs.game.network.packet.Packet
-import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.network.sockets.Socket
@@ -19,9 +18,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.runBlocking
-import xlitekt.shared.buffer.writeByte
-import xlitekt.shared.buffer.writeInt
-import xlitekt.shared.buffer.writeShort
+import com.osrs.common.buffer.writeByte
+import com.osrs.common.buffer.writeInt
+import com.osrs.common.buffer.writeShort
 import java.io.IOException
 import java.net.SocketException
 import java.nio.ByteBuffer
@@ -30,7 +29,7 @@ import kotlin.reflect.KClass
 class Session(
     private val socket: Socket,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    private val builders: Map<KClass<*>, com.osrs.game.network.packet.server.builder.PacketBuilder<Packet>>,
     private val world: World
 ) {
     private val logger = InlineLogger()

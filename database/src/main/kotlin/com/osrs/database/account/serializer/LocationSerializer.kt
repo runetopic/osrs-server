@@ -1,6 +1,6 @@
 package com.osrs.database.account.serializer
 
-import com.osrs.common.location.Location
+import com.osrs.common.map.location.Location
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor

@@ -1,8 +1,8 @@
 package com.osrs.game.actor.render
 
-import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPart
-import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPartColor
-import java.util.EnumMap
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPart
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPartColor
+import java.util.*
 
 sealed class RenderBlock {
     data class Appearance(

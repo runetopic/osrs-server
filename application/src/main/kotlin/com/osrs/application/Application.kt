@@ -8,6 +8,7 @@ import com.osrs.game.Game
 import com.osrs.game.GameModule
 import com.osrs.game.network.Network
 import com.osrs.game.network.NetworkModule
+import com.osrs.game.world.World
 import com.osrs.http.HttpModule
 import dev.misfitlabs.kotlinguice4.getInstance
 
@@ -24,6 +25,7 @@ object Application {
         )
         injector.getInstance<Cache>().load()
         injector.getInstance<Game>().start()
+        injector.getInstance<World>().start()
         injector.getInstance<Network>().bind()
     }
 }

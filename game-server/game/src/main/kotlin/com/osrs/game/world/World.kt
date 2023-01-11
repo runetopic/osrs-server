@@ -11,15 +11,23 @@ data class World(
 ) {
     private val loginRequests = ConcurrentHashMap<Player, Session>()
 
-    fun requestLogin(session: Session, player: Player) {
-        this.loginRequests[player] = session
+    var isOnline = false
+
+    fun start() {
+        isOnline = true
     }
 
     fun processLoginRequest() {
+        if (!isOnline) return
+
         loginRequests.entries.take(150).onEach {
             players.add(it.key)
             it.key.login(this)
         }.also(loginRequests.entries::removeAll)
+    }
+
+    fun requestLogin(session: Session, player: Player) {
+        this.loginRequests[player] = session
     }
 
     companion object {

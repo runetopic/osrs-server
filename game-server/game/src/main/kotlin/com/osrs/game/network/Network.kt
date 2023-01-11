@@ -4,7 +4,6 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.packet.Packet
-import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
 import io.ktor.network.sockets.ServerSocket
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -20,7 +19,7 @@ import kotlin.reflect.KClass
 class Network @Inject constructor(
     private val server: ServerSocket,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    private val builders: Map<KClass<*>, com.osrs.game.network.packet.server.builder.PacketBuilder<Packet>>,
     private val world: World
 ) {
     private val logger = InlineLogger()

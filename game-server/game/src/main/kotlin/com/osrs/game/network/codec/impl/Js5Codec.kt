@@ -8,7 +8,7 @@ import com.osrs.game.network.SessionRequestOpcode.JS5_HIGH_PRIORITY_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.JS5_LOGGED_IN_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.JS5_LOW_PRIORITY_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.JS5_SWITCH_OPCODE
-import com.osrs.game.network.buffer.readUMedium
+import com.osrs.common.buffer.readUMedium
 import com.osrs.game.network.codec.CodecChannelHandler
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel

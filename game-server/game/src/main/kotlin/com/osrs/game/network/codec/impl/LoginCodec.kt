@@ -19,15 +19,15 @@ import com.runetopic.cryptography.toISAAC
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
-import xlitekt.shared.buffer.readInt
-import xlitekt.shared.buffer.readIntLittleEndian
-import xlitekt.shared.buffer.readIntV1
-import xlitekt.shared.buffer.readIntV2
-import xlitekt.shared.buffer.readStringCp1252NullCircumfixed
-import xlitekt.shared.buffer.readStringCp1252NullTerminated
-import xlitekt.shared.buffer.readUByte
-import xlitekt.shared.buffer.readUMedium
-import xlitekt.shared.buffer.readUShort
+import com.osrs.common.buffer.readInt
+import com.osrs.common.buffer.readIntLittleEndian
+import com.osrs.common.buffer.readIntV1
+import com.osrs.common.buffer.readIntV2
+import com.osrs.common.buffer.readStringCp1252NullCircumfixed
+import com.osrs.common.buffer.readStringCp1252NullTerminated
+import com.osrs.common.buffer.readUByte
+import com.osrs.common.buffer.readUMedium
+import com.osrs.common.buffer.readUShort
 import java.math.BigInteger
 import java.nio.ByteBuffer
 

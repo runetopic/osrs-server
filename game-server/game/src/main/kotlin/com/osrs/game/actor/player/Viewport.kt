@@ -2,7 +2,7 @@ package com.osrs.game.actor.player
 
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
-import xlitekt.shared.buffer.withBitAccess
+import com.osrs.common.buffer.withBitAccess
 import java.nio.ByteBuffer
 
 class Viewport(

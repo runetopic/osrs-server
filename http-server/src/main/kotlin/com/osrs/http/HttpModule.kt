@@ -2,7 +2,6 @@ package com.osrs.http
 
 import com.osrs.http.api.account.AccountAPIRouting
 import com.osrs.http.api.world.WorldAPIRouting
-import com.osrs.http.api.xteas.XteasAPIRouting
 import com.osrs.http.config.JavConfigAPIRouting
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import io.ktor.server.netty.NettyApplicationEngine
@@ -14,7 +13,6 @@ object HttpModule : KotlinModule() {
         bind<Routing>().toProvider<HttpRoutingProvider>().asEagerSingleton()
         bind<JavConfigAPIRouting>().asEagerSingleton()
         bind<WorldAPIRouting>().asEagerSingleton()
-        bind<XteasAPIRouting>().asEagerSingleton()
         bind<AccountAPIRouting>().asEagerSingleton()
     }
 }
