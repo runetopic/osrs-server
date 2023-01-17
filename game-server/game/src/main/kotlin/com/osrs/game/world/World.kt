@@ -1,5 +1,6 @@
 package com.osrs.game.world
 
+import com.osrs.cache.Cache
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
@@ -7,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 data class World(
     val worldId: Int,
+    val cache: Cache,
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 ) {
     private val loginRequests = ConcurrentHashMap<Player, Session>()

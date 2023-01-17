@@ -1,22 +1,22 @@
-package com.osrs.cache.entry.map
+package com.osrs.cache.entry.config.map
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.CacheModule.MAP_INDEX
-import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
-import com.osrs.common.map.MapSquare
-import com.osrs.common.map.MapSquares
-import com.runetopic.cache.codec.decompress
-import com.runetopic.cache.store.Js5Store
+import com.osrs.cache.entry.EntryTypeMapProvider
+import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
+import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.LEVELS
+import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.buffer.readIncrSmallSmart
 import com.osrs.common.buffer.readShort
 import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUShort
 import com.osrs.common.buffer.readUShortSmart
+import com.osrs.common.map.MapSquare
+import com.osrs.common.map.MapSquares
+import com.runetopic.cache.codec.decompress
+import com.runetopic.cache.store.Js5Store
 import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
@@ -24,14 +24,12 @@ import java.util.zip.ZipException
 class MapSquareEntryProvider @Inject constructor(
     private val store: Js5Store,
     private val mapSquares: MapSquares
-) : EntryTypeProvider<Int, MapSquareEntry> {
-
+) : EntryTypeMapProvider<MapSquareEntry>() {
     private val logger = InlineLogger()
 
-    override fun loadEntryTypeMap(): Map<Int, MapSquareEntry> {
+    override fun loadTypeMap(): Map<Int, MapSquareEntry> {
         return mapSquares
             .toList()
-            .parallelStream()
             .map(this::loadMapEntry)
             .toList()
             .associateBy(MapSquareEntry::id)
@@ -61,7 +59,7 @@ class MapSquareEntryProvider @Inject constructor(
 
         if (locations.data.isNotEmpty()) {
             try {
-                ByteBuffer.wrap(locations.data.decompress(square.key)).loadLocations(entry)
+                ByteBuffer.wrap(locations.data.decompress(square.key)).loadLocs(entry)
             } catch (exception: ZipException) {
                 logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. GroupId=${locations.id}, MapSquare=${square.id}." }
             }
@@ -89,14 +87,18 @@ class MapSquareEntryProvider @Inject constructor(
         )
     }
 
-    private tailrec fun ByteBuffer.loadLocations(type: MapSquareEntry, locId: Int = -1) {
+    private fun ByteBuffer.loadLocs(type: MapSquareEntry) {
+        loadLocIds(type, -1)
+    }
+
+    private tailrec fun ByteBuffer.loadLocIds(type: MapSquareEntry, locId: Int) {
         val offset = readIncrSmallSmart()
         if (offset == 0) return
         loadLocationCollision(type, locId + offset, 0)
-        return loadLocations(type, locId + offset)
+        return loadLocIds(type, locId + offset)
     }
 
-    private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int, packedLocation: Int) {
+    private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int = -1, packedLocation: Int) {
         val offset = readUShortSmart()
         if (offset == 0) return
         val attributes = readUByte()

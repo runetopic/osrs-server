@@ -17,10 +17,10 @@ object Application {
     fun main(args: Array<String>) {
         val injector = Guice.createInjector(
             ApplicationModule(args),
-            HttpModule,
-            DatabaseModule,
-            GameModule,
             CacheModule,
+            DatabaseModule,
+            HttpModule,
+            GameModule,
             NetworkModule
         )
         injector.getInstance<Cache>().load()

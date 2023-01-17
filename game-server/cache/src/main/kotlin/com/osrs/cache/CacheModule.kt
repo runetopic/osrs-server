@@ -1,18 +1,15 @@
 package com.osrs.cache
 
-import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.cache.entry.map.MapSquareEntryProvider
+import com.osrs.cache.entry.config.location.LocationEntryProvider
+import com.osrs.cache.entry.config.map.MapSquareEntryProvider
 import com.runetopic.cache.store.Js5Store
 import dev.misfitlabs.kotlinguice4.KotlinModule
-import dev.misfitlabs.kotlinguice4.multibindings.KotlinMultibinder
 
 object CacheModule : KotlinModule() {
     override fun configure() {
         bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
-
-        val entryProviders = KotlinMultibinder.newSetBinder<EntryTypeProvider<*, *>>(kotlinBinder)
-
-        entryProviders.addBinding().to<MapSquareEntryProvider>()
+        bind<MapSquareEntryProvider>().asEagerSingleton()
+        bind<LocationEntryProvider>().asEagerSingleton()
     }
 
     // Indexes.
