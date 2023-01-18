@@ -13,7 +13,6 @@ class PlayerRenderer : Renderer<Player>() {
         return appearance
     }
 
-    private fun RenderBlock.getRenderBlockBuilder(): RenderBlockBuilder<Player> {
-        return playerRenderingBlocks[this::class] ?: throw IllegalStateException("Unhandled player render block. ${this::class.qualifiedName}")
-    }
+    private fun RenderBlock.getRenderBlockBuilder(): RenderBlockBuilder<Player> =
+        playerRenderingBlocks[this::class] ?: throw IllegalStateException("Unhandled player render block. ${this::class.qualifiedName}")
 }

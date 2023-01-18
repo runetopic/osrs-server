@@ -7,7 +7,7 @@ import com.osrs.cache.Cache
 
 @Singleton
 class WorldProvider @Inject constructor(
-    val cache: Cache
+    private val cache: Cache
 ) : Provider<World> {
     // TODO add support for multiple worlds but for now this will work
     override fun get(): World = World(1, cache)

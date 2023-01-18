@@ -40,7 +40,7 @@ class PlayerAppearanceBlock : RenderBlockBuilder<Player>(0, 0x4) {
     }
 
     private fun BytePacketBuilder.writeAnimations(render: RenderBlock.Appearance) = if (render.transform == -1) {
-        intArrayOf(808, 823, 819, 820, 821, 822, 824).forEach { writeShort(it.toShort()) }
+        intArrayOf(9494, 823, 819, 820, 821, 822, 824).forEach { writeShort(it.toShort()) }
     } else {
         // TODO NPC transmog
     }
