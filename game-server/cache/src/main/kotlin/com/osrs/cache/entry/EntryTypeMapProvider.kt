@@ -1,7 +1,9 @@
 package com.osrs.cache.entry
 
-abstract class EntryTypeMapProvider<T> {
+abstract class EntryTypeMapProvider<T> : Iterable<T> {
     private val data by lazy(::loadTypeMap)
+
+    override fun iterator(): Iterator<T> = data.values.iterator()
 
     fun contains(key: Int): Boolean = data[key] != null
 

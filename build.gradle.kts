@@ -11,6 +11,13 @@ allprojects {
         plugin("org.jetbrains.kotlin.jvm")
     }
 
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+            freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
+        }
+    }
+
     repositories {
         mavenCentral()
         maven("https://jitpack.io")
@@ -23,6 +30,9 @@ allprojects {
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.0.10-SNAPSHOT")
         implementation("com.runetopic.cache:cache:1.6.0")
+
+        // Pathfinder
+        implementation("com.github.blurite:pathfinder:2.4.2")
         // Logger
         implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.4")
         implementation("org.slf4j:slf4j-simple:2.0.5")

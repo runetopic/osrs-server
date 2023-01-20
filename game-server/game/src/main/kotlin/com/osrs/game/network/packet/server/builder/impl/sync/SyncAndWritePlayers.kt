@@ -37,11 +37,12 @@ private fun Player.syncHighDefinition(buffer: BytePacketBuilder, updates: BytePa
             }
             val other = viewport.players[playerIndex]
             val removing = shouldRemove(other)
-            val updating = shouldUpdate(other)
+            val moving = other?.walkDirection != null
+            val updating = shouldUpdate(other) || moving
             val active = removing || updating
             writeBit(active)
             if (active) {
-                processHighDefinitionPlayer(this, updates, other, playerIndex, removing, updating)
+                processHighDefinitionPlayer(this, updates, other, playerIndex, removing, updating, moving)
             } else {
                 for (index in i + 1 until viewport.highDefinitionsCount) {
                     val localIndex = viewport.highDefinitions[index]
@@ -101,9 +102,15 @@ private fun Player.processHighDefinitionPlayer(
     other: Player?,
     index: Int,
     removing: Boolean,
-    updating: Boolean
+    updating: Boolean,
+    moving: Boolean
 ) {
     builder.writeBits(1, if (removing) 0 else 1)
+
+    if (updating) {
+        encodePendingBlocks(false, other!!, blocks)
+    }
+
     when {
         removing -> { // remove the player
             // send a position update
@@ -112,10 +119,16 @@ private fun Player.processHighDefinitionPlayer(
             validateLocationChanges(builder, other, index)
             viewport.players[index] = null
         }
+        moving -> {
+            val dx = DIRECTION_DELTA_X[other!!.walkDirection!!.playerOpcode]
+            val dz = DIRECTION_DELTA_Z[other!!.walkDirection!!.playerOpcode]
+            val direction = getPlayerWalkingDirection(dx, dz)
+            builder.writeBits(2, 1) // 2 for running
+            builder.writeBits(3, direction) // Opcode for direction bit 3 for walking bit 4 for running.
+        }
         updating -> {
             // send a block update
             builder.writeBits(2, 0)
-            encodePendingBlocks(false, other!!, blocks)
         }
     }
 }
@@ -229,3 +242,33 @@ private fun encodePendingBlocks(forceOtherUpdate: Boolean, other: Player, blocks
 private fun shouldUpdate(other: Player?): Boolean = other?.renderer?.hasPendingUpdate() ?: false
 private fun Player.shouldAdd(other: Player?): Boolean = (other != null && other != this && other.location.withinDistance(location))
 private fun Player.shouldRemove(other: Player?): Boolean = (other == null || !other.location.withinDistance(location) || !world.players.contains(this))
+
+val DIRECTION_DELTA_X = intArrayOf(-1, 0, 1, -1, 1, -1, 0, 1)
+val DIRECTION_DELTA_Z = intArrayOf(-1, -1, -1, 0, 0, 1, 1, 1)
+
+fun getPlayerWalkingDirection(dx: Int, dy: Int): Int {
+    if (dx == -1 && dy == -1) {
+        return 0
+    }
+    if (dx == 0 && dy == -1) {
+        return 1
+    }
+    if (dx == 1 && dy == -1) {
+        return 2
+    }
+    if (dx == -1 && dy == 0) {
+        return 3
+    }
+    if (dx == 1 && dy == 0) {
+        return 4
+    }
+    if (dx == -1 && dy == 1) {
+        return 5
+    }
+    if (dx == 0 && dy == 1) {
+        return 6
+    }
+    return if (dx == 1 && dy == 1) {
+        7
+    } else -1
+}

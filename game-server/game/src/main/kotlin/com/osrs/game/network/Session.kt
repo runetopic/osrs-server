@@ -1,6 +1,9 @@
 package com.osrs.game.network
 
 import com.github.michaelbull.logging.InlineLogger
+import com.osrs.common.buffer.writeByte
+import com.osrs.common.buffer.writeInt
+import com.osrs.common.buffer.writeShort
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec
@@ -18,9 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.runBlocking
-import com.osrs.common.buffer.writeByte
-import com.osrs.common.buffer.writeInt
-import com.osrs.common.buffer.writeShort
 import java.io.IOException
 import java.net.SocketException
 import java.nio.ByteBuffer
