@@ -17,6 +17,7 @@ data class World(
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
     private val loginRequests = ConcurrentHashMap<Player, Session>()
+    private val logoutRequest = ConcurrentHashMap<Player, Session>()
 
     var isOnline = false
 
@@ -34,8 +35,23 @@ data class World(
         }.also(loginRequests.entries::removeAll)
     }
 
+    fun processLogoutRequest() {
+        if (!isOnline) return
+
+        logoutRequest.entries.onEach {
+            players.remove(it.key)
+            it.key.logout()
+        }
+
+        logoutRequest.clear()
+    }
+
     fun requestLogin(session: Session, player: Player) {
         this.loginRequests[player] = session
+    }
+
+    fun requestLogout(session: Session, player: Player) {
+        this.logoutRequest[player] = session
     }
 
     companion object {

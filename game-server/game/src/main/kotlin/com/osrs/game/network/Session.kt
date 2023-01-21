@@ -135,7 +135,9 @@ class Session(
     fun seed() = seed
 
     fun disconnect(reason: String) {
-        if (this.codec?.instanceOf(GameCodec::class) == true) player?.logout(world)
+        if (this.codec?.instanceOf(GameCodec::class) == true) {
+            player?.world?.requestLogout(this, player!!)
+        }
         writeChannel.close()
         socket.close()
         logger.info { "Session has been disconnected for reason={$reason}." }

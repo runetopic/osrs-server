@@ -2,10 +2,9 @@ package com.osrs.game.actor.player
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.movement.Direction
+import com.osrs.game.actor.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
-import com.osrs.game.actor.render.RenderBlock
-import com.osrs.game.actor.render.impl.PlayerRenderer
+import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.server.IfOpenTopPacket
@@ -19,11 +18,9 @@ class Player(
     var world: World,
     var session: Session
 ) : Actor() {
-    override var walkDirection: Direction? = null
-    override var runDirection: Direction? = null
-    override val renderer = PlayerRenderer()
+    override var moveDirection: MoveDirection? = null
     override var location: Location = Location(3222 + Random().nextInt(2), 3222 + Random().nextInt(2))
-    var appearance = RenderBlock.Appearance(RenderBlock.Appearance.Gender.MALE, -1, -1, -1, false)
+    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
     val viewport = Viewport(this)
     var online = false
     var rights = 0
@@ -50,16 +47,8 @@ class Player(
             )
         )
         refreshAppearance()
+        renderer.temporaryMovementType()
         online = true
-    }
-
-    fun logout(world: World) {
-        world.players.remove(this)
-    }
-
-    fun refreshAppearance(appearance: RenderBlock.Appearance = this.appearance): RenderBlock.Appearance {
-        this.appearance = renderer.refreshAppearance(appearance)
-        return this.appearance
     }
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
@@ -67,7 +56,7 @@ class Player(
     fun addToPacketGroup(group: PacketGroup) {
         packetGroup
             .computeIfAbsent(group.handler.groupId) { ArrayBlockingQueue<PacketGroup>(10) }
-            .add(group)
+            .offer(group)
     }
 
     fun processGroupedPackets() {
@@ -85,5 +74,14 @@ class Player(
 
     fun process() {
         movementQueue.process()
+    }
+
+    fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
+        this.appearance = renderer.appearance(appearance)
+        return this.appearance
+    }
+
+    fun logout() {
+        online = false
     }
 }

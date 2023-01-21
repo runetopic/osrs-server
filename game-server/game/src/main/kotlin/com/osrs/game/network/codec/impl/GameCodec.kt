@@ -38,8 +38,6 @@ class GameCodec @Inject constructor(
 
                 val reader = mappedPacketReaders[opcode]
 
-                logger.info { "Incoming client packet. Opcode: $opcode." }
-
                 if (reader == null) {
                     readChannel.discard(size.toLong())
                     continue
@@ -55,6 +53,7 @@ class GameCodec @Inject constructor(
                 val packet = reader.read(readChannel, size)
 
                 if (packet == null) {
+                    logger.info { "Unhandled incoming client packet. Opcode: $opcode." }
                     readChannel.discard(readChannel.availableForRead.toLong())
                     continue
                 }
