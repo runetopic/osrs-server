@@ -25,28 +25,28 @@ enum class Direction(val opcode: Int) {
         fun to(from: Location, to: Location): Direction {
             val deltaX = to.x - from.x
             val deltaZ = to.z - from.z
-            return fromDeltas(deltaX, deltaZ)
+            return getDirection(deltaX, deltaZ)
         }
 
-        private fun fromDeltas(deltaX: Int, deltaZ: Int): Direction {
-            when (deltaZ) {
-                1 -> when (deltaX) {
+        private fun getDirection(dx: Int, dz: Int): Direction {
+            when (dz) {
+                1 -> when (dx) {
                     1 -> return NORTH_EAST
                     0 -> return NORTH
                     -1 -> return NORTH_WEST
                 }
-                -1 -> when (deltaX) {
+                -1 -> when (dx) {
                     1 -> return SOUTH_EAST
                     0 -> return SOUTH
                     -1 -> return SOUTH_WEST
                 }
-                0 -> when (deltaX) {
+                0 -> when (dx) {
                     1 -> return EAST
                     0 -> return NONE
                     -1 -> return WEST
                 }
             }
-            throw IllegalArgumentException("Unhandled direction delta [$deltaX, $deltaZ]")
+            throw IllegalArgumentException("Unhandled direction delta [$dx, $dz]")
         }
 
         val DIRECTION_DELTA_X = intArrayOf(-1, 0, 1, -1, 1, -1, 0, 1)
