@@ -1,11 +1,11 @@
-package com.osrs.game.network.packet.server.builder.impl.sync.block.player
+package com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl
 
 import com.osrs.common.buffer.writeByteSubtract
 import com.osrs.common.buffer.writeReversed
 import com.osrs.common.buffer.writeStringCp1252NullTerminated
 import com.osrs.game.actor.player.Player
-import com.osrs.game.actor.render.RenderBlock
-import com.osrs.game.network.packet.server.builder.impl.sync.block.RenderBlockBuilder
+import com.osrs.game.actor.render.impl.Appearance
+import com.osrs.game.network.packet.server.builder.impl.sync.block.RenderingBlock
 import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPartColor
 import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPartCompanion
 import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.PlayerIdentityKit
@@ -15,11 +15,9 @@ import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeShort
 
-class PlayerAppearanceBlock : RenderBlockBuilder<Player>(0, 0x4) {
+class PlayerAppearanceBlock : RenderingBlock<Player, Appearance>(0, 0x4) {
 
-    override fun build(actor: Player): ByteReadPacket = buildPacket {
-        val render = actor.appearance
-
+    override fun build(actor: Player, render: Appearance): ByteReadPacket = buildPacket {
         val data = buildPacket {
             writeByte(render.gender.mask.toByte())
             writeByte(render.skullIcon.toByte())
@@ -39,18 +37,18 @@ class PlayerAppearanceBlock : RenderBlockBuilder<Player>(0, 0x4) {
         writeReversed(data.readBytes())
     }
 
-    private fun BytePacketBuilder.writeAnimations(render: RenderBlock.Appearance) = if (render.transform == -1) {
+    private fun BytePacketBuilder.writeAnimations(render: Appearance) = if (render.transform == -1) {
         intArrayOf(808, 823, 819, 820, 821, 822, 824).forEach { writeShort(it.toShort()) }
     } else {
         // TODO NPC transmog
     }
 
-    private fun BytePacketBuilder.writeTransmog(render: RenderBlock.Appearance) {
+    private fun BytePacketBuilder.writeTransmog(render: Appearance) {
         writeShort(65535.toShort())
         writeShort(render.transform.toShort())
     }
 
-    private fun BytePacketBuilder.writeIdentityKit(render: RenderBlock.Appearance) = PlayerIdentityKit.values()
+    private fun BytePacketBuilder.writeIdentityKit(render: Appearance) = PlayerIdentityKit.values()
         .sortedBy { it.info.index }
         .forEach {
             it.info.build(

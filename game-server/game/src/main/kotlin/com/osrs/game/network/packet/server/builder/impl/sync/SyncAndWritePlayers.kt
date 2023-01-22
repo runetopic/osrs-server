@@ -4,8 +4,19 @@ import com.osrs.common.buffer.BitAccessor
 import com.osrs.common.buffer.buildPacket
 import com.osrs.common.buffer.withBitAccess
 import com.osrs.common.map.location.withinDistance
+import com.osrs.game.actor.movement.Direction.Companion.DIRECTION_DELTA_X
+import com.osrs.game.actor.movement.Direction.Companion.DIRECTION_DELTA_Z
+import com.osrs.game.actor.movement.Direction.Companion.getPlayerRunningDirection
+import com.osrs.game.actor.movement.Direction.Companion.getPlayerWalkingDirection
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.render.RenderType
+import com.osrs.game.actor.render.impl.Appearance
+import com.osrs.game.actor.render.impl.MovementType
+import com.osrs.game.actor.render.impl.TemporaryMovementType
 import com.osrs.game.network.packet.server.PlayerInfoPacket
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl.MovementTypeBlock
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl.PlayerAppearanceBlock
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl.TemporaryMovementTypeBlock
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
 import kotlin.math.abs
@@ -37,17 +48,18 @@ private fun Player.syncHighDefinition(buffer: BytePacketBuilder, updates: BytePa
             }
             val other = viewport.players[playerIndex]
             val removing = shouldRemove(other)
-            val updating = shouldUpdate(other)
+            val moving = other?.moveDirection != null
+            val updating = shouldUpdate(other) || moving
             val active = removing || updating
             writeBit(active)
             if (active) {
-                processHighDefinitionPlayer(this, updates, other, playerIndex, removing, updating)
+                processHighDefinitionPlayer(this, updates, other, playerIndex, removing, updating, moving)
             } else {
                 for (index in i + 1 until viewport.highDefinitionsCount) {
                     val localIndex = viewport.highDefinitions[index]
                     if (nsn == (0x1 and viewport.nsnFlags[localIndex] != 0)) continue
                     val localPlayer = viewport.players[localIndex]
-                    if (shouldRemove(localPlayer) || (localPlayer != null && localPlayer.renderer.hasPendingUpdate())) break
+                    if (shouldRemove(localPlayer) || localPlayer?.moveDirection != null || (localPlayer != null && localPlayer.hasPendingUpdate())) break
                     skip++
                 }
 
@@ -101,9 +113,15 @@ private fun Player.processHighDefinitionPlayer(
     other: Player?,
     index: Int,
     removing: Boolean,
-    updating: Boolean
+    updating: Boolean,
+    moving: Boolean
 ) {
     builder.writeBits(1, if (removing) 0 else 1)
+
+    if (updating) {
+        encodePendingBlocks(false, other!!, blocks)
+    }
+
     when {
         removing -> { // remove the player
             // send a position update
@@ -112,10 +130,29 @@ private fun Player.processHighDefinitionPlayer(
             validateLocationChanges(builder, other, index)
             viewport.players[index] = null
         }
+        moving -> {
+            var dx = DIRECTION_DELTA_X[other!!.moveDirection!!.walkDirection!!.opcode]
+            var dz = DIRECTION_DELTA_Z[other.moveDirection!!.walkDirection!!.opcode]
+            var running = other.moveDirection!!.runDirection != null
+            var direction = 0
+
+            if (running) {
+                dx += DIRECTION_DELTA_X[other.moveDirection!!.runDirection!!.opcode]
+                dz += DIRECTION_DELTA_Z[other.moveDirection!!.runDirection!!.opcode]
+                direction = getPlayerRunningDirection(dx, dz)
+                running = direction != -1
+            }
+
+            if (!running) {
+                direction = getPlayerWalkingDirection(dx, dz)
+            }
+
+            builder.writeBits(2, if (running) 2 else 1) // 2 for running
+            builder.writeBits(if (running) 4 else 3, direction) // Opcode for direction bit 3 for walking bit 4 for running.
+        }
         updating -> {
             // send a block update
             builder.writeBits(2, 0)
-            encodePendingBlocks(false, other!!, blocks)
         }
     }
 }
@@ -218,14 +255,22 @@ private fun BitAccessor.writeSkipCount(
 
 private fun encodePendingBlocks(forceOtherUpdate: Boolean, other: Player, blocks: BytePacketBuilder) {
     if (forceOtherUpdate) other.refreshAppearance(other.appearance)
+    val updates = other.pendingUpdates().map(::mapToBlock).sortedBy { it.second.index }.toMap()
     var mask = 0x0
-    other.renderer.updates.forEach { mask = mask or it.mask }
+    updates.forEach { mask = mask or it.value.mask }
     if (mask >= 0xff) mask = mask or 0x40
     blocks.writeByte(mask.toByte())
     if (mask >= 0xff) blocks.writeByte((mask shr 8).toByte())
-    other.renderer.updates.forEach { blocks.writePacket(it.build(other)) }
+    updates.forEach { blocks.writePacket(it.value.build(other, it.key)) }
 }
 
-private fun shouldUpdate(other: Player?): Boolean = other?.renderer?.hasPendingUpdate() ?: false
+private fun mapToBlock(it: RenderType) = when (it) {
+    is Appearance -> it to PlayerAppearanceBlock()
+    is MovementType -> it to MovementTypeBlock()
+    is TemporaryMovementType -> it to TemporaryMovementTypeBlock()
+    else -> throw IllegalStateException("Unhandled player block in PlayerInfo. Block was $it")
+}
+
+private fun shouldUpdate(other: Player?): Boolean = other?.hasPendingUpdate() ?: false
 private fun Player.shouldAdd(other: Player?): Boolean = (other != null && other != this && other.location.withinDistance(location))
-private fun Player.shouldRemove(other: Player?): Boolean = (other == null || !other.location.withinDistance(location) || !world.players.contains(this))
+private fun Player.shouldRemove(other: Player?): Boolean = (other == null || !other.location.withinDistance(location) || !world.players.contains(other))

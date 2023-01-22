@@ -16,6 +16,6 @@ class MovementPacketReader : PacketReader<MovementPacket>(
     override suspend fun read(readChannel: ByteReadChannel, size: Int): MovementPacket = MovementPacket(
         movementType = readChannel.readUByteAdd() == 1,
         destinationX = readChannel.readUShortLittleEndian(),
-        destinationY = readChannel.readUShortAdd()
+        destinationZ = readChannel.readUShortAdd()
     )
 }

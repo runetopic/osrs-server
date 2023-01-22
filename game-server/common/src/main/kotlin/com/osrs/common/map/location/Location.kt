@@ -23,7 +23,7 @@ value class Location(
 
     companion object {
         val None = Location(-1, -1, -1)
-        val Default = Location(3222, 3222, 322)
+        val Default = Location(3222, 3222, 0)
     }
 }
 

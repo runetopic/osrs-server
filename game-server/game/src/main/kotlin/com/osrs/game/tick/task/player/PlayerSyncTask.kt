@@ -11,6 +11,9 @@ class PlayerSyncTask(
 
     override fun sync() {
         val players = world.players.filterNotNull().filter { it.online }
+
+        players.forEach(Player::processGroupedPackets)
+        players.forEach(Player::process)
         players.forEach(Player::syncAndWritePlayers)
         players.forEach(Player::reset)
         players.forEach(Player::writeAndFlush)
