@@ -13,12 +13,12 @@ class ActorRenderer {
         return appearance
     }
 
-    fun updateMovementType() {
-        pendingUpdates += MovementType()
+    fun updateMovementType(type: Int) {
+        pendingUpdates += MovementType(type)
     }
 
-    fun temporaryMovementType() {
-        pendingUpdates += TemporaryMovementType()
+    fun temporaryMovementType(type: Int) {
+        pendingUpdates += TemporaryMovementType(type)
     }
 
     fun hasPendingUpdate(): Boolean = pendingUpdates.isNotEmpty()

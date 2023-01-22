@@ -46,8 +46,8 @@ class Player(
                 161
             )
         )
+        renderer.updateMovementType(if (isRunning) 2 else 1)
         refreshAppearance()
-        renderer.temporaryMovementType()
         online = true
     }
 

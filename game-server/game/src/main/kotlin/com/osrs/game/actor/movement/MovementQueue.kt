@@ -15,49 +15,59 @@ class MovementQueue(
     private val routeSteps: Deque<RouteCoordinates> = LinkedList()
 
     fun process() {
-        if (isEmpty()) appendNextStep()
+        appendNextStep(actor.location)
 
-        var next: Location? = poll()
+        var nextWalkStep = poll()
 
-        if (next != null) {
-            var location = actor.location
-            var walkDirection: Direction? = Direction.to(location, next)
-            var runDirection: Direction? = null
+        if (nextWalkStep == null) {
+            clear()
+            return
+        }
 
-            if (walkDirection == Direction.NONE) {
-                walkDirection = null
-                clear()
+        val walkDirection: Direction = Direction.to(actor.location, nextWalkStep)
+        var runDirection: Direction? = null
+
+        if (walkDirection == Direction.NONE) {
+            clear()
+            return
+        }
+
+        var location = nextWalkStep
+
+        if (actor.isRunning) {
+            appendNextStep(location)
+
+            nextWalkStep = poll() ?: return run {
+                actor.renderer.temporaryMovementType(1)
+                moveTo(location, MoveDirection(walkDirection, null))
             }
 
-            location = next
+            runDirection = Direction.to(location, nextWalkStep)
+            location = nextWalkStep
+        }
 
-            if (actor.isRunning) {
-                next = poll()
+        moveTo(location, MoveDirection(walkDirection, runDirection))
 
-                if (next != null) {
-                    runDirection = Direction.to(location, next)
-                    location = next
-                }
-            }
-
-            if (walkDirection != null) {
-                actor.moveDirection = MoveDirection(walkDirection, runDirection)
-                actor.location = location
-
-                if (runDirection != null) {
-                    actor.renderer.updateMovementType()
-                }
-            }
+        if (runDirection != null) {
+            actor.renderer.temporaryMovementType(2)
         }
     }
 
-    private fun appendNextStep() {
+    private fun moveTo(
+        location: Location,
+        direction: MoveDirection
+    ) {
+        actor.location = location
+        actor.moveDirection = direction
+    }
+
+    private fun appendNextStep(location: Location) {
+        if (isNotEmpty()) return
         if (routeSteps.isEmpty()) return
         clear()
         val step = routeSteps.poll()
-        val last = actor.location
-        var curX = last.x
-        var curY = last.z
+        var curX = location.x
+        var curY = location.z
         val destX = step.x
         val destY = step.y
         val xSign = (destX - curX).sign
@@ -67,8 +77,7 @@ class MovementQueue(
             curX += xSign
             curY += ySign
             add(Location(curX, curY))
-
-            if (++count > MAX_STEPS_PER_TURN) break
+            if (++count > MAX_TURNS) break
         }
     }
 
@@ -79,6 +88,6 @@ class MovementQueue(
     }
 
     companion object {
-        private const val MAX_STEPS_PER_TURN = 25
+        private const val MAX_TURNS = 25
     }
 }
