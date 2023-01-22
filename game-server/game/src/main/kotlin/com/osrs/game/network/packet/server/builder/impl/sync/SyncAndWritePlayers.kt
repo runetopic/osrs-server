@@ -11,8 +11,8 @@ import com.osrs.game.actor.movement.Direction.Companion.getPlayerWalkingDirectio
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.RenderType
 import com.osrs.game.actor.render.impl.Appearance
-import com.osrs.game.actor.render.impl.MovementType
-import com.osrs.game.actor.render.impl.TemporaryMovementType
+import com.osrs.game.actor.render.impl.MovementSpeed
+import com.osrs.game.actor.render.impl.TemporaryMovementSpeed
 import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl.MovementTypeBlock
 import com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl.PlayerAppearanceBlock
@@ -266,8 +266,8 @@ private fun encodePendingBlocks(forceOtherUpdate: Boolean, other: Player, blocks
 
 private fun mapToBlock(it: RenderType) = when (it) {
     is Appearance -> it to PlayerAppearanceBlock()
-    is MovementType -> it to MovementTypeBlock()
-    is TemporaryMovementType -> it to TemporaryMovementTypeBlock()
+    is MovementSpeed -> it to MovementTypeBlock()
+    is TemporaryMovementSpeed -> it to TemporaryMovementTypeBlock()
     else -> throw IllegalStateException("Unhandled player block in PlayerInfo. Block was $it")
 }
 

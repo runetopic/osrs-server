@@ -5,6 +5,7 @@ import com.osrs.game.actor.Actor
 import com.osrs.game.actor.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.render.impl.Appearance
+import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.server.IfOpenTopPacket
@@ -46,7 +47,7 @@ class Player(
                 161
             )
         )
-        renderer.updateMovementType(if (isRunning) 2 else 1)
+        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
         refreshAppearance()
         online = true
     }
