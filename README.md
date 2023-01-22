@@ -34,7 +34,7 @@ The server is broken up into multiple modules to make things easier to manage an
   - *Credentials: (Username=admin, password=password)*
 
 ### Application configuration
-_This project uses ktor for the network, therefore the application is powered via the application.conf file._
+_This project uses ktor for the networking, therefore the application is powered via the application.conf file._
 - Create a new file called ```application.conf``` inside of the [resources](./application/src/main/resources/) directory.
 - Place the following contents inside of the application.conf:
   ```
