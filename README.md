@@ -28,7 +28,7 @@ The server is broken up into multiple modules to make things easier to manage an
 - Download the [OpenOSRS](https://github.com/runetopic/openosrs/tree/localhost) client from our runetopic organization. This branch is configured to connect to the server  automatically.
 
 ### MongoDB Setup
-- This project requires mongoDB for account creation and verification. Please setup either a local cloud instance, or a local instance up. I will be providing this via docker in the future, but this is a manual process for now.
+- This project requires mongoDB for account creation and verification. Please setup either a cloud instance, or a local instance. I will be providing this via docker in the future, but this is a manual process for now.
 - Create a database called ```api``` and a collection called ```account``` if they do not get created automatically.
 - Upon start of the server, an admin account will be created for you:
   - *Credentials: (Username=admin, password=password)*
