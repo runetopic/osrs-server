@@ -13,6 +13,7 @@ import com.osrs.game.network.packet.server.RebuildNormalPacket
 import com.osrs.game.world.World
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
+import kotlin.math.abs
 
 class Player(
     val username: String,
@@ -25,7 +26,7 @@ class Player(
     val viewport = Viewport(this)
     var online = false
     var rights = 0
-
+    var lastLoadedLocation: Location? = null
     val movementQueue = MovementQueue(this)
 
     private val packetGroup = mutableMapOf<Int, ArrayBlockingQueue<PacketGroup>>()
@@ -35,13 +36,7 @@ class Player(
         this.world = world
         this.lastLocation = location
         session.writeLoginResponse()
-        session.write(
-            RebuildNormalPacket(
-                viewport,
-                location,
-                true
-            )
-        )
+        loadMapRegion(true)
         session.write(
             IfOpenTopPacket(
                 161
@@ -50,6 +45,17 @@ class Player(
         renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
         refreshAppearance()
         online = true
+    }
+
+    private fun loadMapRegion(initialize: Boolean) {
+        session.write(
+            RebuildNormalPacket(
+                viewport,
+                location,
+                initialize
+            )
+        )
+        lastLoadedLocation = location
     }
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
@@ -75,6 +81,19 @@ class Player(
 
     fun process() {
         movementQueue.process()
+
+        if (shouldRebuildMap()) loadMapRegion(false)
+    }
+
+    private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
+        if (lastLoadedLocation == null || lastLoadedLocation == location) return false
+
+        val lastZoneX = lastLoadedLocation!!.zoneX
+        val lastZoneZ = lastLoadedLocation!!.zoneZ
+        val zoneX = location.zoneX
+        val zoneZ = location.zoneZ
+        val limit = ((buildArea shr 3) / 2) - 1
+        return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {

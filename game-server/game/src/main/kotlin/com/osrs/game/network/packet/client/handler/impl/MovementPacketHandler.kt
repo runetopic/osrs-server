@@ -22,7 +22,6 @@ class MovementPacketHandler @Inject constructor(
             z = player.location.level
         )
 
-        println(path.toString())
         player.movementQueue.appendRoute(path)
     }
 }
