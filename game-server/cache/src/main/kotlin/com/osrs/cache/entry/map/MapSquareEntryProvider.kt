@@ -1,13 +1,13 @@
-package com.osrs.cache.entry.config.map
+package com.osrs.cache.entry.map
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.CacheModule.MAP_INDEX
 import com.osrs.cache.entry.EntryTypeMapProvider
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.LEVELS
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.MAP_SIZE
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.buffer.readIncrSmallSmart
 import com.osrs.common.buffer.readShort
 import com.osrs.common.buffer.readUByte

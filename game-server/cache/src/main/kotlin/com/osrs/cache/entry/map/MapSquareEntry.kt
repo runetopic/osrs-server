@@ -1,4 +1,4 @@
-package com.osrs.cache.entry.config.map
+package com.osrs.cache.entry.map
 
 import com.osrs.cache.entry.EntryType
 

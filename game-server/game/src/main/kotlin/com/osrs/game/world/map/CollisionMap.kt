@@ -3,11 +3,11 @@ package com.osrs.game.world.map
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.entry.config.location.LocationEntryProvider
-import com.osrs.cache.entry.config.map.MapSquareEntry
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.BLOCKED_TILE_BIT
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.LEVELS
-import com.osrs.cache.entry.config.map.MapSquareEntry.Companion.MAP_SIZE
+import com.osrs.cache.entry.map.MapSquareEntry
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.BLOCKED_TILE_BIT
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
+import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.transform
 import com.osrs.game.world.map.zone.Zones

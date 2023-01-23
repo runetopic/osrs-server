@@ -1,7 +1,7 @@
 package com.osrs.game.world
 
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.config.map.MapSquareEntryProvider
+import com.osrs.cache.entry.map.MapSquareEntryProvider
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session

@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Provider
 import com.google.inject.Singleton
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.config.map.MapSquareEntryProvider
+import com.osrs.cache.entry.map.MapSquareEntryProvider
 import com.osrs.game.world.map.CollisionMap
 
 @Singleton

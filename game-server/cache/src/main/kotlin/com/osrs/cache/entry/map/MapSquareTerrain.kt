@@ -1,4 +1,4 @@
-package com.osrs.cache.entry.config.map
+package com.osrs.cache.entry.map
 
 data class MapSquareTerrain(
     val height: Int,
