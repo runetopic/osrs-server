@@ -10,7 +10,7 @@ import io.ktor.utils.io.core.writeShort
 class WeaponInfo : BodyPartInfo(index = 3) {
     override fun equipmentIndex(gender: Appearance.Gender): Int = Equipment.SLOT_WEAPON
     override fun build(builder: BytePacketBuilder, kit: BodyPartCompanion) {
-        builder.writeShort(0x200 + 27277)
+        builder.writeShort((0x200 + 27277).toShort())
 //        builder.writeByte(kit.id.toByte())
     }
 }

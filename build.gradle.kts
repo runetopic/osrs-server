@@ -11,10 +11,15 @@ allprojects {
         plugin("org.jetbrains.kotlin.jvm")
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "11"
-            freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_19.majorVersion))
+        }
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_19.majorVersion))
         }
     }
 
@@ -26,11 +31,11 @@ allprojects {
     }
 
     dependencies {
-        implementation(kotlin("stdlib"))
+        // Kotlin standard-lib
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.0.10-SNAPSHOT")
         implementation("com.runetopic.cache:cache:1.6.0")
-
         // Pathfinder
         implementation("com.github.blurite:pathfinder:2.4.2")
         // Logger
@@ -47,12 +52,7 @@ allprojects {
         implementation("org.litote.kmongo:kmongo-serialization:4.8.0")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-server-content-negotiation:2.2.1")
+        // Bcrypt
         implementation("org.mindrot:jbcrypt:0.4")
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_19.majorVersion))
     }
 }
