@@ -21,7 +21,7 @@ import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
 @Singleton
-class MapSquareEntryProvider @Inject constructor(
+class MapSquareEntryTypeMap @Inject constructor(
     private val store: Js5Store,
     private val mapSquares: MapSquares
 ) : EntryTypeMapProvider<MapSquareEntry>() {
@@ -98,7 +98,7 @@ class MapSquareEntryProvider @Inject constructor(
         return loadLocIds(type, locId + offset)
     }
 
-    private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int = -1, packedLocation: Int) {
+    private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int, packedLocation: Int) {
         val offset = readUShortSmart()
         if (offset == 0) return
         val attributes = readUByte()

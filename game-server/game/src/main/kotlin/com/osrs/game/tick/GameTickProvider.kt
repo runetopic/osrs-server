@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Provider
 import com.google.inject.Singleton
 import com.osrs.game.world.World
+import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 

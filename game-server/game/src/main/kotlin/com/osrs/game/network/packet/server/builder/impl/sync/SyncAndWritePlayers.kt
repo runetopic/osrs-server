@@ -114,13 +114,16 @@ private fun Player.processHighDefinitionPlayer(
     index: Int,
     removing: Boolean,
     updating: Boolean,
-    moving: Boolean
+    moving: Boolean,
 ) {
     builder.writeBits(1, if (removing) 0 else 1)
 
     if (updating) {
         encodePendingBlocks(false, other!!, blocks)
+//        val generatedBlocks = preBuiltUpdates
+//        blocks.writeFully(generatedBlocks[index]!!)
     }
+
 
     when {
         removing -> { // remove the player

@@ -1,14 +1,17 @@
 package com.osrs.game.network.packet
 
 import com.google.inject.Singleton
-import com.osrs.game.network.packet.client.MouseIdlePacket
+import com.osrs.game.network.packet.client.IdlePacket
 import com.osrs.game.network.packet.client.MovementPacket
+import com.osrs.game.network.packet.client.WindowStatusPacket
 import com.osrs.game.network.packet.client.handler.PacketHandler
-import com.osrs.game.network.packet.client.handler.impl.MouseIdlePacketHandler
+import com.osrs.game.network.packet.client.handler.impl.IdlePacketHandler
 import com.osrs.game.network.packet.client.handler.impl.MovementPacketHandler
+import com.osrs.game.network.packet.client.handler.impl.WindowStatusPacketHandler
 import com.osrs.game.network.packet.client.reader.PacketReader
-import com.osrs.game.network.packet.client.reader.impl.MouseIdlePacketReader
+import com.osrs.game.network.packet.client.reader.impl.IdlePacketReader
 import com.osrs.game.network.packet.client.reader.impl.MovementPacketReader
+import com.osrs.game.network.packet.client.reader.impl.WindowStatusPacketReader
 import com.osrs.game.network.packet.server.IfOpenTopPacket
 import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.RebuildNormalPacket
@@ -32,11 +35,13 @@ object PacketModule : KotlinModule() {
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
         readers.addBinding().to<MovementPacketReader>().asEagerSingleton()
-        readers.addBinding().to<MouseIdlePacketReader>().asEagerSingleton()
+        readers.addBinding().to<IdlePacketReader>().asEagerSingleton()
+        readers.addBinding().to<WindowStatusPacketReader>().asEagerSingleton()
 
         val handlers = KotlinMapBinder.newMapBinder<KClass<*>, PacketHandler<Packet>>(kotlinBinder)
 
-        handlers.addBinding(MovementPacket::class).to<MovementPacketHandler>()
-        handlers.addBinding(MouseIdlePacket::class).to<MouseIdlePacketHandler>()
+        handlers.addBinding(MovementPacket::class).to<MovementPacketHandler>().asEagerSingleton()
+        handlers.addBinding(IdlePacket::class).to<IdlePacketHandler>().asEagerSingleton()
+        handlers.addBinding(WindowStatusPacket::class).to<WindowStatusPacketHandler>().asEagerSingleton()
     }
 }

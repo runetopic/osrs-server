@@ -21,6 +21,18 @@ enum class Direction(val opcode: Int) {
 
     SOUTH_EAST(opcode = 2);
 
+    fun getDeltaX(): Int = when (this) {
+        SOUTH_EAST, NORTH_EAST, EAST -> 1
+        SOUTH_WEST, NORTH_WEST, WEST -> -1
+        else -> 0
+    }
+
+    fun getDeltaZ(): Int = when (this) {
+        NORTH_WEST, NORTH_EAST, NORTH -> 1
+        SOUTH_WEST, SOUTH_EAST, SOUTH -> -1
+        else -> 0
+    }
+
     companion object {
         fun to(from: Location, to: Location): Direction {
             val deltaX = to.x - from.x

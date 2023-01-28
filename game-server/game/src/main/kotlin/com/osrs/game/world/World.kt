@@ -1,18 +1,20 @@
 package com.osrs.game.world
 
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.map.MapSquareEntryProvider
+import com.osrs.cache.entry.map.MapSquareEntryTypeMap
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.world.map.CollisionMap
+import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.ConcurrentHashMap
 
 data class World(
     val worldId: Int,
     val cache: Cache,
-    val maps: MapSquareEntryProvider,
-    val collisionMap: CollisionMap
+    val maps: MapSquareEntryTypeMap,
+    val collisionMap: CollisionMap,
+    val stepValidator: StepValidator
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
@@ -31,7 +33,7 @@ data class World(
 
         loginRequests.entries.take(150).onEach {
             players.add(it.key)
-            it.key.login(this)
+            it.key.login()
         }.also(loginRequests.entries::removeAll)
     }
 

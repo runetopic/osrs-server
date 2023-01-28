@@ -4,13 +4,13 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.entry.config.enum.EnumTypeProvider
 import com.osrs.cache.entry.config.location.LocationEntryProvider
-import com.osrs.cache.entry.map.MapSquareEntryProvider
+import com.osrs.cache.entry.map.MapSquareEntryTypeMap
 import com.runetopic.cache.hierarchy.index.Index
 import com.runetopic.cache.store.Js5Store
 
 class Cache @Inject constructor(
     private val store: Js5Store,
-    private val maps: MapSquareEntryProvider,
+    private val maps: MapSquareEntryTypeMap,
     private val locations: LocationEntryProvider,
     private val enums: EnumTypeProvider
 ) {

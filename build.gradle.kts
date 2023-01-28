@@ -54,5 +54,7 @@ allprojects {
         implementation("io.ktor:ktor-server-content-negotiation:2.2.1")
         // Bcrypt
         implementation("org.mindrot:jbcrypt:0.4")
+        // Kaml - Yaml parser.
+        implementation("com.charleskorn.kaml:kaml:0.50.0")
     }
 }

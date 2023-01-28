@@ -7,41 +7,37 @@ import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
+import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.server.IfOpenTopPacket
 import com.osrs.game.network.packet.server.RebuildNormalPacket
+import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import kotlin.math.abs
 
 class Player(
     val username: String,
-    var world: World,
+    override var world: World,
     var session: Session
 ) : Actor() {
     override var moveDirection: MoveDirection? = null
-    override var location: Location = Location(3222 + Random().nextInt(2), 3222 + Random().nextInt(2))
+    override var location: Location = Location(3162, 3490)
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
+    val movementQueue = MovementQueue(this)
     val viewport = Viewport(this)
+    val interfaces = Interfaces()
     var online = false
     var rights = 0
     var lastLoadedLocation: Location? = null
-    val movementQueue = MovementQueue(this)
 
     private val packetGroup = mutableMapOf<Int, ArrayBlockingQueue<PacketGroup>>()
 
-    fun login(world: World) {
+    fun login() {
         this.session.player = this
-        this.world = world
         this.lastLocation = location
         session.writeLoginResponse()
         loadMapRegion(true)
-        session.write(
-            IfOpenTopPacket(
-                161
-            )
-        )
         renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
         refreshAppearance()
         online = true
@@ -103,5 +99,9 @@ class Player(
 
     fun logout() {
         online = false
+    }
+
+    fun write(packet: Packet) {
+        session.write(packet)
     }
 }
