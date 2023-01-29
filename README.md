@@ -112,4 +112,7 @@ _This project uses ktor for the networking, therefore the application is powered
   ```
 - Run the application!
 
+### Media
+![Test](https://i.gyazo.com/391d3bf234502ce27fa58728bb74e935.jpg)
+
 If you need help, have any questions, or just wanna chat, feel free to join our [discord!](https://discord.gg/3scgBkrfMG)
