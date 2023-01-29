@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl
+package com.osrs.game.network.packet.server.builder.impl.sync.block.player
 
 import com.osrs.common.buffer.writeByteSubtract
 import com.osrs.common.buffer.writeReversed
@@ -18,6 +18,7 @@ import io.ktor.utils.io.core.writeShort
 class PlayerAppearanceBlock : RenderingBlock<Player, Appearance>(0, 0x4) {
 
     override fun build(actor: Player, render: Appearance): ByteReadPacket = buildPacket {
+        println("Building appearance for ${actor.username}")
         val data = buildPacket {
             writeByte(render.gender.mask.toByte())
             writeByte(render.skullIcon.toByte())

@@ -31,7 +31,7 @@ data class World(
     fun processLoginRequest() {
         if (!isOnline) return
 
-        loginRequests.entries.take(150).onEach {
+        loginRequests.entries.take(50).onEach {
             players.add(it.key)
             it.key.login()
         }.also(loginRequests.entries::removeAll)

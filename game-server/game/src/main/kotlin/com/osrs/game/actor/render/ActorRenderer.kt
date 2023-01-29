@@ -23,5 +23,8 @@ class ActorRenderer {
     }
 
     fun hasPendingUpdate(): Boolean = pendingUpdates.isNotEmpty()
-    fun clearUpdates() = pendingUpdates.clear()
+
+    fun clearUpdates() = pendingUpdates.removeIf {
+        it !is Appearance
+    }
 }

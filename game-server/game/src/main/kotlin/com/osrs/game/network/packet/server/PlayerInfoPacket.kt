@@ -1,9 +1,13 @@
 package com.osrs.game.network.packet.server
 
+import com.osrs.game.actor.PlayerList
+import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.Packet
 
 data class PlayerInfoPacket(
-    val buffer: ByteArray
+    val viewport: Viewport,
+    val players: PlayerList,
+    val playerBlockUpdates: Array<ByteArray?>
 ) : Packet {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -11,12 +15,17 @@ data class PlayerInfoPacket(
 
         other as PlayerInfoPacket
 
-        if (!buffer.contentEquals(other.buffer)) return false
+        if (viewport != other.viewport) return false
+        if (players != other.players) return false
+        if (!playerBlockUpdates.contentDeepEquals(other.playerBlockUpdates)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return buffer.contentHashCode()
+        var result = viewport.hashCode()
+        result = 31 * result + players.hashCode()
+        result = 31 * result + playerBlockUpdates.contentDeepHashCode()
+        return result
     }
 }

@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.server.builder.impl.sync.block.player.impl
+package com.osrs.game.network.packet.server.builder.impl.sync.block.player
 
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.impl.TemporaryMovementSpeed
