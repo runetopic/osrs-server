@@ -27,12 +27,10 @@ class PlayerSyncTask(
         players.forEach(Player::processGroupedPackets)
         players.forEach(Player::process)
         players.forEach(PlayerUpdateBlocks::buildPendingUpdates)
-        players.forEach(::writeGPI)
+        players.forEach(Player::sendPlayerInfo)
         players.forEach(Player::reset)
         players.forEach(Player::writeAndFlush)
 
         clearUpdateBlocks()
     }
-
-    private fun writeGPI(it: Player) = it.session.write(PlayerInfoPacket(it.viewport, world.players, pendingUpdateBlocks()))
 }

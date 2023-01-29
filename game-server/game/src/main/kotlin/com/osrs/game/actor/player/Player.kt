@@ -9,8 +9,9 @@ import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.server.IfOpenTopPacket
+import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.RebuildNormalPacket
+import com.osrs.game.tick.task.player.PlayerUpdateBlocks
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -91,6 +92,8 @@ class Player(
         val limit = ((buildArea shr 3) / 2) - 1
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
+
+    fun sendPlayerInfo() = session.write(PlayerInfoPacket(viewport, world.players, PlayerUpdateBlocks.pendingUpdateBlocks()))
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
         this.appearance = renderer.appearance(appearance)

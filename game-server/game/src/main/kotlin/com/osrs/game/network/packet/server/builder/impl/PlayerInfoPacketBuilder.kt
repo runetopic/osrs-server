@@ -47,10 +47,11 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
                     continue
                 }
                 val other = players[playerIndex]
+                val pendingUpdates = other?.let { updates[it.index] }
                 val adding = viewport.shouldAdd(other)
                 writeBit(adding)
                 if (adding) {
-                    processLowDefinitionPlayer(viewport, adding, other!!, playerIndex, blocks, updates)
+                    processLowDefinitionPlayer(viewport, adding, other!!, playerIndex, blocks, pendingUpdates)
                 } else {
                     for (index in i + 1 until viewport.lowDefinitionsCount) {
                         val externalIndex = viewport.lowDefinitions[index]
@@ -74,7 +75,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         other: Player,
         index: Int,
         blocks: BytePacketBuilder,
-        updates: Array<ByteArray?>
+        updates: ByteArray?
     ) {
         if (adding) {
             // add an external player to start tracking
@@ -83,11 +84,9 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
             writeBits(13, other.location.x)
             writeBits(13, other.location.z)
 
-            val pendingUpdates = updates[index]
-
-            if (pendingUpdates != null) {
+            if (updates != null) {
                 writeBits(1, 1)
-                blocks.writeFully(pendingUpdates)
+                blocks.writeFully(updates)
             }
 
             viewport.players[other.index] = other
