@@ -50,8 +50,8 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
                 val pendingUpdates = other?.let { updates[it.index] }
                 val adding = viewport.shouldAdd(other)
                 writeBit(adding)
-                if (adding) {
-                    processLowDefinitionPlayer(viewport, adding, other!!, playerIndex, blocks, pendingUpdates)
+                if (other != null && adding) {
+                    processLowDefinitionPlayer(viewport, other, playerIndex, blocks, pendingUpdates)
                 } else {
                     for (index in i + 1 until viewport.lowDefinitionsCount) {
                         val externalIndex = viewport.lowDefinitions[index]
@@ -71,27 +71,24 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
 
     private fun BitAccess.processLowDefinitionPlayer(
         viewport: Viewport,
-        adding: Boolean,
         other: Player,
         index: Int,
         blocks: BytePacketBuilder,
         updates: ByteArray?
     ) {
-        if (adding) {
-            // add an external player to start tracking
-            writeBits(2, 0)
-            validateLocationChanges(viewport, other, index)
-            writeBits(13, other.location.x)
-            writeBits(13, other.location.z)
+        // add an external player to start tracking
+        writeBits(2, 0)
+        validateLocationChanges(viewport, other, index)
+        writeBits(13, other.location.x)
+        writeBits(13, other.location.z)
 
-            if (updates != null) {
-                writeBits(1, 1)
-                blocks.writeFully(updates)
-            }
-
-            viewport.players[other.index] = other
-            viewport.nsnFlags[index] = viewport.nsnFlags[index] or 2
+        if (updates != null) {
+            writeBits(1, 1)
+            blocks.writeFully(updates)
         }
+
+        viewport.players[other.index] = other
+        viewport.nsnFlags[index] = viewport.nsnFlags[index] or 2
     }
 
     private fun BitAccess.validateLocationChanges(
