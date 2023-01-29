@@ -1,0 +1,15 @@
+.idea/
+.gradle/
+.*
+application.conf
+main_file_cache.*
+browsercontrol_0.jar
+browsercontrol_1.jar
+gamepack.jar
+/build/
+/game-server/cache/data/
+/*/build/
+**/build/**
+/game-server/cache/build/
+interface_editor_*.jar
+xteas*.json

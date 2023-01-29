@@ -13,3 +13,5 @@ class Interfaces(
         open -= userInterface
     }
 }
+
+fun Int.packInterface(childId: Int = 0) = this shl 16 or childId

@@ -54,7 +54,7 @@ param=8=true
 param=9=ElZAIrq5NpKN6D3mDdihco3oPeYN2KFy2DCquj7JMmECPmLrDP3Bnw
 param=10=5
 param=11=https://auth.jagex.com/
-param=12=337
+param=12=420
 param=13=.runescape.com
 param=14=0
 param=15=0
