@@ -12,7 +12,6 @@ import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.builder.PacketBuilder
-import com.osrs.game.tick.task.player.PlayerUpdateBlocks
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
@@ -253,5 +252,5 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     }
 
     private fun Viewport.shouldAdd(other: Player?): Boolean = (other != null && other != player && other.location.withinDistance(player.location))
-    private fun Viewport.shouldRemove(other: Player?): Boolean = (other == null || !other.location.withinDistance(player.location))
+    private fun Viewport.shouldRemove(other: Player?): Boolean = (other == null || !other.online || !other.location.withinDistance(player.location) || !player.world.players.contains(other))
 }
