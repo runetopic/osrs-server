@@ -4,8 +4,11 @@ import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
+import com.osrs.game.actor.render.HighDefinitionRenderingBlock
+import com.osrs.game.actor.render.RenderType
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
+import com.osrs.game.actor.render.toBlock
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -15,6 +18,7 @@ import com.osrs.game.tick.task.player.PlayerUpdateBlocks
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 
 class Player(
@@ -23,7 +27,7 @@ class Player(
     var session: Session
 ) : Actor() {
     override var moveDirection: MoveDirection? = null
-    override var location: Location = Location(3162, 3490)
+    override var location: Location = Location(3208, 3224, 2)
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
     val movementQueue = MovementQueue(this)
     val viewport = Viewport(this)
@@ -32,7 +36,7 @@ class Player(
     var rights = 0
     var lastLoadedLocation: Location? = null
 
-    private val packetGroup = mutableMapOf<Int, ArrayBlockingQueue<PacketGroup>>()
+    private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
 
     fun login() {
         this.session.player = this
@@ -57,7 +61,7 @@ class Player(
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
 
-    fun addToPacketGroup(group: PacketGroup) {
+    fun addToPacketGroup(group: PacketGroup) { // u  like that
         packetGroup
             .computeIfAbsent(group.handler.groupId) { ArrayBlockingQueue<PacketGroup>(10) }
             .offer(group)
@@ -93,7 +97,14 @@ class Player(
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
 
-    fun sendPlayerInfo() = session.write(PlayerInfoPacket(viewport, world.players, PlayerUpdateBlocks.pendingUpdateBlocks()))
+    fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
+        PlayerInfoPacket(
+            viewport = viewport,
+            players = world.players,
+            highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
+            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
+        )
+    )
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
         this.appearance = renderer.appearance(appearance)

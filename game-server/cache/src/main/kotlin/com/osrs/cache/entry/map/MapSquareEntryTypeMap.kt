@@ -28,10 +28,8 @@ class MapSquareEntryTypeMap @Inject constructor(
     private val logger = InlineLogger()
 
     override fun loadTypeMap(): Map<Int, MapSquareEntry> {
-        return mapSquares
-            .toList()
+        return mapSquares.values
             .map(this::loadMapEntry)
-            .toList()
             .associateBy(MapSquareEntry::id)
     }
 
@@ -87,15 +85,11 @@ class MapSquareEntryTypeMap @Inject constructor(
         )
     }
 
-    private fun ByteBuffer.loadLocs(type: MapSquareEntry) {
-        loadLocIds(type, -1)
-    }
-
-    private tailrec fun ByteBuffer.loadLocIds(type: MapSquareEntry, locId: Int) {
+    private tailrec fun ByteBuffer.loadLocs(type: MapSquareEntry, locId: Int = -1) {
         val offset = readIncrSmallSmart()
         if (offset == 0) return
         loadLocationCollision(type, locId + offset, 0)
-        return loadLocIds(type, locId + offset)
+        return loadLocs(type, locId + offset)
     }
 
     private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int, packedLocation: Int) {

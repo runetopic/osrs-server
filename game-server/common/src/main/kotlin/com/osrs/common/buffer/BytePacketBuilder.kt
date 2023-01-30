@@ -1,7 +1,6 @@
 package com.osrs.common.buffer
 
 import io.ktor.utils.io.core.BytePacketBuilder
-import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShort
 
 inline fun buildPacket(block: BytePacketBuilder.() -> Unit): BytePacketBuilder {

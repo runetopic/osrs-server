@@ -16,8 +16,6 @@ abstract class Actor {
     var index = 0
     abstract var world: World
 
-    fun pendingUpdates() = renderer.pendingUpdates
-
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
 
     fun reset() {

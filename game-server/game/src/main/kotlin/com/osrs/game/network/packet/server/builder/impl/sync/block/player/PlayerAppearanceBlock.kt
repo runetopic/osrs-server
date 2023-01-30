@@ -49,7 +49,7 @@ class PlayerAppearanceBlock : RenderingBlock<Player, Appearance>(0, 0x4) {
         writeShort(render.transform.toShort())
     }
 
-    private fun BytePacketBuilder.writeIdentityKit(render: Appearance) = PlayerIdentityKit.values()
+    private fun BytePacketBuilder.writeIdentityKit(render: Appearance) = enumValues<PlayerIdentityKit>()
         .sortedBy { it.info.index }
         .forEach {
             it.info.build(

@@ -12,6 +12,7 @@ import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.builder.PacketBuilder
+import com.osrs.game.tick.task.player.PlayerUpdateBlocks
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
@@ -28,8 +29,8 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
 
         buffer.writeBytes(
             buildPacket {
-                repeat(2) { buffer.syncHighDefinition(packet.viewport, this, packet.playerBlockUpdates, it == 0) }
-                repeat(2) { buffer.syncLowDefinition(packet.viewport, this, packet.players, packet.playerBlockUpdates, it == 0) }
+                repeat(2) { buffer.syncHighDefinition(packet.viewport, this, packet.highDefinitionUpdates, it == 0) }
+                repeat(2) { buffer.syncLowDefinition(packet.viewport, this, packet.players, packet.lowDefinitionUpdates, it == 0) }
             }.build().readBytes()
         )
         packet.viewport.update()
@@ -214,9 +215,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     ) {
         writeBits(1, if (removing) 0 else 1)
 
-        if (!removing && updates != null) {
-            blocks.writeFully(updates)
-        }
+        if (!removing && updates != null) blocks.writeFully(updates)
 
         when {
             removing -> { // remove the player

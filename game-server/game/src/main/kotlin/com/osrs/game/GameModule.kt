@@ -3,6 +3,7 @@ package com.osrs.game
 import com.osrs.common.ui.InterfaceInfoMap
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
+import com.osrs.game.tick.task.player.PlayerUpdateBlocks
 import com.osrs.game.world.World
 import com.osrs.game.world.WorldProvider
 import com.osrs.game.world.map.CollisionMap
@@ -23,6 +24,7 @@ object GameModule : KotlinModule() {
         bind<StepValidator>().toProvider<StepValidatorProvider>().asEagerSingleton()
         bind<World>().toProvider<WorldProvider>().asEagerSingleton()
         bind<CollisionMap>().asEagerSingleton()
+        bind<PlayerUpdateBlocks>().asEagerSingleton()
         bind<GameTick>().toProvider<GameTickProvider>().asEagerSingleton()
     }
 }
