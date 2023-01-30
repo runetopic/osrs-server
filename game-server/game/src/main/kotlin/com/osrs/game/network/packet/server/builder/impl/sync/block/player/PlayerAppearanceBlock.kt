@@ -18,7 +18,6 @@ import io.ktor.utils.io.core.writeShort
 class PlayerAppearanceBlock : RenderingBlock<Player, Appearance>(0, 0x4) {
 
     override fun build(actor: Player, render: Appearance): ByteReadPacket = buildPacket {
-        println("Building appearance for ${actor.username}")
         val data = buildPacket {
             writeByte(render.gender.mask.toByte())
             writeByte(render.skullIcon.toByte())

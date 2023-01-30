@@ -2,13 +2,10 @@ package com.osrs.game.actor.player
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.MoveDirection
+import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
-import com.osrs.game.actor.render.HighDefinitionRenderingBlock
-import com.osrs.game.actor.render.RenderType
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
-import com.osrs.game.actor.render.toBlock
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -30,7 +27,7 @@ class Player(
     override var location: Location = Location(3208, 3224, 2)
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
     val movementQueue = MovementQueue(this)
-    val viewport = Viewport(this)
+    private val viewport = Viewport(this)
     val interfaces = Interfaces()
     var online = false
     var rights = 0

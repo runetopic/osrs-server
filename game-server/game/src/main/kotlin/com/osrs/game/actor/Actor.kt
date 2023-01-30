@@ -2,10 +2,9 @@ package com.osrs.game.actor
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.movement.Direction
+import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.render.ActorRenderer
 import com.osrs.game.world.World
-
-data class MoveDirection(val walkDirection: Direction?, val runDirection: Direction?)
 
 abstract class Actor {
     var isRunning = true

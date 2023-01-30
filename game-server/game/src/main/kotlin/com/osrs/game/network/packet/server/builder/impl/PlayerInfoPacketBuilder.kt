@@ -28,41 +28,62 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
 
         buffer.writeBytes(
             buildPacket {
-                repeat(2) { buffer.syncHighDefinition(packet.viewport, this, packet.highDefinitionUpdates, it == 0) }
-                repeat(2) { buffer.syncLowDefinition(packet.viewport, this, packet.players, packet.lowDefinitionUpdates, it == 0) }
+                repeat(2) {
+                    buffer.syncHighDefinition(
+                        packet.viewport,
+                        this,
+                        packet.highDefinitionUpdates,
+                        it == 0
+                    )
+                }
+                repeat(2) {
+                    buffer.syncLowDefinition(
+                        packet.viewport,
+                        this,
+                        packet.lowDefinitionUpdates,
+                        packet.players,
+                        it == 0
+                    )
+                }
             }.build().readBytes()
         )
+
         packet.viewport.update()
     }
 
-    private fun ByteBuffer.syncLowDefinition(viewport: Viewport, blocks: BytePacketBuilder, players: PlayerList, updates: Array<ByteArray?>, nsn: Boolean) {
+    private fun ByteBuffer.syncLowDefinition(
+        viewport: Viewport,
+        blocks: BytePacketBuilder,
+        updates: Array<ByteArray?>,
+        players: PlayerList,
+        nsn: Boolean
+    ) = withBitAccess {
         var skip = 0
-        withBitAccess {
-            for (i in 0 until viewport.lowDefinitionsCount) {
-                val playerIndex = viewport.lowDefinitions[i]
-                if (nsn == (0x1 and viewport.nsnFlags[playerIndex] == 0)) continue
-                if (skip > 0) {
-                    viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
-                    skip--
-                    continue
+
+        for (i in 0 until viewport.lowDefinitionsCount) {
+            val playerIndex = viewport.lowDefinitions[i]
+            if (nsn == (0x1 and viewport.nsnFlags[playerIndex] == 0)) continue
+            if (skip > 0) {
+                viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
+                skip--
+                continue
+            }
+            val other = players[playerIndex]
+            val pendingUpdates = other?.let { updates[it.index] }
+            val adding = viewport.shouldAdd(other)
+            writeBit(adding)
+            if (other != null && adding) {
+                processLowDefinitionPlayer(viewport, other, playerIndex, blocks, pendingUpdates)
+            } else {
+                for (index in i + 1 until viewport.lowDefinitionsCount) {
+                    val externalIndex = viewport.lowDefinitions[index]
+                    if (nsn == (0x1 and viewport.nsnFlags[externalIndex] == 0)) continue
+                    val externalPlayer = players[externalIndex]
+                    if (viewport.shouldAdd(externalPlayer)) break
+                    skip++
                 }
-                val other = players[playerIndex]
-                val pendingUpdates = other?.let { updates[it.index] }
-                val adding = viewport.shouldAdd(other)
-                writeBit(adding)
-                if (other != null && adding) {
-                    processLowDefinitionPlayer(viewport, other, playerIndex, blocks, pendingUpdates)
-                } else {
-                    for (index in i + 1 until viewport.lowDefinitionsCount) {
-                        val externalIndex = viewport.lowDefinitions[index]
-                        if (nsn == (0x1 and viewport.nsnFlags[externalIndex] == 0)) continue
-                        val externalPlayer = players[externalIndex]
-                        if (viewport.shouldAdd(externalPlayer)) break
-                        skip++
-                    }
-                    writeSkipCount(skip)
-                    viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
-                }
+                writeSkipCount(skip)
+                viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             }
         }
 
@@ -177,13 +198,12 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
             }
             val other = viewport.players[playerIndex]
             val removing = viewport.shouldRemove(other)
-            val moving = other?.moveDirection != null
             val pendingUpdates = other?.let { updates[it.index] }
-            val updating = pendingUpdates != null || moving
+            val updating = pendingUpdates != null || other?.moveDirection != null
             val active = removing || updating
             writeBit(active)
             if (active) {
-                processHighDefinitionPlayer(viewport, blocks, other, playerIndex, removing, moving, pendingUpdates)
+                processHighDefinitionPlayer(viewport, blocks, other, playerIndex, removing, pendingUpdates)
             } else {
                 for (index in i + 1 until viewport.highDefinitionsCount) {
                     val localIndex = viewport.highDefinitions[index]
@@ -209,12 +229,13 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         other: Player?,
         index: Int,
         removing: Boolean,
-        moving: Boolean,
         updates: ByteArray?
     ) {
         writeBits(1, if (removing) 0 else 1)
 
         if (!removing && updates != null) blocks.writeFully(updates)
+
+        val moveDirection = other?.moveDirection
 
         when {
             removing -> { // remove the player
@@ -224,15 +245,15 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
                 validateLocationChanges(viewport, other, index)
                 viewport.players[index] = null
             }
-            moving -> {
-                var dx = Direction.DIRECTION_DELTA_X[other!!.moveDirection!!.walkDirection!!.opcode]
-                var dz = Direction.DIRECTION_DELTA_Z[other.moveDirection!!.walkDirection!!.opcode]
+            moveDirection != null -> {
+                var dx = Direction.DIRECTION_DELTA_X[moveDirection.walkDirection!!.opcode]
+                var dz = Direction.DIRECTION_DELTA_Z[moveDirection.walkDirection.opcode]
                 var running = other.moveDirection!!.runDirection != null
                 var direction = 0
 
                 if (running) {
-                    dx += Direction.DIRECTION_DELTA_X[other.moveDirection!!.runDirection!!.opcode]
-                    dz += Direction.DIRECTION_DELTA_Z[other.moveDirection!!.runDirection!!.opcode]
+                    dx += Direction.DIRECTION_DELTA_X[moveDirection.runDirection!!.opcode]
+                    dz += Direction.DIRECTION_DELTA_Z[moveDirection.runDirection.opcode]
                     direction = Direction.getPlayerRunningDirection(dx, dz)
                     running = direction != -1
                 }
