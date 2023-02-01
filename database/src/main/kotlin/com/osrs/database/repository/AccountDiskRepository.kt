@@ -54,7 +54,7 @@ class AccountDiskRepository @Inject constructor(
     }
 
     override fun createAccount(account: Account): Account {
-        val path = Path.of("${playersPath}/$${account.username}.json")
+        val path = Path.of("${playersPath}/${account.username}.json")
         json.encodeToStream(account, path.outputStream())
         return account
     }
