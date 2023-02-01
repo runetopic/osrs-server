@@ -13,3 +13,5 @@ gamepack.jar
 /game-server/cache/build/
 interface_editor_*.jar
 xteas*.json
+./players/*
+/players/

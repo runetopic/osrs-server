@@ -1,4 +1,4 @@
-package com.osrs.http.api.account.response
+package com.osrs.database.dto
 
 import kotlinx.serialization.Serializable
 

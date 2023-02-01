@@ -1,4 +1,4 @@
-package com.osrs.database.account.serializer
+package com.osrs.database.serializer
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer

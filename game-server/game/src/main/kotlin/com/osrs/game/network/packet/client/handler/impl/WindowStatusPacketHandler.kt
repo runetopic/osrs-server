@@ -71,9 +71,5 @@ class WindowStatusPacketHandler @Inject constructor(
     }
 
     private fun Int.enumChildForLayout(layout: InterfaceLayout): Int =
-        enums[layout.enumId]
-            ?.params
-            ?.entries
-            ?.find { it.key == InterfaceLayout.RESIZABLE.interfaceId.packInterface(this) }
-            ?.value as Int and 0xffff
+        (enums[layout.enumId]?.params?.get(InterfaceLayout.RESIZABLE.interfaceId.packInterface(this)) as? Int)?.and(0xffff) ?: 0
 }

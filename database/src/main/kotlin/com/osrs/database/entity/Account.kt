@@ -1,10 +1,10 @@
-package com.osrs.database.account
+package com.osrs.database.entity
 
 import com.osrs.common.map.location.Location
 import com.osrs.common.skill.Skills
-import com.osrs.database.account.serializer.InstantSerializer
-import com.osrs.database.account.serializer.LocationSerializer
-import com.osrs.database.account.serializer.SkillsSerializer
+import com.osrs.database.serializer.InstantSerializer
+import com.osrs.database.serializer.LocationSerializer
+import com.osrs.database.serializer.SkillsSerializer
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id

@@ -12,7 +12,7 @@ import com.osrs.common.buffer.readStringCp1252NullTerminated
 import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
-import com.osrs.database.account.AccountService
+import com.osrs.database.service.AccountService
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE

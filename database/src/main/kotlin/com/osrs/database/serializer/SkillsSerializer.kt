@@ -1,4 +1,4 @@
-package com.osrs.database.account.serializer
+package com.osrs.database.serializer
 
 import com.osrs.common.skill.Skill
 import com.osrs.common.skill.Skills

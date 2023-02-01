@@ -1,4 +1,4 @@
-package com.osrs.game.tick.task.player
+package com.osrs.game.network.packet.server.builder.impl.sync.block.player
 
 import com.google.inject.Singleton
 import com.osrs.common.buffer.writeBytes

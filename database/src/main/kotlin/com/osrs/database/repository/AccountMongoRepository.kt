@@ -1,9 +1,10 @@
-package com.osrs.database.account
+package com.osrs.database.repository
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.mongodb.client.MongoClient
 import com.osrs.common.map.location.Location
+import com.osrs.database.entity.Account
 import org.litote.kmongo.ensureUniqueIndex
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
@@ -11,11 +12,11 @@ import org.litote.kmongo.getCollection
 import org.mindrot.jbcrypt.BCrypt
 
 @Singleton
-class AccountService @Inject constructor(
+class AccountMongoRepository @Inject constructor(
     mongoClient: MongoClient
-) {
-    private val database = mongoClient.getDatabase("api")
-    private val collection = database.getCollection<Account>("account")
+) : AccountRepository {
+
+    private val collection = mongoClient.getDatabase("api").getCollection<Account>("account")
 
     init {
         with(collection) {
@@ -36,24 +37,11 @@ class AccountService @Inject constructor(
         }
     }
 
-    fun createAccount(username: String, email: String, password: String): Account? {
-        if (collection.findOne(Account::username eq username) != null) return null
+    override fun findAccountByUsername(username: String): Account? = collection.findOne(Account::username eq username)
 
-        val account = Account(
-            username = username,
-            rights = 0,
-            email = email,
-            password = BCrypt.hashpw(password, BCrypt.gensalt(12)),
-            location = Location.Default
-        )
-
-        if (collection.insertOne(account).insertedId == null) throw InternalError("Failed to create account.")
-
+    override fun createAccount(account: Account): Account {
+        val created = collection.insertOne(account)
+        if (created.insertedId == null) throw InternalError("Failed to create the user in the database. Username: ${account.username}")
         return account
-    }
-
-    fun validateCredentials(username: String, password: String): Boolean {
-        val account = collection.findOne(Account::username eq username) ?: return false
-        return BCrypt.checkpw(password, account.password)
     }
 }

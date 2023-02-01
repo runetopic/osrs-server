@@ -9,7 +9,13 @@ import org.litote.kmongo.KMongo
 
 @Singleton
 class MongoClientProvider @Inject constructor(
-    private val environment: ApplicationEnvironment
-) : Provider<MongoClient> {
-    override fun get(): MongoClient = KMongo.createClient(environment.config.property("mongo.connection").getString())
+    environment: ApplicationEnvironment
+) : Provider<MongoClient?> {
+    private val connectionString = environment.config.propertyOrNull("mongo.connection")?.getString() ?: ""
+    private val isLocal = environment.config.property("game.local").getString().toBoolean()
+
+    override fun get(): MongoClient? {
+        if (isLocal || connectionString.isEmpty()) return null
+        return KMongo.createClient(connectionString)
+    }
 }

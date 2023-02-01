@@ -3,14 +3,14 @@ package com.osrs.game.tick
 import com.github.michaelbull.logging.InlineLogger
 import com.osrs.game.tick.task.SyncTask
 import com.osrs.game.tick.task.player.PlayerSyncTask
-import com.osrs.game.tick.task.player.PlayerUpdateBlocks
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.PlayerUpdateBlocks
 import com.osrs.game.tick.task.world.WorldSyncTask
 import com.osrs.game.world.World
 import kotlin.system.measureTimeMillis
 
 class GameTick(
     private val world: World,
-    private val playerUpdateBlocks: PlayerUpdateBlocks
+    playerUpdateBlocks: PlayerUpdateBlocks
 ) : Runnable {
     private val logger = InlineLogger()
     private var tick = 0

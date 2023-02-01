@@ -11,7 +11,7 @@ import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.server.PlayerInfoPacket
 import com.osrs.game.network.packet.server.RebuildNormalPacket
-import com.osrs.game.tick.task.player.PlayerUpdateBlocks
+import com.osrs.game.network.packet.server.builder.impl.sync.block.player.PlayerUpdateBlocks
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -58,7 +58,7 @@ class Player(
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
 
-    fun addToPacketGroup(group: PacketGroup) { // u  like that
+    fun addToPacketGroup(group: PacketGroup) {
         packetGroup
             .computeIfAbsent(group.handler.groupId) { ArrayBlockingQueue<PacketGroup>(10) }
             .offer(group)

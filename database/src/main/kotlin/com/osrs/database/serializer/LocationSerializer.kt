@@ -1,4 +1,4 @@
-package com.osrs.database.account.serializer
+package com.osrs.database.serializer
 
 import com.osrs.common.map.location.Location
 import kotlinx.serialization.KSerializer
