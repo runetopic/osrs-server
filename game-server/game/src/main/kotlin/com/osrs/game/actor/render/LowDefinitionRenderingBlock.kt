@@ -1,7 +1,7 @@
 package com.osrs.game.actor.render
 
 import com.osrs.game.actor.Actor
-import com.osrs.game.network.packet.server.builder.impl.sync.block.RenderingBlock
+import com.osrs.game.network.packet.builder.impl.sync.block.RenderingBlock
 
 data class LowDefinitionRenderingBlock<T : Actor, R : RenderType>(
     val renderType: RenderType,

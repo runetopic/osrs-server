@@ -28,8 +28,10 @@ class AccountService @Inject constructor(
         )
     }
 
-    fun validateCredentials(username: String, password: String): Boolean {
-        val account = accountRepository.findAccountByUsername(username) ?: return false
+    fun findAccountByUsername(username: String): Account? = accountRepository.findAccountByUsername(username)
+
+    fun validateAccount(account: Account, password: String): Boolean {
+        // TODO: Can add a validation response, depending on if the account has been banned etc.
         return BCrypt.checkpw(password, account.password)
     }
 }

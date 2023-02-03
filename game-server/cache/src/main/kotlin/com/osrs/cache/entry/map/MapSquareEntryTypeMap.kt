@@ -28,6 +28,7 @@ class MapSquareEntryTypeMap @Inject constructor(
     private val logger = InlineLogger()
 
     override fun loadTypeMap(): Map<Int, MapSquareEntry> {
+        logger.info { "Loading map entries" }
         return mapSquares.values
             .map(this::loadMapEntry)
             .associateBy(MapSquareEntry::id)

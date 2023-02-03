@@ -9,7 +9,8 @@ import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec
 import com.osrs.game.network.codec.impl.HandshakeCodec
 import com.osrs.game.network.packet.Packet
-import com.osrs.game.network.packet.server.builder.PacketBuilder
+import com.osrs.game.network.packet.builder.PacketBuilder
+import com.osrs.game.world.World
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
@@ -27,6 +28,7 @@ import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
 class Session(
+    private val world: World,
     private val socket: Socket,
     private val codecs: Set<CodecChannelHandler>,
     private val builders: Map<KClass<*>, PacketBuilder<Packet>>
@@ -134,9 +136,8 @@ class Session(
     fun seed() = seed
 
     fun disconnect(reason: String) {
-        if (this.codec?.instanceOf(GameCodec::class) == true) {
-            player?.world?.requestLogout(this, player!!)
-        }
+        val isGameCodec = this.codec?.instanceOf(GameCodec::class) ?: false
+        if (isGameCodec) player?.let { world.requestLogout(it) }
         writeChannel.close()
         socket.close()
         logger.info { "Session has been disconnected for reason={$reason}." }

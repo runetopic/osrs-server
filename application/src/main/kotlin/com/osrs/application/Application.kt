@@ -14,14 +14,19 @@ object Application {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val injector = Guice.createInjector(ApplicationModule(args))
-        val time = measureTimeMillis {
-            injector.getInstance<Cache>().load()
-            injector.getInstance<Game>().start()
-            injector.getInstance<World>().start()
-        }
+        try {
+            val injector = Guice.createInjector(ApplicationModule(args))
 
-        logger.info { "Application took $time to fully spin up." }
-        injector.getInstance<Network>().bind()
+            val time = measureTimeMillis {
+                injector.getInstance<Cache>().load()
+                injector.getInstance<Game>().start()
+                injector.getInstance<World>().start()
+            }
+
+            logger.info { "Application took $time to fully spin up." }
+            injector.getInstance<Network>().bind()
+        } catch (exception: Exception) {
+            logger.error(exception) { "There was an error starting up the server: "}
+        }
     }
 }

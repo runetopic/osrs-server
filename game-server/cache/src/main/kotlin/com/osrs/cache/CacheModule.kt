@@ -9,9 +9,10 @@ import dev.misfitlabs.kotlinguice4.KotlinModule
 object CacheModule : KotlinModule() {
     override fun configure() {
         bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
-        bind<MapSquareEntryTypeMap>().asEagerSingleton()
-        bind<LocationEntryProvider>().asEagerSingleton()
-        bind<EnumTypeProvider>().asEagerSingleton()
+
+        requestInjection(MapSquareEntryTypeMap::class.java)
+        requestInjection(LocationEntryProvider::class.java)
+        requestInjection(EnumTypeProvider::class.java)
     }
 
     // Indexes.

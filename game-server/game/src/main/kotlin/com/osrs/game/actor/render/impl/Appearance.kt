@@ -1,8 +1,8 @@
 package com.osrs.game.actor.render.impl
 
 import com.osrs.game.actor.render.RenderType
-import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPart
-import com.osrs.game.network.packet.server.builder.impl.sync.block.player.kit.BodyPartColor
+import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPart
+import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPartColor
 import java.util.*
 
 data class Appearance(

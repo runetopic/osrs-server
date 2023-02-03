@@ -46,6 +46,8 @@ allprojects {
         implementation("io.ktor:ktor-server-netty:2.2.1")
         // Kotlin-guice
         implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
+        // https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
+        implementation("com.google.inject.extensions:guice-assistedinject:5.1.0")
         // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
         implementation("org.litote.kmongo:kmongo-id-serialization:4.8.0")

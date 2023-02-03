@@ -22,7 +22,7 @@ class AccountDiskRepository @Inject constructor(
     environment: ApplicationEnvironment,
     private val json: Json,
 ): AccountRepository {
-    private val playersPath = environment.config.property("game.configuration.players").getString()
+    private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./players/"
 
     private val logger = InlineLogger()
 
@@ -41,7 +41,7 @@ class AccountDiskRepository @Inject constructor(
     }
 
     override fun findAccountByUsername(username: String): Account? {
-        val path = Path.of("${playersPath}/$username.json")
+        val path = Path.of("${playerSaveDirectory}/$username.json")
 
         if (!path.exists()) return null
 
@@ -54,7 +54,7 @@ class AccountDiskRepository @Inject constructor(
     }
 
     override fun createAccount(account: Account): Account {
-        val path = Path.of("${playersPath}/${account.username}.json")
+        val path = Path.of("${playerSaveDirectory}/${account.username}.json")
         json.encodeToStream(account, path.outputStream())
         return account
     }

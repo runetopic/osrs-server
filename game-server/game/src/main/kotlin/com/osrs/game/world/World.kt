@@ -48,12 +48,12 @@ data class World(
         logoutRequest.clear()
     }
 
-    fun requestLogin(session: Session, player: Player) {
-        this.loginRequests[player] = session
+    fun requestLogin(player: Player) {
+        this.loginRequests[player] = player.session
     }
 
-    fun requestLogout(session: Session, player: Player) {
-        this.logoutRequest[player] = session
+    fun requestLogout(player: Player) {
+        this.logoutRequest[player] = player.session
     }
 
     companion object {

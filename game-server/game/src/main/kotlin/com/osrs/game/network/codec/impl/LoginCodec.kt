@@ -13,7 +13,7 @@ import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
 import com.osrs.database.service.AccountService
-import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.player.factory.PlayerFactory
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_RECONNECTING_OPCODE
@@ -35,7 +35,8 @@ class LoginCodec @Inject constructor(
     private val cache: Cache,
     environment: ApplicationEnvironment,
     val world: World,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val playerFactory: PlayerFactory
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -151,14 +152,15 @@ class LoginCodec @Inject constructor(
                 session.setIsaacCiphers(clientKeys.toISAAC(), serverKeys.toISAAC())
                 logger.info { "Finished decoding login for $username. Display type: $displayType Canvas width: $canvasWidth Canvas height: $canvasHeight" }
 
-                if (opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateCredentials(username, password)) {
+                val account = accountService.findAccountByUsername(username)
+
+                if (account == null || opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateAccount(account, password)) {
                     session.writeAndFlush(INVALID_USERNAME_PASSWORD_OPCODE)
                     session.disconnect("Invalid user credentials. Disconnecting client")
                     return
                 }
 
-                val player = Player(username, world, session) // TODO load account profiles from the database
-                world.requestLogin(session, player)
+                world.requestLogin(playerFactory.buildPlayer(account, session))
                 session.writeAndFlush(LOGIN_SUCCESS_OPCODE)
                 session.setCodec(GameCodec::class)
             }

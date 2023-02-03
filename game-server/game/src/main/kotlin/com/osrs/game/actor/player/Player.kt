@@ -9,9 +9,9 @@ import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.server.PlayerInfoPacket
-import com.osrs.game.network.packet.server.RebuildNormalPacket
-import com.osrs.game.network.packet.server.builder.impl.sync.block.player.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.type.server.PlayerInfoPacket
+import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -19,19 +19,26 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 
 class Player(
+    override var location: Location = Location.None,
     val username: String,
     override var world: World,
-    var session: Session
+    var session: Session,
 ) : Actor() {
-    override var moveDirection: MoveDirection? = null
-    override var location: Location = Location(3208, 3224, 2)
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
-    val movementQueue = MovementQueue(this)
-    private val viewport = Viewport(this)
-    val interfaces = Interfaces()
-    var online = false
-    var rights = 0
+
+    lateinit var interfaces: Interfaces
+
     var lastLoadedLocation: Location? = null
+
+    val movementQueue = MovementQueue(this)
+
+    override var moveDirection: MoveDirection? = null
+
+    var online = false
+
+    var rights = 0
+
+    private val viewport = Viewport(this)
 
     private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
 
@@ -64,6 +71,12 @@ class Player(
             .offer(group)
     }
 
+    fun process() {
+        movementQueue.process()
+
+        if (shouldRebuildMap()) loadMapRegion(false)
+    }
+
     fun processGroupedPackets() {
         for (handler in packetGroup) {
             val queue = handler.value
@@ -75,12 +88,6 @@ class Player(
 
             queue.clear()
         }
-    }
-
-    fun process() {
-        movementQueue.process()
-
-        if (shouldRebuildMap()) loadMapRegion(false)
     }
 
     private fun shouldRebuildMap(buildArea: Int = 104): Boolean {

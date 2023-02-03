@@ -9,10 +9,10 @@ import com.runetopic.cache.hierarchy.index.Index
 import com.runetopic.cache.store.Js5Store
 
 class Cache @Inject constructor(
-    private val store: Js5Store,
-    private val maps: MapSquareEntryTypeMap,
-    private val locations: LocationEntryProvider,
-    private val enums: EnumTypeProvider
+    val store: Js5Store,
+    val maps: MapSquareEntryTypeMap,
+    val locations: LocationEntryProvider,
+    val enums: EnumTypeProvider
 ) {
     val checksums = store.checksumsWithoutRSA()
     val crcs = IntArray(store.validIndexCount()) { store.index(it).crc }

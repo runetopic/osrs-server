@@ -8,8 +8,8 @@ import com.osrs.game.network.Session
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.client.handler.PacketHandler
-import com.osrs.game.network.packet.client.reader.PacketReader
+import com.osrs.game.network.packet.handler.PacketHandler
+import com.osrs.game.network.packet.reader.PacketReader
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
 
 class GameCodec @Inject constructor(
     environment: ApplicationEnvironment,
-    private val packetReaders: Set<PacketReader<Packet>>,
+    packetReaders: Set<PacketReader<Packet>>,
     private val packetHandlers: Map<KClass<*>, PacketHandler<Packet>>
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
