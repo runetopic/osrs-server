@@ -71,6 +71,11 @@ class Session(
     }
 
     fun write(packet: Packet) {
+        player ?: return run {
+            disconnect("Cannot write packet for a session that does not have a player set yet.")
+            return@run
+        }
+
         val builder = builders[packet::class] ?: return
 
         if (builder.opcode > Byte.MAX_VALUE) writePool.writeByte(128 + serverCipher.getNext())
@@ -99,15 +104,19 @@ class Session(
             disconnect("Cannot write login response for a session that does not have a player set yet.")
             return@run
         }
-        writePool.writeByte(29)
+        val start = writePool.position()
+        writePool.position(start + 1)
         writePool.writeByte(0)
         writePool.writeInt(0)
         writePool.writeByte(player.rights)
         writePool.writeByte(if (player.rights > 0) 1 else 0)
         writePool.writeShort(player.index)
         writePool.writeByte(0)
-        writePool.putLong(seed())
-        writePool.putLong(0) // Player UUID.
+        writePool.putLong(seed()) // Player UUID.
+        val end = writePool.position()
+        writePool.position(start)
+        writePool.writeByte(end - start)
+        writePool.position(end)
     }
 
     suspend fun writeAndFlush(opcode: Int) {

@@ -4,8 +4,8 @@ import com.google.inject.Singleton
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
-import com.osrs.game.ui.GameInterfaces.gameFrame
 import com.osrs.game.ui.InterfaceLayout
+import com.osrs.game.ui.UserInterface.Companion.GameInterfaces
 
 @Singleton
 class WindowStatusPacketHandler : PacketHandler<WindowStatusPacket>() {
@@ -16,7 +16,7 @@ class WindowStatusPacketHandler : PacketHandler<WindowStatusPacket>() {
             player.interfaces.layout = layout
         } else {
             player.interfaces.sendInterfaceLayout(layout)
-            gameFrame.forEach { player.interfaces += it }
+            GameInterfaces.forEach { player.interfaces += it }
         }
     }
 }

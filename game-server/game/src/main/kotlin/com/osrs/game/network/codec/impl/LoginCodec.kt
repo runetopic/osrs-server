@@ -13,7 +13,7 @@ import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
 import com.osrs.database.service.AccountService
-import com.osrs.game.actor.player.factory.PlayerFactory
+import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_RECONNECTING_OPCODE
@@ -36,7 +36,6 @@ class LoginCodec @Inject constructor(
     environment: ApplicationEnvironment,
     val world: World,
     private val accountService: AccountService,
-    private val playerFactory: PlayerFactory
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -84,7 +83,12 @@ class LoginCodec @Inject constructor(
                     return
                 }
 
-                val rsaBlock = ByteBuffer.wrap(BigInteger(rsaBuffer).modPow(BigInteger(rsaExponent, 16), BigInteger(rsaModulus, 16)).toByteArray())
+                val rsaBlock = ByteBuffer.wrap(
+                    BigInteger(rsaBuffer).modPow(
+                        BigInteger(rsaExponent, 16),
+                        BigInteger(rsaModulus, 16)
+                    ).toByteArray()
+                )
 
                 if (rsaBlock.get().toInt() != 1) {
                     session.writeAndFlush(BAD_SESSION_OPCODE)
@@ -154,13 +158,24 @@ class LoginCodec @Inject constructor(
 
                 val account = accountService.findAccountByUsername(username)
 
-                if (account == null || opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateAccount(account, password)) {
+                if (account == null || opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateAccount(
+                        account,
+                        password
+                    )
+                ) {
                     session.writeAndFlush(INVALID_USERNAME_PASSWORD_OPCODE)
                     session.disconnect("Invalid user credentials. Disconnecting client")
                     return
                 }
 
-                world.requestLogin(playerFactory.buildPlayer(account, session))
+                world.requestLogin(
+                    Player(
+                        location = account.location,
+                        username = account.username,
+                        world = world,
+                        session = session,
+                    )
+                )
                 session.writeAndFlush(LOGIN_SUCCESS_OPCODE)
                 session.setCodec(GameCodec::class)
             }

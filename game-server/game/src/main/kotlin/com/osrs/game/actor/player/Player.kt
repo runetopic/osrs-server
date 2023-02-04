@@ -42,12 +42,16 @@ class Player(
 
     private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
 
-    fun login() {
+    fun initialize(interfaces: Interfaces) {
         this.session.player = this
         this.lastLocation = location
+        this.interfaces = interfaces
+        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
+    }
+
+    fun login() {
         session.writeLoginResponse()
         loadMapRegion(true)
-        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
         refreshAppearance()
         online = true
     }

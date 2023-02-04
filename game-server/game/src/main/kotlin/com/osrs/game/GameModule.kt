@@ -1,8 +1,7 @@
 package com.osrs.game
 
 import com.osrs.common.ui.InterfaceInfoMap
-import com.osrs.game.actor.player.factory.PlayerFactory
-import com.osrs.game.actor.player.factory.PlayerFactoryImplementation
+import com.osrs.game.world.service.LoginService
 import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
@@ -27,7 +26,7 @@ object GameModule : KotlinModule() {
         bind<World>().toProvider<WorldProvider>().asEagerSingleton()
         bind<CollisionMap>().asEagerSingleton()
         bind<PlayerUpdateBlocks>().asEagerSingleton()
-        bind<PlayerFactory>().to<PlayerFactoryImplementation>().asEagerSingleton()
+        bind<LoginService>().asEagerSingleton()
         bind<GameTick>().toProvider<GameTickProvider>().asEagerSingleton()
     }
 }

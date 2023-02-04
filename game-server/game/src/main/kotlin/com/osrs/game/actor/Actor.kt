@@ -22,4 +22,6 @@ abstract class Actor {
         moveDirection = null
         lastLocation = location
     }
+
+
 }

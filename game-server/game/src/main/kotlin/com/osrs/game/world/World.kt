@@ -6,12 +6,14 @@ import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.world.map.CollisionMap
+import com.osrs.game.world.service.LoginService
 import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.ConcurrentHashMap
 
 data class World(
     val worldId: Int,
     val cache: Cache,
+    val loginService: LoginService,
     val maps: MapSquareEntryTypeMap,
     val collisionMap: CollisionMap,
     val stepValidator: StepValidator
@@ -33,7 +35,7 @@ data class World(
 
         loginRequests.entries.take(50).onEach {
             players.add(it.key)
-            it.key.login()
+            loginService.login(it.key)
         }.also(loginRequests.entries::removeAll)
     }
 
