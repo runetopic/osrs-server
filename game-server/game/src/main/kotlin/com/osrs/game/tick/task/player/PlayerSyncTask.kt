@@ -1,7 +1,7 @@
 package com.osrs.game.tick.task.player
 
 import com.osrs.game.actor.player.Player
-import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.tick.task.SyncTask
 import com.osrs.game.world.World
 

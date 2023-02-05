@@ -1,14 +1,14 @@
-package com.osrs.game.network.packet.builder.impl.sync.block.player
+package com.osrs.game.network.packet.builder.impl.sync.player.appearance
 
 import com.osrs.common.buffer.writeByteSubtract
 import com.osrs.common.buffer.writeReversed
 import com.osrs.common.buffer.writeStringCp1252NullTerminated
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.impl.Appearance
-import com.osrs.game.network.packet.builder.impl.sync.block.RenderingBlock
-import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPartColor
-import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.BodyPartCompanion
-import com.osrs.game.network.packet.builder.impl.sync.block.player.kit.PlayerIdentityKit
+import com.osrs.game.network.packet.builder.impl.sync.RenderingBlock
+import com.osrs.game.network.packet.builder.impl.sync.player.appearance.kit.BodyPartColor
+import com.osrs.game.network.packet.builder.impl.sync.player.appearance.kit.BodyPartCompanion
+import com.osrs.game.network.packet.builder.impl.sync.player.appearance.kit.PlayerIdentityKit
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket

@@ -1,8 +1,8 @@
-package com.osrs.game.network.packet.builder.impl.sync.block.player
+package com.osrs.game.network.packet.builder.impl.sync.player
 
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.impl.MovementSpeed
-import com.osrs.game.network.packet.builder.impl.sync.block.RenderingBlock
+import com.osrs.game.network.packet.builder.impl.sync.RenderingBlock
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 

@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.builder.impl.sync.block
+package com.osrs.game.network.packet.builder.impl.sync
 
 import com.google.inject.Singleton
 import com.osrs.common.buffer.writeBytes

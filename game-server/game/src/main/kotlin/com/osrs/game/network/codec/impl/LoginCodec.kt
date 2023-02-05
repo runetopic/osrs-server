@@ -172,6 +172,7 @@ class LoginCodec @Inject constructor(
                     Player(
                         location = account.location,
                         username = account.username,
+                        skills = account.skills,
                         world = world,
                         session = session,
                     )

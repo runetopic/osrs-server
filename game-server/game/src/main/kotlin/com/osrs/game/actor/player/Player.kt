@@ -1,6 +1,8 @@
 package com.osrs.game.actor.player
 
 import com.osrs.common.map.location.Location
+import com.osrs.common.skill.Skill
+import com.osrs.common.skill.Skills
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
@@ -9,10 +11,11 @@ import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
@@ -24,6 +27,7 @@ class Player(
     override var location: Location = Location.None,
     val username: String,
     override var world: World,
+    val skills: Skills,
     var session: Session,
 ) : Actor() {
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
@@ -55,6 +59,7 @@ class Player(
         session.writeLoginResponse()
         loadMapRegion(true)
         refreshAppearance()
+        updateStats()
         online = true
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
@@ -108,6 +113,16 @@ class Player(
         val limit = ((buildArea shr 3) / 2) - 1
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
+
+    private fun updateStats() {
+        Skill.values().forEach {
+            val level = skills.level(it)
+            val experience = skills.xp(it)
+            updateStat(it, level, experience)
+        }
+    }
+
+    fun updateStat(skill: Skill, level: Int, experience: Double) = write(UpdateStatPacket(skill.id, level, experience))
 
     fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
         PlayerInfoPacket(

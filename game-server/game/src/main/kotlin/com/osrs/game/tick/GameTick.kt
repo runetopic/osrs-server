@@ -1,7 +1,7 @@
 package com.osrs.game.tick
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.tick.task.SyncTask
 import com.osrs.game.tick.task.player.PlayerSyncTask
 import com.osrs.game.tick.task.world.WorldSyncTask

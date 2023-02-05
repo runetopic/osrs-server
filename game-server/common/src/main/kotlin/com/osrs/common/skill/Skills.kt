@@ -27,7 +27,7 @@ class Skills(
     }
 
     companion object {
-        fun defaultLevelsAndExperience(): Pair<IntArray, DoubleArray> {
+        private fun defaultLevelsAndExperience(): Pair<IntArray, DoubleArray> {
             val defaultExperience = getXpForLevel(DEFAULT_LEVEL)
 
             val levels = IntArray(MAX_SKILLS)

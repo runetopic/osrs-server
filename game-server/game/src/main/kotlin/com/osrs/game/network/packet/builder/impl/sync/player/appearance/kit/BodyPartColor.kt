@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.builder.impl.sync.block.player.kit
+package com.osrs.game.network.packet.builder.impl.sync.player.appearance.kit
 
 enum class BodyPartColor(val id: Int) {
     HAIR(0),

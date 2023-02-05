@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.builder.impl.sync.block.player.kit
+package com.osrs.game.network.packet.builder.impl.sync.player.appearance.kit
 
 import com.osrs.game.actor.render.impl.Appearance
 import io.ktor.utils.io.core.BytePacketBuilder

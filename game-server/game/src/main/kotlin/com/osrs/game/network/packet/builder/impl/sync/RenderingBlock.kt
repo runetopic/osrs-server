@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.builder.impl.sync.block
+package com.osrs.game.network.packet.builder.impl.sync
 
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.render.RenderType
