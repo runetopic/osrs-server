@@ -3,9 +3,9 @@ package com.osrs.http.api.account
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.database.account.AccountService
-import com.osrs.http.api.account.request.CreateAccountRequest
-import com.osrs.http.api.account.response.CreateAccountResponse
+import com.osrs.database.service.AccountService
+import com.osrs.database.dto.CreateAccountRequest
+import com.osrs.database.dto.CreateAccountResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -28,7 +28,7 @@ class AccountAPIRouting @Inject constructor(
                 logger.info { "Creating account with request $request" }
 
                 try {
-                    accountService.createAccount(request.username, request.email, request.password) ?: return@post call.response.status(HttpStatusCode.Conflict)
+                    accountService.createAccount(request) ?: return@post call.response.status(HttpStatusCode.Conflict)
                     call.respond(
                         status = HttpStatusCode.Created,
                         CreateAccountResponse(

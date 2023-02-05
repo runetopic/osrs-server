@@ -6,7 +6,7 @@ import com.osrs.common.buffer.withBitAccess
 import java.nio.ByteBuffer
 
 class Viewport(
-    private val player: Player
+    val player: Player
 ) {
     val nsnFlags = IntArray(MAX_PLAYERS)
     val locations = IntArray(MAX_PLAYERS)

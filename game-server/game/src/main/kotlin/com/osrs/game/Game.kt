@@ -6,7 +6,6 @@ import com.osrs.game.tick.GameTick
 class Game @Inject constructor(
     private val gameTick: GameTick
 ) {
-
     fun start() {
     }
 }

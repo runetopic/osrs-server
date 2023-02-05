@@ -11,6 +11,7 @@ suspend fun ByteReadChannel.readUShort() = readShort().toInt() and 0xffff
 suspend fun ByteReadChannel.readUMedium() = (readUByte() shl 16) or readUShort()
 
 suspend fun ByteReadChannel.readUShortLittleEndian() = readUByte() or (readUByte() shl 8)
+suspend fun ByteReadChannel.readUShortLittleEndianAdd() = readUByteAdd() or (readUByte() shl 8)
 suspend fun ByteReadChannel.readUShortAdd() = (readUByte() shl 8) or readUByteAdd()
 
 suspend fun ByteReadChannel.readIntLittleEndian() = readUShortLittleEndian() or (readUByte() shl 16) or (readUByte() shl 24)

@@ -1,18 +1,22 @@
 package com.osrs.game.world
 
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.map.MapSquareEntryProvider
+import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.world.map.CollisionMap
+import com.osrs.game.world.service.LoginService
+import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.ConcurrentHashMap
 
 data class World(
     val worldId: Int,
     val cache: Cache,
-    val maps: MapSquareEntryProvider,
-    val collisionMap: CollisionMap
+    val loginService: LoginService,
+    val maps: MapSquareTypeProvider,
+    val collisionMap: CollisionMap,
+    val stepValidator: StepValidator
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
@@ -22,16 +26,15 @@ data class World(
     var isOnline = false
 
     fun start() {
-        isOnline = true
         maps.forEach(collisionMap::applyCollision)
     }
 
     fun processLoginRequest() {
         if (!isOnline) return
 
-        loginRequests.entries.take(150).onEach {
+        loginRequests.entries.take(50).onEach {
             players.add(it.key)
-            it.key.login(this)
+            loginService.login(it.key)
         }.also(loginRequests.entries::removeAll)
     }
 
@@ -46,12 +49,12 @@ data class World(
         logoutRequest.clear()
     }
 
-    fun requestLogin(session: Session, player: Player) {
-        this.loginRequests[player] = session
+    fun requestLogin(player: Player) {
+        this.loginRequests[player] = player.session
     }
 
-    fun requestLogout(session: Session, player: Player) {
-        this.logoutRequest[player] = session
+    fun requestLogout(player: Player) {
+        this.logoutRequest[player] = player.session
     }
 
     companion object {

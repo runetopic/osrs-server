@@ -2,7 +2,7 @@ package com.osrs.application
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Guice
-import com.osrs.cache.Cache
+import com.google.inject.Injector
 import com.osrs.game.Game
 import com.osrs.game.network.Network
 import com.osrs.game.world.World
@@ -14,14 +14,18 @@ object Application {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val injector = Guice.createInjector(ApplicationModule(args))
-        val time = measureTimeMillis {
-            injector.getInstance<Cache>().load()
-            injector.getInstance<Game>().start()
-            injector.getInstance<World>().start()
-        }
+        try {
+            var injector: Injector
 
-        logger.info { "Application took $time to fully spin up." }
-        injector.getInstance<Network>().bind()
+            val time = measureTimeMillis {
+                injector = Guice.createInjector(ApplicationModule(args))
+                injector.getInstance<Game>().start()
+                injector.getInstance<World>().start()
+            }
+
+            injector.getInstance<Network>().bind(time)
+        } catch (exception: Exception) {
+            logger.error(exception) { "There was an error starting up the server: "}
+        }
     }
 }

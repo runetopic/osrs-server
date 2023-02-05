@@ -10,7 +10,9 @@ import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.transform
+import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.Zones
+import org.rsmod.pathfinder.StepValidator
 import org.rsmod.pathfinder.ZoneFlags
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR_DECORATION
@@ -46,8 +48,11 @@ import org.rsmod.pathfinder.flag.CollisionFlag.WALL_WEST_ROUTE_BLOCKER
 class CollisionMap @Inject constructor(
     private val locations: LocationEntryProvider,
     private val zoneFlags: ZoneFlags,
-    private val zones: Zones
+    private val zones: Zones,
+    private val stepValidator: StepValidator
 ) {
+    fun canTravel(location: Location, direction: Direction): Boolean =
+        stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, 0)
 
     fun applyCollision(type: MapSquareEntry) {
         for (level in 0 until LEVELS) {
@@ -119,7 +124,14 @@ class CollisionMap @Inject constructor(
                     width = entry.height
                     length = entry.width
                 }
-                changeNormalCollision(location, width, length, blockProjectile, !breakRouteFinding, add)
+                changeNormalCollision(
+                    location,
+                    width,
+                    length,
+                    blockProjectile,
+                    !breakRouteFinding,
+                    add
+                )
             }
             shape in GameObjectShape.GROUND_DECOR_SHAPES && interactType == 1 -> changeFloorDecor(location, add)
         }

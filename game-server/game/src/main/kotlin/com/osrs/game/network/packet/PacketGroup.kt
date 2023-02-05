@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet
 
-import com.osrs.game.network.packet.client.handler.PacketHandler
+import com.osrs.game.network.packet.handler.PacketHandler
 
 class PacketGroup(
     val packet: Packet,

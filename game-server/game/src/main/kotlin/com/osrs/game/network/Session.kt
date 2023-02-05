@@ -9,6 +9,7 @@ import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec
 import com.osrs.game.network.codec.impl.HandshakeCodec
 import com.osrs.game.network.packet.Packet
+import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.network.sockets.Socket
@@ -27,10 +28,10 @@ import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
 class Session(
+    private val world: World,
     private val socket: Socket,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, com.osrs.game.network.packet.server.builder.PacketBuilder<Packet>>,
-    private val world: World
+    private val builders: Map<KClass<*>, PacketBuilder<Packet>>
 ) {
     private val logger = InlineLogger()
 
@@ -70,6 +71,11 @@ class Session(
     }
 
     fun write(packet: Packet) {
+        player ?: return run {
+            disconnect("Cannot write packet for a session that does not have a player set yet.")
+            return@run
+        }
+
         val builder = builders[packet::class] ?: return
 
         if (builder.opcode > Byte.MAX_VALUE) writePool.writeByte(128 + serverCipher.getNext())
@@ -98,15 +104,19 @@ class Session(
             disconnect("Cannot write login response for a session that does not have a player set yet.")
             return@run
         }
-        writePool.writeByte(29)
+        val start = writePool.position()
+        writePool.position(start + 1)
         writePool.writeByte(0)
         writePool.writeInt(0)
         writePool.writeByte(player.rights)
         writePool.writeByte(if (player.rights > 0) 1 else 0)
         writePool.writeShort(player.index)
         writePool.writeByte(0)
-        writePool.putLong(seed())
-        writePool.putLong(0) // Player UUID.
+        writePool.putLong(seed()) // Player UUID.
+        val end = writePool.position()
+        writePool.position(start)
+        writePool.writeByte(end - start)
+        writePool.position(end)
     }
 
     suspend fun writeAndFlush(opcode: Int) {
@@ -135,9 +145,8 @@ class Session(
     fun seed() = seed
 
     fun disconnect(reason: String) {
-        if (this.codec?.instanceOf(GameCodec::class) == true) {
-            player?.world?.requestLogout(this, player!!)
-        }
+        val isGameCodec = this.codec?.instanceOf(GameCodec::class) ?: false
+        if (isGameCodec) player?.let { world.requestLogout(it) }
         writeChannel.close()
         socket.close()
         logger.info { "Session has been disconnected for reason={$reason}." }

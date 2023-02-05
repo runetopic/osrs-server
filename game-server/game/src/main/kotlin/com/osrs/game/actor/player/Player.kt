@@ -2,49 +2,62 @@ package com.osrs.game.actor.player
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.MoveDirection
+import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.network.Session
+import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.server.IfOpenTopPacket
-import com.osrs.game.network.packet.server.RebuildNormalPacket
+import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.type.server.MessageGamePacket
+import com.osrs.game.network.packet.type.server.PlayerInfoPacket
+import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.VarpSmallPacket
+import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 
 class Player(
+    override var location: Location = Location.None,
     val username: String,
-    var world: World,
-    var session: Session
+    override var world: World,
+    var session: Session,
 ) : Actor() {
-    override var moveDirection: MoveDirection? = null
-    override var location: Location = Location(3222 + Random().nextInt(2), 3222 + Random().nextInt(2))
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
-    val viewport = Viewport(this)
-    var online = false
-    var rights = 0
+
+    lateinit var interfaces: Interfaces
+
     var lastLoadedLocation: Location? = null
+
     val movementQueue = MovementQueue(this)
 
-    private val packetGroup = mutableMapOf<Int, ArrayBlockingQueue<PacketGroup>>()
+    override var moveDirection: MoveDirection? = null
 
-    fun login(world: World) {
+    var online = false
+
+    var rights = 0
+
+    private val viewport = Viewport(this)
+
+    private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
+
+    fun initialize(interfaces: Interfaces) {
         this.session.player = this
-        this.world = world
         this.lastLocation = location
+        this.interfaces = interfaces
+        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
+    }
+
+    fun login() {
         session.writeLoginResponse()
         loadMapRegion(true)
-        session.write(
-            IfOpenTopPacket(
-                161
-            )
-        )
-        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
         refreshAppearance()
         online = true
+        session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
+        session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
     }
 
     private fun loadMapRegion(initialize: Boolean) {
@@ -66,6 +79,12 @@ class Player(
             .offer(group)
     }
 
+    fun process() {
+        movementQueue.process()
+
+        if (shouldRebuildMap()) loadMapRegion(false)
+    }
+
     fun processGroupedPackets() {
         for (handler in packetGroup) {
             val queue = handler.value
@@ -79,12 +98,6 @@ class Player(
         }
     }
 
-    fun process() {
-        movementQueue.process()
-
-        if (shouldRebuildMap()) loadMapRegion(false)
-    }
-
     private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
         if (lastLoadedLocation == null || lastLoadedLocation == location) return false
 
@@ -96,6 +109,15 @@ class Player(
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
 
+    fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
+        PlayerInfoPacket(
+            viewport = viewport,
+            players = world.players,
+            highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
+            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
+        )
+    )
+
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
         this.appearance = renderer.appearance(appearance)
         return this.appearance
@@ -103,5 +125,9 @@ class Player(
 
     fun logout() {
         online = false
+    }
+
+    fun write(packet: Packet) {
+        session.write(packet)
     }
 }

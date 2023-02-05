@@ -2,7 +2,6 @@ package com.osrs.game.actor.movement
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.MoveDirection
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import org.rsmod.pathfinder.Route
 import org.rsmod.pathfinder.RouteCoordinates
@@ -18,17 +17,12 @@ class MovementQueue(
     fun process() {
         appendNextStep(actor.location)
 
-        var nextWalkStep = poll()
-
-        if (nextWalkStep == null) {
-            clear()
-            return
-        }
+        var nextWalkStep = poll() ?: return
 
         val walkDirection: Direction = Direction.to(actor.location, nextWalkStep)
         var runDirection: Direction? = null
 
-        if (walkDirection == Direction.NONE) {
+        if (walkDirection == Direction.NONE || !actor.canTravel(actor.location, walkDirection)) {
             clear()
             return
         }
@@ -44,14 +38,20 @@ class MovementQueue(
             }
 
             runDirection = Direction.to(location, nextWalkStep)
-            location = nextWalkStep
-        }
 
-        moveTo(location, MoveDirection(walkDirection, runDirection))
+            if (!actor.canTravel(location, runDirection)) {
+                clear()
+                runDirection = null
+            } else {
+                location = nextWalkStep
+            }
+        }
 
         if (runDirection != null) {
             actor.renderer.temporaryMovementSpeed(MovementSpeedType.RUN)
         }
+
+        moveTo(location, MoveDirection(walkDirection, runDirection))
     }
 
     private fun moveTo(
@@ -77,7 +77,7 @@ class MovementQueue(
         while (curX != destX || curY != destY) {
             curX += xSign
             curY += ySign
-            add(Location(curX, curY))
+            add(Location(curX, curY, location.level))
             if (++count > MAX_TURNS) break
         }
     }

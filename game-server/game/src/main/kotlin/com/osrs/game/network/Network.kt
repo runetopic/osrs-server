@@ -4,7 +4,7 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.packet.Packet
-import com.osrs.game.network.packet.server.builder.PacketBuilder
+import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
 import io.ktor.network.sockets.ServerSocket
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -19,9 +19,9 @@ import kotlin.reflect.KClass
 
 class Network @Inject constructor(
     private val server: ServerSocket,
+    private val world: World,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
-    private val world: World
+    private val builders: Map<KClass<*>, PacketBuilder<Packet>>
 ) {
     private val logger = InlineLogger()
 
@@ -31,11 +31,12 @@ class Network @Inject constructor(
         }
     )
 
-    fun bind() = runBlocking {
-        logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
+    fun bind(launchTimeInMS: Long) = runBlocking {
+        logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections. Server took ${launchTimeInMS}ms to launch." }
+        world.isOnline = true
         with(scope) {
             while (this.isActive) {
-                val session = Session(server.accept(), codecs, builders, world)
+                val session = Session(world, server.accept(), codecs, builders)
                 launch(Dispatchers.IO) { session.connect() }
             }
         }
