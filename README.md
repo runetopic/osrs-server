@@ -20,7 +20,6 @@ The server is broken up into multiple modules to make things easier to manage an
 - [game-server](/game-server) (This is used to hold all of the core game related code and submodules.)
 - [http-server](/http-server) (This is used to setup an HTTP server to serve the OSRS client the static files. For example: jav_config.ws and latest gamepack.jar)
 
-
 # Getting Started
 
 ### Client setup
@@ -29,7 +28,8 @@ The server is broken up into multiple modules to make things easier to manage an
 
 ### MongoDB Setup (Optional if local flag in ApplicationConfig is enabled)
 - This project has support for mongoDB for account creation and verification as well as local disk storage. 
-- If you're working on local development, and need to work offline, you may set the ```game.local``` flag to true in the ```application.conf``` Please setup either a cloud instance, or a local instance. I will be providing this via docker in the future, but this is a manual process for now.
+- If you're working on local development, and need to work offline, you may set the ```game.local``` flag to true in the ```application.conf``` 
+- Please setup either a cloud instance, or a local instance. I will be providing this via docker in the future, but this is a manual process for now.
 - Create a database called ```api``` and a collection called ```account``` if they do not get created automatically.
 - Upon start of the server, an admin account will be created for you:
   - *Credentials: (Username=admin, password=password)*
