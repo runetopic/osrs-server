@@ -23,9 +23,20 @@ object Application {
                 injector.getInstance<World>().start()
             }
 
+            addShutDownHook(injector)
+
             injector.getInstance<Network>().bind(time)
         } catch (exception: Exception) {
             logger.error(exception) { "There was an error starting up the server: "}
         }
+    }
+
+    private fun addShutDownHook(injector: Injector) {
+        Runtime.getRuntime().addShutdownHook(
+            Thread {
+                logger.info { "Gracefully shutting down the server." }
+                injector.getInstance<Network>().shutdown()
+            }
+        )
     }
 }

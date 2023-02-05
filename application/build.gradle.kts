@@ -1,12 +1,5 @@
 plugins {
     kotlin("jvm")
-    application
-}
-
-application {
-    mainClass.set("com.osrs.application.Application")
-    applicationDefaultJvmArgs = listOf("-XX:+UseZGC")
-    tasks.run.get().workingDir = rootProject.projectDir
 }
 
 dependencies {

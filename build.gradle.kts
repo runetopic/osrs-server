@@ -42,8 +42,10 @@ allprojects {
         implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.4")
         implementation("org.slf4j:slf4j-simple:2.0.5")
         // Ktor
-        implementation("io.ktor:ktor-server-core:2.2.1")
-        implementation("io.ktor:ktor-server-netty:2.2.1")
+        // https://mvnrepository.com/artifact/io.ktor/ktor-server-core
+        runtimeOnly("io.ktor:ktor-server-core:2.2.3")
+        // https://mvnrepository.com/artifact/io.ktor/ktor-server-netty
+        implementation("io.ktor:ktor-server-netty:2.2.3")
         // Kotlin-guice
         implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
         // Kotlin-guice assisted inject https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject

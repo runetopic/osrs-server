@@ -6,12 +6,14 @@ import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
+import io.ktor.http.parseServerSetCookieHeader
 import io.ktor.network.sockets.ServerSocket
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -40,5 +42,11 @@ class Network @Inject constructor(
                 launch(Dispatchers.IO) { session.connect() }
             }
         }
+    }
+
+    fun shutdown() {
+        world.isOnline = false
+        server.close()
+        logger.info { "Network has been shutdown." }
     }
 }

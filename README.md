@@ -1,8 +1,8 @@
 # OSRS-Server
 
-Revision 210.4 OSRS server written in Kotlin.
+Revision 210.7 OSRS server written in Kotlin.
 
-<a href="#"><img src="https://img.shields.io/badge/Build:%20-210.4-blue.svg"/></a>
+<a href="#"><img src="https://img.shields.io/badge/Build:%20-210.7-blue.svg"/></a>
 [![Discord](https://img.shields.io/discord/212385463418355713?color=%237289DA&logo=Discord&logoColor=%237289DA)](https://discord.gg/3scgBkrfMG)
 [![wakatime](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89.svg)](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89)
 <a href="#"><img src="https://img.shields.io/badge/Powered%20by-Kotlin%201.8.0-blue.svg"/></a>
@@ -27,8 +27,9 @@ The server is broken up into multiple modules to make things easier to manage an
 
 - Download the [OpenOSRS](https://github.com/runetopic/openosrs/tree/localhost) client from our runetopic organization. This branch is configured to connect to the server  automatically.
 
-### MongoDB Setup
-- This project requires mongoDB for account creation and verification. Please setup either a cloud instance, or a local instance. I will be providing this via docker in the future, but this is a manual process for now.
+### MongoDB Setup (Optional if local flag in ApplicationConfig is enabled)
+- This project has support for mongoDB for account creation and verification as well as local disk storage. 
+- If you're working on local development, and need to work offline, you may set the ```game.local``` flag to true in the ```application.conf``` Please setup either a cloud instance, or a local instance. I will be providing this via docker in the future, but this is a manual process for now.
 - Create a database called ```api``` and a collection called ```account``` if they do not get created automatically.
 - Upon start of the server, an admin account will be created for you:
   - *Credentials: (Username=admin, password=password)*
@@ -47,6 +48,7 @@ _This project uses ktor for the networking, therefore the application is powered
   }
 
   game {
+      local = true
       benchmarking = false
       cores = 4
       build {
@@ -69,16 +71,13 @@ _This project uses ktor for the networking, therefore the application is powered
           xteas = "/map/xteas210.json"
       }
   }
-
-  network {
-      port = 43594
-  }
-
+  
   mongo {
       connection = "mongodb://username:password@ip:port"
   }
   ```
-- Update the connection string for mongo using the following format: ```mongodb://username:password@ip:port```
+- _**The mongo configuration is optional if the ```local``` flag is true**_
+- **_Update the connection string for mongo using the following format:_** ```mongodb://username:password@ip:port```This is also recommend injecting from an environment variable - checkout [Ktor Environment Variables](https://ktor.io/docs/configuration-file.html#environment-variables) for more information
 
 ### Server configuration (Required upon intial setup and revision upgrades)
 - Download the supported revision cache (.dat2 format) and map keys (.json format) from [OpenRS2](https://archive.openrs2.org/caches).
