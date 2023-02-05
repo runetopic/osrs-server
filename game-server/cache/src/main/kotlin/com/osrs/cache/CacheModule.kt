@@ -2,17 +2,22 @@ package com.osrs.cache
 
 import com.osrs.cache.entry.config.enum.EnumTypeProvider
 import com.osrs.cache.entry.config.location.LocationEntryProvider
-import com.osrs.cache.entry.map.MapSquareEntryTypeMap
+import com.osrs.cache.entry.config.varbit.VarBitEntryProvider
+import com.osrs.cache.entry.config.varp.VarpEntryProvider
+import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.runetopic.cache.store.Js5Store
 import dev.misfitlabs.kotlinguice4.KotlinModule
 
 object CacheModule : KotlinModule() {
-    override fun configure() {
-        bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
 
-        requestInjection(MapSquareEntryTypeMap::class.java)
-        requestInjection(LocationEntryProvider::class.java)
-        requestInjection(EnumTypeProvider::class.java)
+    override fun configure() {
+        bind<Cache>().asEagerSingleton()
+        bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
+        bind<MapSquareTypeProvider>().asEagerSingleton()
+        bind<LocationEntryProvider>().asEagerSingleton()
+        bind<EnumTypeProvider>().asEagerSingleton()
+        bind<VarBitEntryProvider>().asEagerSingleton()
+        bind<VarpEntryProvider>().asEagerSingleton()
     }
 
     // Indexes.

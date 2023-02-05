@@ -30,7 +30,7 @@ class AccountMongoRepository @Inject constructor(
                         rights = 2,
                         email = "admin@xlitersps.com",
                         password = BCrypt.hashpw("password", BCrypt.gensalt(12)),
-                        location = Location(3222, 3222, 0)
+                        location = Location.Default
                     )
                 )
             }

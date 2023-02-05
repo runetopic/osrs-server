@@ -6,6 +6,8 @@ import com.osrs.game.network.packet.builder.impl.IfOpenSubPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
+import com.osrs.game.network.packet.builder.impl.VarpLargePacketBuilder
+import com.osrs.game.network.packet.builder.impl.VarpSmallPacketBuilder
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.handler.impl.IdlePacketHandler
 import com.osrs.game.network.packet.handler.impl.MovementPacketHandler
@@ -21,6 +23,8 @@ import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.VarpLargePacket
+import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import dev.misfitlabs.kotlinguice4.multibindings.KotlinMapBinder
 import dev.misfitlabs.kotlinguice4.multibindings.KotlinMultibinder
@@ -35,6 +39,8 @@ object PacketModule : KotlinModule() {
         builders.addBinding(IfOpenTopPacket::class).to<IfOpenTopPacketBuilder>().asEagerSingleton()
         builders.addBinding(PlayerInfoPacket::class).to<PlayerInfoPacketBuilder>().asEagerSingleton()
         builders.addBinding(IfOpenSubPacket::class).to<IfOpenSubPacketBuilder>().asEagerSingleton()
+        builders.addBinding(VarpLargePacket::class).to<VarpLargePacketBuilder>().asEagerSingleton()
+        builders.addBinding(VarpSmallPacket::class).to<VarpSmallPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
         readers.addBinding().to<MovementPacketReader>().asEagerSingleton()

@@ -31,8 +31,9 @@ class Network @Inject constructor(
         }
     )
 
-    fun bind() = runBlocking {
-        logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections." }
+    fun bind(launchTimeInMS: Long) = runBlocking {
+        logger.info { "Server is now accepting connections on ${server.localAddress} and listening for incoming connections. Server took ${launchTimeInMS}ms to launch." }
+        world.isOnline = true
         with(scope) {
             while (this.isActive) {
                 val session = Session(world, server.accept(), codecs, builders)

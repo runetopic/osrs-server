@@ -3,8 +3,9 @@ package com.osrs.cache.entry.map
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.MAP_INDEX
-import com.osrs.cache.entry.EntryTypeMapProvider
+import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
@@ -16,23 +17,17 @@ import com.osrs.common.buffer.readUShortSmart
 import com.osrs.common.map.MapSquare
 import com.osrs.common.map.MapSquares
 import com.runetopic.cache.codec.decompress
-import com.runetopic.cache.store.Js5Store
 import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
 @Singleton
-class MapSquareEntryTypeMap @Inject constructor(
-    private val store: Js5Store,
+class MapSquareTypeProvider @Inject constructor(
+    private val cache: Cache,
     private val mapSquares: MapSquares
-) : EntryTypeMapProvider<MapSquareEntry>() {
+) : EntryTypeProvider<MapSquareEntry>() {
     private val logger = InlineLogger()
 
-    override fun loadTypeMap(): Map<Int, MapSquareEntry> {
-        logger.info { "Loading map entries" }
-        return mapSquares.values
-            .map(this::loadMapEntry)
-            .associateBy(MapSquareEntry::id)
-    }
+    override fun loadTypeMap(): Map<Int, MapSquareEntry> = mapSquares.values.map(this::loadMapEntry).associateBy(MapSquareEntry::id)
 
     private fun loadMapEntry(square: MapSquare): MapSquareEntry {
         val entry = MapSquareEntry(square.id)
@@ -42,7 +37,7 @@ class MapSquareEntryTypeMap @Inject constructor(
             return entry
         }
 
-        val mapIndex = store.index(MAP_INDEX)
+        val mapIndex = cache.index(MAP_INDEX)
         val terrain = mapIndex.group("m${entry.regionX}_${entry.regionZ}")
         val terrainData = ByteBuffer.wrap(terrain.data.decompress())
 

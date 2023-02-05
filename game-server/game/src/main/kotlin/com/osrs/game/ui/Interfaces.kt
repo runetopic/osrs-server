@@ -34,7 +34,7 @@ class Interfaces constructor(
             IfOpenSubPacket(
                 interfaceId = info.id,
                 toInterface = layout.interfaceId.packInterface(childId),
-                clickThrough = !info.isModal()
+                isModal = info.isModal()
             )
         )
     }

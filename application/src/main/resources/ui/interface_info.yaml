@@ -52,6 +52,9 @@
 - id: 541
   name: prayer
   resizableChildId: 80
+- id: 558
+  name: select_display_name
+  resizableChildId: 16
 - id: 593
   name: combat_options
   resizableChildId: 75

@@ -25,6 +25,7 @@ sealed class UserInterface (
     object UnknownOverlay : UserInterface("unknown_overlay")
     object ChatChannel : UserInterface("chat_channel")
     object AdvancedSettings : UserInterface("advanced_settings")
+    object SelectDisplayName : UserInterface("select_display_name")
 
     companion object {
         val GameInterfaces = setOf(

@@ -1,6 +1,6 @@
 package com.osrs.cache.entry
 
-abstract class EntryTypeMapProvider<T> : Iterable<T> {
+abstract class EntryTypeProvider<T> : Iterable<T> {
     private val data by lazy(::loadTypeMap)
 
     override fun iterator(): Iterator<T> = data.values.iterator()

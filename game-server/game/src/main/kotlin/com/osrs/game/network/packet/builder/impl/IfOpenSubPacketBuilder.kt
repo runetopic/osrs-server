@@ -15,7 +15,7 @@ class IfOpenSubPacketBuilder : PacketBuilder<IfOpenSubPacket>(
 ) {
     override fun build(packet: IfOpenSubPacket, buffer: ByteBuffer) {
         buffer.writeIntLittleEndian(packet.toInterface)
-        buffer.writeByteNegate(if (packet.clickThrough) 1 else 0)
+        buffer.writeByteNegate(if (!packet.isModal) 1 else 0)
         buffer.writeShort(packet.interfaceId)
     }
 }

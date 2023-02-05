@@ -2,9 +2,10 @@ package com.osrs.cache.entry.config.location
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.LOC_CONFIG
-import com.osrs.cache.entry.EntryTypeMapProvider
+import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.common.buffer.discard
 import com.osrs.common.buffer.readByte
 import com.osrs.common.buffer.readInt
@@ -13,22 +14,19 @@ import com.osrs.common.buffer.readStringCp1252NullTerminated
 import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
-import com.runetopic.cache.store.Js5Store
 import java.nio.ByteBuffer
 
 @Singleton
 class LocationEntryProvider @Inject constructor(
-    private val store: Js5Store
-) : EntryTypeMapProvider<LocationEntry>() {
+    private val cache: Cache
+) : EntryTypeProvider<LocationEntry>() {
 
-    override fun loadTypeMap(): Map<Int, LocationEntry> {
-        return store
-            .index(CONFIG_INDEX)
-            .group(LOC_CONFIG)
-            .files()
-            .map { ByteBuffer.wrap(it.data).loadEntryType(LocationEntry(it.id)) }
-            .associateBy(LocationEntry::id)
-    }
+    override fun loadTypeMap(): Map<Int, LocationEntry> = cache
+        .index(CONFIG_INDEX)
+        .group(LOC_CONFIG)
+        .files()
+        .map { ByteBuffer.wrap(it.data).loadEntryType(LocationEntry(it.id)) }
+        .associateBy(LocationEntry::id)
 
     private tailrec fun ByteBuffer.loadEntryType(type: LocationEntry): LocationEntry {
         when (val opcode = readUByte()) {

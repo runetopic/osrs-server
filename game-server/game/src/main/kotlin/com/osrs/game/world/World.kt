@@ -1,7 +1,7 @@
 package com.osrs.game.world
 
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.map.MapSquareEntryTypeMap
+import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
@@ -14,7 +14,7 @@ data class World(
     val worldId: Int,
     val cache: Cache,
     val loginService: LoginService,
-    val maps: MapSquareEntryTypeMap,
+    val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
     val stepValidator: StepValidator
 ) {
@@ -26,7 +26,6 @@ data class World(
     var isOnline = false
 
     fun start() {
-        isOnline = true
         maps.forEach(collisionMap::applyCollision)
     }
 

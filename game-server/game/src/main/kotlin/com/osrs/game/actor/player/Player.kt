@@ -12,6 +12,7 @@ import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -54,6 +55,7 @@ class Player(
         loadMapRegion(true)
         refreshAppearance()
         online = true
+        session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
     }
 
     private fun loadMapRegion(initialize: Boolean) {
