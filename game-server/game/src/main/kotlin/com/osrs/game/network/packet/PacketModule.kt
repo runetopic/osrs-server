@@ -12,13 +12,16 @@ import com.osrs.game.network.packet.builder.impl.VarpSmallPacketBuilder
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.handler.impl.IdlePacketHandler
 import com.osrs.game.network.packet.handler.impl.MovementPacketHandler
+import com.osrs.game.network.packet.handler.impl.NoTimeoutPacketHandler
 import com.osrs.game.network.packet.handler.impl.WindowStatusPacketHandler
 import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.reader.impl.IdlePacketReader
 import com.osrs.game.network.packet.reader.impl.MovementPacketReader
+import com.osrs.game.network.packet.reader.impl.NoTimeoutPacketReader
 import com.osrs.game.network.packet.reader.impl.WindowStatusPacketReader
 import com.osrs.game.network.packet.type.client.IdlePacket
 import com.osrs.game.network.packet.type.client.MovementPacket
+import com.osrs.game.network.packet.type.client.NoTimeoutPacket
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
@@ -49,11 +52,13 @@ object PacketModule : KotlinModule() {
         readers.addBinding().to<MovementPacketReader>().asEagerSingleton()
         readers.addBinding().to<IdlePacketReader>().asEagerSingleton()
         readers.addBinding().to<WindowStatusPacketReader>().asEagerSingleton()
+        readers.addBinding().to<NoTimeoutPacketReader>().asEagerSingleton()
 
         val handlers = KotlinMapBinder.newMapBinder<KClass<*>, PacketHandler<Packet>>(kotlinBinder)
 
         handlers.addBinding(MovementPacket::class).to<MovementPacketHandler>().asEagerSingleton()
         handlers.addBinding(IdlePacket::class).to<IdlePacketHandler>().asEagerSingleton()
         handlers.addBinding(WindowStatusPacket::class).to<WindowStatusPacketHandler>().asEagerSingleton()
+        handlers.addBinding(NoTimeoutPacket::class).to<NoTimeoutPacketHandler>().asEagerSingleton()
     }
 }
