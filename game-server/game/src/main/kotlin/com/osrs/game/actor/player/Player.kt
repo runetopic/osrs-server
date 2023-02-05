@@ -10,6 +10,7 @@ import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.builder.impl.sync.block.PlayerUpdateBlocks
+import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
@@ -56,6 +57,7 @@ class Player(
         refreshAppearance()
         online = true
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
+        session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
     }
 
     private fun loadMapRegion(initialize: Boolean) {
