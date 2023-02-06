@@ -8,6 +8,7 @@ import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
 import com.osrs.game.network.packet.builder.impl.MessageGamePacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
+import com.osrs.game.network.packet.builder.impl.UpdateRunEnergyPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateStatPacketBuilder
 import com.osrs.game.network.packet.builder.impl.VarpLargePacketBuilder
 import com.osrs.game.network.packet.builder.impl.VarpSmallPacketBuilder
@@ -32,6 +33,7 @@ import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.VarpLargePacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
@@ -53,6 +55,7 @@ object PacketModule : KotlinModule() {
         builders.addBinding(VarpSmallPacket::class).to<VarpSmallPacketBuilder>().asEagerSingleton()
         builders.addBinding(MessageGamePacket::class).to<MessageGamePacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateStatPacket::class).to<UpdateStatPacketBuilder>().asEagerSingleton()
+        builders.addBinding(UpdateRunEnergyPacket::class).to<UpdateRunEnergyPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
         readers.addBinding().to<MoveGamePacketReader>().asEagerSingleton()

@@ -8,6 +8,7 @@ import com.osrs.game.world.World
 
 abstract class Actor {
     var isRunning = true
+    var runEnergy: Float = 10_000f
     abstract var moveDirection: MoveDirection?
     val renderer = ActorRenderer()
     abstract var location: Location

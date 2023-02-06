@@ -15,6 +15,7 @@ import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.Interfaces
@@ -60,6 +61,7 @@ class Player(
         loadMapRegion(true)
         refreshAppearance()
         updateStats()
+        updateRunEnergy(runEnergy.toInt())
         online = true
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
@@ -123,6 +125,8 @@ class Player(
     }
 
     fun updateStat(skill: Skill, level: Int, experience: Double) = write(UpdateStatPacket(skill.id, level, experience))
+
+    fun updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy / 100))
 
     fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
         PlayerInfoPacket(
