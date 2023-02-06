@@ -112,6 +112,6 @@ _This project uses ktor for the networking, therefore the application is powered
 - Run the application!
 
 ### Media
-![Test](https://i.gyazo.com/391d3bf234502ce27fa58728bb74e935.jpg)
+![Test](https://cdn.discordapp.com/attachments/214495198745591810/1071618048370409513/e10fc1d930aa7a10505db2b08b009ef8.png)
 
 If you need help, have any questions, or just wanna chat, feel free to join our [discord!](https://discord.gg/3scgBkrfMG)
