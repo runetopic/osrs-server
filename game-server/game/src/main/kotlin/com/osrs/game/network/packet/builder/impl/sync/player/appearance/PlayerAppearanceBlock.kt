@@ -1,7 +1,7 @@
 package com.osrs.game.network.packet.builder.impl.sync.player.appearance
 
-import com.osrs.common.buffer.writeByteSubtract
-import com.osrs.common.buffer.writeReversed
+import com.osrs.common.buffer.writeByteAdd
+import com.osrs.common.buffer.writeReversedAdd
 import com.osrs.common.buffer.writeStringCp1252NullTerminated
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.impl.Appearance
@@ -33,8 +33,8 @@ class PlayerAppearanceBlock : RenderingBlock<Player, Appearance>(0, 0x4) {
             repeat(3) { writeStringCp1252NullTerminated("") }
             writeByte(0)
         }
-        writeByteSubtract(data.remaining.toByte())
-        writeReversed(data.readBytes())
+        writeByteAdd(data.remaining.toByte())
+        writeReversedAdd(data.readBytes())
     }
 
     private fun BytePacketBuilder.writeAnimations(render: Appearance) = if (render.transform == -1) {

@@ -14,7 +14,7 @@ import com.osrs.common.buffer.readUShort
 import java.nio.ByteBuffer
 
 @Singleton
-class EnumTypeProvider @Inject constructor(
+class EnumEntryProvider @Inject constructor(
     private val cache: Cache
 ) : EntryTypeProvider<EnumEntry>() {
     override fun loadTypeMap(): Map<Int, EnumEntry> = cache

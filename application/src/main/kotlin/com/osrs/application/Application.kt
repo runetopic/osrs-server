@@ -3,6 +3,7 @@ package com.osrs.application
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Guice
 import com.google.inject.Injector
+import com.osrs.cache.entry.config.obj.ObjEntryProvider
 import com.osrs.game.Game
 import com.osrs.game.network.Network
 import com.osrs.game.world.World
@@ -24,7 +25,7 @@ object Application {
             }
 
             addShutDownHook(injector)
-
+            logger.info { "Loaded ${injector.getInstance<ObjEntryProvider>().size} objs." }
             injector.getInstance<Network>().bind(time)
         } catch (exception: Exception) {
             logger.error(exception) { "There was an error starting up the server: "}

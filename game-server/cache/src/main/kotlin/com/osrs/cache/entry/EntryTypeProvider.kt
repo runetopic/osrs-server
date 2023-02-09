@@ -1,15 +1,31 @@
 package com.osrs.cache.entry
 
+import com.osrs.common.buffer.readInt
+import com.osrs.common.buffer.readStringCp1252NullTerminated
+import com.osrs.common.buffer.readUByte
+import com.osrs.common.buffer.readUMedium
+import java.nio.ByteBuffer
+
 abstract class EntryTypeProvider<T> : Iterable<T> {
-    private val data by lazy(::loadTypeMap)
+    internal val data by lazy(::loadTypeMap)
+    internal val data2 get() = data
 
     override fun iterator(): Iterator<T> = data.values.iterator()
 
     fun contains(key: Int): Boolean = data.containsKey(key)
 
-    operator fun get(key: Int): T? = data[key]
+    operator fun get(key: Int): T? = data2[key]
 
     abstract fun loadTypeMap(): Map<Int, T>
+
+    internal open fun postLoadEntryType() {}
+
+    protected fun ByteBuffer.readStringIntParameters(): Map<Int, Any> = buildMap {
+        repeat(readUByte()) {
+            val usingString = readUByte() == 1
+            put(readUMedium(), if (usingString) readStringCp1252NullTerminated() else readInt())
+        }
+    }
 
     val size get() = data.size
 }

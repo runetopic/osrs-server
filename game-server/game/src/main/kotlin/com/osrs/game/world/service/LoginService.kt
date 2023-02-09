@@ -2,19 +2,23 @@ package com.osrs.game.world.service
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.cache.entry.config.enum.EnumTypeProvider
+import com.osrs.cache.entry.config.enum.EnumEntryProvider
+import com.osrs.cache.entry.config.obj.ObjEntryProvider
 import com.osrs.common.ui.InterfaceInfoMap
 import com.osrs.game.actor.player.Player
+import com.osrs.game.container.Inventory
 import com.osrs.game.ui.Interfaces
 
 @Singleton
 class LoginService @Inject constructor(
     private val interfaceInfoMap: InterfaceInfoMap,
-    private val enums: EnumTypeProvider
+    private val enumEntryProvider: EnumEntryProvider,
+    private val objEntryProvider: ObjEntryProvider,
 ) {
     fun login(player: Player) {
         player.initialize(
-            interfaces = Interfaces(player, interfaceInfoMap, enums)
+            interfaces = Interfaces(player, interfaceInfoMap, enumEntryProvider),
+            inventory = Inventory(player, objEntryProvider)
         )
         player.login()
     }

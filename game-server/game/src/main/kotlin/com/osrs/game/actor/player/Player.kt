@@ -8,6 +8,7 @@ import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
+import com.osrs.game.container.Inventory
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -18,6 +19,7 @@ import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
+import com.osrs.game.ui.InterfaceLayout.RESIZABLE
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -34,6 +36,7 @@ class Player(
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
 
     lateinit var interfaces: Interfaces
+    lateinit var inventory: Inventory
 
     var lastLoadedLocation: Location? = null
 
@@ -49,10 +52,14 @@ class Player(
 
     private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
 
-    fun initialize(interfaces: Interfaces) {
+    fun initialize(
+        interfaces: Interfaces,
+        inventory: Inventory
+    ) {
         this.session.player = this
         this.lastLocation = location
         this.interfaces = interfaces
+        this.inventory = inventory
         renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
     }
 
@@ -62,9 +69,11 @@ class Player(
         refreshAppearance()
         updateStats()
         updateRunEnergy(runEnergy.toInt())
-        online = true
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
+        inventory.sendInventory()
+        this.interfaces.sendInterfaceLayout(RESIZABLE)
+        online = true
     }
 
     private fun loadMapRegion(initialize: Boolean) {

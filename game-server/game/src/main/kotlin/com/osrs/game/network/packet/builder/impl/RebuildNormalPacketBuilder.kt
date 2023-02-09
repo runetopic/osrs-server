@@ -15,7 +15,7 @@ import java.nio.ByteBuffer
 class RebuildNormalPacketBuilder @Inject constructor(
     private val mapSquares: MapSquares
 ) : PacketBuilder<RebuildNormalPacket>(
-    opcode = 103,
+    opcode = 0,
     size = -2
 ) {
     override fun build(packet: RebuildNormalPacket, buffer: ByteBuffer) {

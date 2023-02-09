@@ -20,6 +20,12 @@ fun BytePacketBuilder.writeReversed(bytes: ByteArray) {
     }
 }
 
+fun BytePacketBuilder.writeReversedAdd(bytes: ByteArray) {
+    for (i in bytes.indices.reversed()) {
+        writeByteAdd(bytes[i])
+    }
+}
+
 fun BytePacketBuilder.writeBytes(bytes: ByteArray) {
     bytes.forEach { writeByte(it) }
 }

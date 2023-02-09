@@ -1,6 +1,6 @@
 title=Old School RuneScape
 adverturl=http://www.runescape.com/g=oldscape/bare_advert.ws
-codebase=http://127.0.0.1:8080/
+codebase=http://127.0.0.1
 cachedir=oldschool
 storebase=0
 initial_jar=gamepack.jar
@@ -64,6 +64,7 @@ param=18=
 param=19=196515767263-1oo20deqm6edn7ujlihl6rpadk9drhva.apps.googleusercontent.com
 param=20=https://social.auth.jagex.com/
 param=21=0
-param=25=210
+param=25=211
 param=28=https://account.jagex.com/
+
 

@@ -26,8 +26,8 @@ class GameTick(
 
         try {
             val time = measureTimeMillis {
-                syncTask.forEach(SyncTask::sync)
                 ++tick
+                syncTask.forEach(SyncTask::sync)
             }
             val freeMemoryMB = ((Runtime.getRuntime().freeMemory() / 1024) / 1024).toFloat()
             val totalMemoryMB = ((Runtime.getRuntime().totalMemory() / 1024) / 1024).toFloat()
