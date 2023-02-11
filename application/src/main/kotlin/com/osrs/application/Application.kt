@@ -25,7 +25,6 @@ object Application {
             }
 
             addShutDownHook(injector)
-            logger.info { "Loaded ${injector.getInstance<ObjEntryProvider>().size} objs." }
             injector.getInstance<Network>().bind(time)
         } catch (exception: Exception) {
             logger.error(exception) { "There was an error starting up the server: "}
