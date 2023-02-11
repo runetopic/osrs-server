@@ -8,17 +8,14 @@ import java.nio.ByteBuffer
 
 abstract class EntryTypeProvider<T> : Iterable<T> {
     internal val data by lazy(::loadTypeMap)
-    internal val data2 get() = data
 
     override fun iterator(): Iterator<T> = data.values.iterator()
 
     fun contains(key: Int): Boolean = data.containsKey(key)
 
-    operator fun get(key: Int): T? = data2[key]
+    operator fun get(key: Int): T? = data[key]
 
     abstract fun loadTypeMap(): Map<Int, T>
-
-    internal open fun postLoadEntryType() {}
 
     protected fun ByteBuffer.readStringIntParameters(): Map<Int, Any> = buildMap {
         repeat(readUByte()) {

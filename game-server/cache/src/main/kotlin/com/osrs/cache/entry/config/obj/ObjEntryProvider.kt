@@ -20,19 +20,19 @@ class ObjEntryProvider @Inject constructor(
 ) : EntryTypeProvider<ObjEntryType>() {
 
     override fun loadTypeMap(): Map<Int, ObjEntryType> {
-
-        return cache.index(CONFIG_INDEX)
+        val objs = cache.index(CONFIG_INDEX)
             .group(OBJ_CONFIG)
             .files()
             .map { ByteBuffer.wrap(it.data).loadEntryType(ObjEntryType(it.id)) }
             .associateBy(ObjEntryType::id)
+
+        postLoadObjs(objs)
+        return objs
     }
 
     private tailrec fun ByteBuffer.loadEntryType(type: ObjEntryType): ObjEntryType {
         when (val opcode = readUByte()) {
-            0 -> {
-                return type
-            }
+            0 -> return type
             1 -> type.model = readUShort()
             2 -> type.name = readStringCp1252NullTerminated()
             4 -> type.zoom2d = readUShort()
@@ -99,32 +99,29 @@ class ObjEntryProvider @Inject constructor(
         return loadEntryType(type)
     }
 
-    public override fun postLoadEntryType() {
-        // TODO fix post loading entries
-        forEach {
-            val type = it
-
+    private fun postLoadObjs(objs: Map<Int, ObjEntryType>) {
+        objs.values.forEach { type ->
             if (type.isStackable) type.weight = 0
 
             if (type.noteTemplate != -1) {
-                data[type.noteTemplate]?.let { noteTemplate ->
-                    data[type.note]?.let { note ->
+                objs[type.noteTemplate]?.let { noteTemplate ->
+                    objs[type.note]?.let { note ->
                         type.toNote(noteTemplate, note)
                     }
                 }
             }
 
             if (type.notedId != -1) {
-                data[type.notedId]?.let { noted ->
-                    data[type.unnotedId]?.let { unnoted ->
+                objs[type.notedId]?.let { noted ->
+                    objs[type.unnotedId]?.let { unnoted ->
                         type.toUnnoted(noted, unnoted)
                     }
                 }
             }
 
             if (type.placeholderTemplate != -1) {
-                data[type.placeholderTemplate]?.let { placeholderTemplate ->
-                    data[type.placeholder]?.let { placeholder ->
+                objs[type.placeholderTemplate]?.let { placeholderTemplate ->
+                    objs[type.placeholder]?.let { placeholder ->
                         type.toPlaceholder(placeholderTemplate, placeholder)
                     }
                 }
