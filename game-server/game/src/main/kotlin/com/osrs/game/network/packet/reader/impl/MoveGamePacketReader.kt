@@ -2,6 +2,8 @@ package com.osrs.game.network.packet.reader.impl
 
 import com.google.inject.Singleton
 import com.osrs.common.buffer.readUByteAdd
+import com.osrs.common.buffer.readUByteSubtract
+import com.osrs.common.buffer.readUShort
 import com.osrs.common.buffer.readUShortAdd
 import com.osrs.common.buffer.readUShortLittleEndian
 import com.osrs.game.network.packet.reader.PacketReader
@@ -10,12 +12,12 @@ import io.ktor.utils.io.ByteReadChannel
 
 @Singleton
 class MoveGamePacketReader : PacketReader<MoveGamePacket>(
-    opcode = 92,
+    opcode = 97,
     size = -1
 ) {
     override suspend fun read(readChannel: ByteReadChannel, size: Int): MoveGamePacket = MoveGamePacket(
-        movementType = readChannel.readUByteAdd() == 1,
-        destinationX = readChannel.readUShortLittleEndian(),
-        destinationZ = readChannel.readUShortAdd()
+        destinationX = readChannel.readUShort(),
+        movementType = readChannel.readUByteSubtract() == 1,
+        destinationZ = readChannel.readUShort()
     )
 }

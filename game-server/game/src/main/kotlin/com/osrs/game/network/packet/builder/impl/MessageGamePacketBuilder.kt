@@ -10,11 +10,11 @@ import java.nio.ByteBuffer
 
 @Singleton
 class MessageGamePacketBuilder : PacketBuilder<MessageGamePacket>(
-    opcode = 6,
+    opcode = 32,
     size = -1
 ) {
     override fun build(packet: MessageGamePacket, buffer: ByteBuffer) {
-        buffer.writeSmart(packet.type   )
+        buffer.writeSmart(packet.type)
         buffer.writeByte(if (packet.hasPrefix) 1 else 0)
         if (packet.hasPrefix) buffer.writeStringCp1252NullTerminated(packet.prefix)
         buffer.writeStringCp1252NullTerminated(packet.message)

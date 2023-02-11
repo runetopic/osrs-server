@@ -7,7 +7,7 @@ import io.ktor.utils.io.ByteReadChannel
 
 @Singleton
 class IdlePacketReader : PacketReader<IdlePacket>(
-    opcode = 77,
+    opcode = 79,
     size = 0
 ) {
     private val idlePacket = IdlePacket()

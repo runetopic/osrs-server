@@ -135,7 +135,7 @@ class Player(
 
     fun updateStat(skill: Skill, level: Int, experience: Double) = write(UpdateStatPacket(skill.id, level, experience))
 
-    fun updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy / 100))
+    fun updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy))
 
     fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
         PlayerInfoPacket(

@@ -1,6 +1,7 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
+import com.osrs.common.buffer.writeByteAdd
 import com.osrs.common.buffer.writeIntLittleEndian
 import com.osrs.common.buffer.writeShortAdd
 import com.osrs.game.network.packet.builder.PacketBuilder
@@ -9,11 +10,11 @@ import java.nio.ByteBuffer
 
 @Singleton
 class VarpLargePacketBuilder : PacketBuilder<VarpLargePacket>(
-    opcode = 5,
-    size = 6
+    opcode = 97,
+    size = 3
 ) {
     override fun build(packet: VarpLargePacket, buffer: ByteBuffer) {
         buffer.writeShortAdd(packet.id)
-        buffer.writeIntLittleEndian(packet.value)
+        buffer.writeByteAdd(packet.value)
     }
 }
