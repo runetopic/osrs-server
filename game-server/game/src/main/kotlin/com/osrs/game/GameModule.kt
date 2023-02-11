@@ -1,7 +1,6 @@
 package com.osrs.game
 
 import com.osrs.common.ui.InterfaceInfoMap
-import com.osrs.game.world.service.LoginService
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
@@ -11,6 +10,7 @@ import com.osrs.game.world.map.CollisionMap
 import com.osrs.game.world.map.path.PathFinderProvider
 import com.osrs.game.world.map.path.StepValidatorProvider
 import com.osrs.game.world.map.zone.Zones
+import com.osrs.game.world.service.LoginService
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.rsmod.pathfinder.PathFinder
 import org.rsmod.pathfinder.StepValidator

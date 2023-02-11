@@ -285,29 +285,27 @@ class LoginCodec @Inject constructor(
 
     private suspend fun validateClientCRCs(session: Session, xteaBuffer: ByteBuffer) {
         val clientCRCs = IntArray(cache.validIndexCount()) { -1 }
-
-        clientCRCs[3] = xteaBuffer.int
-        clientCRCs[12] = xteaBuffer.readIntV1()
-        clientCRCs[17] = xteaBuffer.readIntV1()
-        clientCRCs[15] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[14] = xteaBuffer.readIntV1()
-        clientCRCs[2] = xteaBuffer.readIntLittleEndian()
-        xteaBuffer.readIntV1()
-        clientCRCs[8] = xteaBuffer.readIntV2()
-        clientCRCs[6] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[13] = xteaBuffer.int
-        clientCRCs[18] = xteaBuffer.readIntV1()
-        clientCRCs[9] = xteaBuffer.int
-        clientCRCs[7] = xteaBuffer.readIntV2()
-        clientCRCs[1] = xteaBuffer.int
+        clientCRCs[12] = xteaBuffer.readIntV2()
+        clientCRCs[2] = xteaBuffer.readIntV2()
+        clientCRCs[10] = xteaBuffer.readIntV2()
+        clientCRCs[11] = xteaBuffer.readIntLittleEndian()
+        clientCRCs[5] = xteaBuffer.readIntV1()
+        xteaBuffer.readIntLittleEndian() // Always 0
+        clientCRCs[14] = xteaBuffer.readIntLittleEndian()
         clientCRCs[19] = xteaBuffer.int
-        clientCRCs[20] = xteaBuffer.readIntV2()
-        clientCRCs[11] = xteaBuffer.int
-        clientCRCs[10] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[5] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[4] = xteaBuffer.int
+        clientCRCs[18] = xteaBuffer.readIntV1()
+        clientCRCs[20] = xteaBuffer.int
         clientCRCs[0] = xteaBuffer.readIntV2()
-
+        clientCRCs[3] = xteaBuffer.readIntLittleEndian()
+        clientCRCs[8] = xteaBuffer.readIntV1()
+        clientCRCs[13] = xteaBuffer.int
+        clientCRCs[6] = xteaBuffer.readIntV1()
+        clientCRCs[15] = xteaBuffer.readIntV1()
+        clientCRCs[9] = xteaBuffer.readIntV2()
+        clientCRCs[7] = xteaBuffer.readIntV2()
+        clientCRCs[17] = xteaBuffer.readIntLittleEndian()
+        clientCRCs[4] = xteaBuffer.int
+        clientCRCs[1] = xteaBuffer.readIntLittleEndian()
         cache.crcs.forEachIndexed { index, i ->
             if (index == 16 || index == 21) return@forEachIndexed // Client is skipping index 16 and 21
             if (clientCRCs[index] != i) {

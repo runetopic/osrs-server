@@ -1,7 +1,8 @@
 package com.osrs.cache
 
-import com.osrs.cache.entry.config.enum.EnumTypeProvider
+import com.osrs.cache.entry.config.enum.EnumEntryProvider
 import com.osrs.cache.entry.config.location.LocationEntryProvider
+import com.osrs.cache.entry.config.obj.ObjEntryProvider
 import com.osrs.cache.entry.config.varbit.VarBitEntryProvider
 import com.osrs.cache.entry.config.varp.VarpEntryProvider
 import com.osrs.cache.entry.map.MapSquareTypeProvider
@@ -15,9 +16,10 @@ object CacheModule : KotlinModule() {
         bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
         bind<MapSquareTypeProvider>().asEagerSingleton()
         bind<LocationEntryProvider>().asEagerSingleton()
-        bind<EnumTypeProvider>().asEagerSingleton()
+        bind<EnumEntryProvider>().asEagerSingleton()
         bind<VarBitEntryProvider>().asEagerSingleton()
         bind<VarpEntryProvider>().asEagerSingleton()
+        bind<ObjEntryProvider>().asEagerSingleton()
     }
 
     // Indexes.

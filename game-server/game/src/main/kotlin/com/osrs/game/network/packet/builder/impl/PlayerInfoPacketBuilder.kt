@@ -20,7 +20,7 @@ import kotlin.math.abs
 
 @Singleton
 class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
-    opcode = 77,
+    opcode = 3,
     size = -2
 ) {
     override fun build(packet: PlayerInfoPacket, buffer: ByteBuffer) {

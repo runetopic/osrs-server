@@ -120,6 +120,12 @@ fun ByteBuffer.writeShortAdd(value: Int) {
     writeByteAdd(value)
 }
 
+
+fun ByteBuffer.writeShortLittleEndian2(value: Int) {
+    put((value shr 8).toByte())
+    put(value.toByte())
+}
+
 fun ByteBuffer.writeShortLittleEndian(value: Int) {
     put(value.toByte())
     put((value shr 8).toByte())

@@ -5,7 +5,7 @@ import com.runetopic.cache.hierarchy.index.Index
 import com.runetopic.cache.store.Js5Store
 
 class Cache @Inject constructor(
-    val store: Js5Store
+    private val store: Js5Store
 ) {
     val checksums = store.checksumsWithoutRSA()
     val crcs = IntArray(store.validIndexCount()) { store.index(it).crc }
