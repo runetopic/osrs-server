@@ -1,13 +1,16 @@
 package com.osrs.game.network.packet
 
-import com.google.inject.Singleton
 import com.osrs.game.network.packet.reader.impl.MoveMiniMapPacketReader
 import com.osrs.game.network.packet.builder.PacketBuilder
+import com.osrs.game.network.packet.builder.impl.CameraResetPacketBuilder
+import com.osrs.game.network.packet.builder.impl.HintArrowPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenSubPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
 import com.osrs.game.network.packet.builder.impl.MessageGamePacketBuilder
+import com.osrs.game.network.packet.builder.impl.MidiSongPacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
+import com.osrs.game.network.packet.builder.impl.SetPlayerOptionPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateContainerFullPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateRunEnergyPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateStatPacketBuilder
@@ -29,11 +32,15 @@ import com.osrs.game.network.packet.type.client.MoveGamePacket
 import com.osrs.game.network.packet.type.client.MoveMiniMapPacket
 import com.osrs.game.network.packet.type.client.NoTimeoutPacket
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
+import com.osrs.game.network.packet.type.server.CameraReset
+import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
+import com.osrs.game.network.packet.type.server.MidiSongPacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
 import com.osrs.game.network.packet.type.server.UpdateContainerFullPacket
 import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
@@ -44,7 +51,6 @@ import dev.misfitlabs.kotlinguice4.multibindings.KotlinMapBinder
 import dev.misfitlabs.kotlinguice4.multibindings.KotlinMultibinder
 import kotlin.reflect.KClass
 
-@Singleton
 object PacketModule : KotlinModule() {
     override fun configure() {
         val builders = KotlinMapBinder.newMapBinder<KClass<*>, PacketBuilder<Packet>>(kotlinBinder)
@@ -59,6 +65,10 @@ object PacketModule : KotlinModule() {
         builders.addBinding(UpdateStatPacket::class).to<UpdateStatPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateRunEnergyPacket::class).to<UpdateRunEnergyPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateContainerFullPacket::class).to<UpdateContainerFullPacketBuilder>().asEagerSingleton()
+        builders.addBinding(CameraReset::class).to<CameraResetPacketBuilder>().asEagerSingleton()
+        builders.addBinding(MidiSongPacket::class).to<MidiSongPacketBuilder>().asEagerSingleton()
+        builders.addBinding(HintArrowPacket::class).to<HintArrowPacketBuilder>().asEagerSingleton()
+        builders.addBinding(SetPlayerOptionPacket::class).to<SetPlayerOptionPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

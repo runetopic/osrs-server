@@ -6,6 +6,7 @@ import com.osrs.common.skill.Skills
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
+import com.osrs.game.actor.render.HintArrowType.LOCATION
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.container.Inventory
@@ -13,9 +14,12 @@ import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
+import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
+import com.osrs.game.network.packet.type.server.MidiSongPacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
+import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
 import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
@@ -54,7 +58,7 @@ class Player(
 
     fun initialize(
         interfaces: Interfaces,
-        inventory: Inventory
+        inventory: Inventory,
     ) {
         this.session.player = this
         this.lastLocation = location
@@ -71,7 +75,15 @@ class Player(
         updateRunEnergy(runEnergy.toInt())
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
-        inventory.sendInventory()
+        session.write(MidiSongPacket(62))
+        session.write(SetPlayerOptionPacket("Follow", 1))
+        session.write(SetPlayerOptionPacket("Trade", 2))
+        session.write(HintArrowPacket(
+            type = LOCATION,
+            targetX = this.location.x,
+            targetZ = this.location.z,
+            targetHeight = 255
+        ))
         this.interfaces.sendInterfaceLayout(RESIZABLE)
         online = true
     }

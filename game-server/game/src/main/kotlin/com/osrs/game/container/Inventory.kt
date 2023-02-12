@@ -15,9 +15,8 @@ class Inventory(
     objEntryProvider: ObjEntryProvider
 ) : Container(INVENTORY_CONTAINER_KEY, INVENTORY_CAPACITY, objEntryProvider) {
 
-    fun sendInventory() {
-        add(Item(995, Int.MAX_VALUE))
-        add(Item(995, Int.MAX_VALUE))
+    fun refresh() {
+        this.add(Item(4151, 28))
         player.session.write(
             UpdateContainerFullPacket(
                 PACKED_INVENTORY_ID,

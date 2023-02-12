@@ -8,11 +8,14 @@ import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.ui.InterfaceLayout.RESIZABLE
+import com.osrs.game.ui.listener.InterfaceListener
+import kotlin.reflect.KClass
 
 class Interfaces constructor(
     val player: Player,
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
+    private val interfaceListeners: Map<KClass<*>, InterfaceListener<*>>,
     private val open: MutableList<UserInterface> = mutableListOf()
 ) : MutableList<UserInterface> by open {
     var layout: InterfaceLayout = RESIZABLE
@@ -25,6 +28,8 @@ class Interfaces constructor(
         val childId = info.resizableChildId.enumChildForLayout(layout)
 
         open += userInterface
+
+        interfaceListeners[userInterface::class]?.onOpen(player, userInterface)
 
         player.write(
             IfOpenSubPacket(
