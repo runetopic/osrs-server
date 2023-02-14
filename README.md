@@ -6,6 +6,9 @@ Revision 211 OSRS server written in Kotlin.
 [![Discord](https://img.shields.io/discord/212385463418355713?color=%237289DA&logo=Discord&logoColor=%237289DA)](https://discord.gg/3scgBkrfMG)
 [![wakatime](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89.svg)](https://wakatime.com/badge/user/00b793fe-9bcc-4e7a-88c2-7c1879c548ce/project/ed70e7ef-2223-4791-91ae-3c27fa5f8c89)
 <a href="#"><img src="https://img.shields.io/badge/Powered%20by-Kotlin%201.8.0-blue.svg"/></a>
+![](https://tokei.rs/b1/github/tyler27/osrs-server)
+![](https://tokei.rs/b1/github/tyler27/osrs-server?category=files)
+
 # Dependencies
 - [Kotlin](https://kotlinlang.org/docs/home.html) (Language)
 - [Kotlin-guice](https://github.com/misfitlabsdev/kotlin-guice) (Dependecy injection)
@@ -115,6 +118,38 @@ _This project uses ktor for the networking, therefore the application is powered
   param=28=https://account.jagex.com/
   ```
 - Run the application!
+
+# Features
+
+### Packets
+
+  #### Client Packets Implemented:
+  - Idle
+  - IfButton
+  - MoveGame
+  - MoveMiniMap
+  - NoTimeout
+  - WindowStatus
+  #### Server Packets Implemented:
+   - CameraReset
+   - HintArrow
+   - IfOpenSub
+   - IfOpenTop
+   - MessageGame
+   - MidiSong
+   - ObjAdd
+   - PlayerInfo
+   - RebuildNormal
+   - RunClientScript
+   - SetPlayerOption
+   - UpdateContainerFull
+   - UpdateRunEnergy
+   - UpdateStat
+   - UpdateZoneFullFollows
+   - UpdateZonePartialEnclosed
+   - UpdateZonePartialFollows
+   - VarpLarge
+   - VarpSmall
 
 ### Media
 ![Test](https://i.gyazo.com/a2e43f3143a2a7f67fc2d22a84d2000c.jpg)
