@@ -2,10 +2,14 @@ package com.osrs.game.world
 
 import com.osrs.cache.Cache
 import com.osrs.cache.entry.map.MapSquareTypeProvider
+import com.osrs.common.map.location.Location
+import com.osrs.common.map.location.ZoneLocation
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.world.map.CollisionMap
+import com.osrs.game.world.map.zone.Zone
+import com.osrs.game.world.map.zone.ZoneManager
 import com.osrs.game.world.service.LoginService
 import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.ConcurrentHashMap
@@ -16,7 +20,8 @@ data class World(
     val loginService: LoginService,
     val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
-    val stepValidator: StepValidator
+    val stepValidator: StepValidator,
+    val zoneManager: ZoneManager
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
@@ -55,6 +60,14 @@ data class World(
 
     fun requestLogout(player: Player) {
         this.logoutRequest[player] = player.session
+    }
+
+    fun zone(location: ZoneLocation): Zone {
+        return zoneManager[location]
+    }
+
+    fun zone(location: Location): Zone {
+        return zoneManager[location]
     }
 
     companion object {

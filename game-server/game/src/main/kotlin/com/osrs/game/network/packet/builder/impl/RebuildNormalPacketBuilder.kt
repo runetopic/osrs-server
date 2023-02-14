@@ -24,8 +24,8 @@ class RebuildNormalPacketBuilder @Inject constructor(
         val zoneX = packet.location.zoneX
         val zoneZ = packet.location.zoneZ
 
-        buffer.writeShortLittleEndian(zoneX)
-        buffer.writeShortLittleEndianAdd(zoneZ)
+        buffer.writeShortLittleEndian(zoneZ)
+        buffer.writeShortLittleEndianAdd(zoneX)
 
         val zonesX = ((zoneX - 6) / 8..(zoneX + 6) / 8)
         val zonesZ = ((zoneZ - 6) / 8..(zoneZ + 6) / 8)

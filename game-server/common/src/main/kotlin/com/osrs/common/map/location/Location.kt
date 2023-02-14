@@ -18,6 +18,8 @@ value class Location(
     inline val regionLocation get() = z shr 13 or (x shr 13 shl 8) or (level shl 16)
     inline val zoneLocation get() = ZoneLocation(zoneX, zoneZ, level)
 
+    fun clone(): Location = Location(packedLocation)
+
     override fun toString(): String =
         "Location(packedCoordinates=$packedLocation, x=$x, z=$z, level=$level, zoneX=$zoneX, zoneZ=$zoneZ, zoneId=$zoneId, regionX=$regionX, regionZ=$regionZ, regionId=$regionId)"
 
@@ -36,6 +38,8 @@ fun Location.withinDistance(other: Location, distance: Int = 15): Boolean {
 
 fun Location.localX(location: Location, size: Int = 104) = x - 8 * (location.zoneX - (size shr 4))
 fun Location.localZ(location: Location, size: Int = 104) = z - 8 * (location.zoneZ - (size shr 4))
+
+fun Location.toLocalLocation(other: Location) = LocalLocation(localX(other) shl 8 or localZ(other))
 
 fun Location.transform(xOffset: Int, yOffset: Int, levelOffset: Int = 0) = Location(
     x = x + xOffset,

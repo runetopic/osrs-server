@@ -10,7 +10,7 @@ import com.osrs.game.world.WorldProvider
 import com.osrs.game.world.map.CollisionMap
 import com.osrs.game.world.map.path.PathFinderProvider
 import com.osrs.game.world.map.path.StepValidatorProvider
-import com.osrs.game.world.map.zone.Zones
+import com.osrs.game.world.map.zone.ZoneManager
 import com.osrs.game.world.service.LoginService
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.rsmod.pathfinder.PathFinder
@@ -22,7 +22,7 @@ object GameModule : KotlinModule() {
         install(UserInterfaceModule)
         bind<InterfaceInfoMap>().asEagerSingleton()
         bind<ZoneFlags>().toInstance(ZoneFlags())
-        bind<Zones>().toInstance(Zones())
+        bind<ZoneManager>().toInstance(ZoneManager())
         bind<PathFinder>().toProvider<PathFinderProvider>().asEagerSingleton()
         bind<StepValidator>().toProvider<StepValidatorProvider>().asEagerSingleton()
         bind<World>().toProvider<WorldProvider>().asEagerSingleton()

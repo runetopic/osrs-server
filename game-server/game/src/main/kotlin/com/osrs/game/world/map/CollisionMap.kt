@@ -11,7 +11,7 @@ import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.transform
 import com.osrs.game.actor.movement.Direction
-import com.osrs.game.world.map.zone.Zones
+import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator
 import org.rsmod.pathfinder.ZoneFlags
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR
@@ -48,7 +48,7 @@ import org.rsmod.pathfinder.flag.CollisionFlag.WALL_WEST_ROUTE_BLOCKER
 class CollisionMap @Inject constructor(
     private val locations: LocationEntryProvider,
     private val zoneFlags: ZoneFlags,
-    private val zones: Zones,
+    private val zoneManager: ZoneManager,
     private val stepValidator: StepValidator
 ) {
     fun canTravel(location: Location, direction: Direction): Boolean =
@@ -69,7 +69,7 @@ class CollisionMap @Inject constructor(
 
                     val location = Location(x + baseX, z + baseZ, level)
                     addFloorCollision(location)
-                    zones.createZone(location.zoneLocation)
+                    zoneManager.createZone(location.zoneLocation)
                 }
             }
         }
@@ -85,7 +85,7 @@ class CollisionMap @Inject constructor(
                         if (!locations.contains(it.id)) return@forEach
                         val gameObject = GameObject(it.id, location, it.shape, it.rotation)
                         addObjectCollision(gameObject)
-                        zones.createZone(location.zoneLocation)
+                        zoneManager.createZone(location.zoneLocation)
                         // TODO add object into zone
                     }
                 }

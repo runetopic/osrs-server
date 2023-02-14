@@ -5,6 +5,7 @@ import com.osrs.game.actor.movement.Direction
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.render.ActorRenderer
 import com.osrs.game.world.World
+import com.osrs.game.world.map.zone.Zone
 
 abstract class Actor {
     var isRunning = true
@@ -16,6 +17,9 @@ abstract class Actor {
     var index = 0
     abstract var world: World
 
+    var zone: Zone? = null
+    var zones = hashSetOf<Int>()
+
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
 
     fun reset() {
@@ -23,6 +27,4 @@ abstract class Actor {
         moveDirection = null
         lastLocation = location
     }
-
-
 }

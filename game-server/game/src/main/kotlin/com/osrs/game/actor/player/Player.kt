@@ -1,6 +1,7 @@
 package com.osrs.game.actor.player
 
 import com.osrs.common.map.location.Location
+import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.skill.Skill
 import com.osrs.common.skill.Skills
 import com.osrs.game.actor.Actor
@@ -10,6 +11,7 @@ import com.osrs.game.actor.render.HintArrowType.LOCATION
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.container.Inventory
+import com.osrs.game.item.FloorItem
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -22,6 +24,7 @@ import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
 import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
+import com.osrs.game.network.packet.type.server.UpdateZoneFullFollowsPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.InterfaceLayout.RESIZABLE
 import com.osrs.game.ui.Interfaces
@@ -29,6 +32,8 @@ import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class Player(
     override var location: Location = Location.None,
@@ -41,8 +46,9 @@ class Player(
 
     lateinit var interfaces: Interfaces
     lateinit var inventory: Inventory
+    var baseZoneLocation: ZoneLocation = Location.None.zoneLocation
 
-    var lastLoadedLocation: Location? = null
+    var lastLoadedLocation: Location = Location.None
 
     val movementQueue = MovementQueue(this)
 
@@ -86,9 +92,11 @@ class Player(
         ))
         this.interfaces.sendInterfaceLayout(RESIZABLE)
         online = true
+        world.zone(location).requestAddObj(FloorItem(4151, 1, location))
     }
 
     private fun loadMapRegion(initialize: Boolean) {
+        lastLoadedLocation = location.clone()
         session.write(
             RebuildNormalPacket(
                 viewport,
@@ -96,8 +104,41 @@ class Player(
                 initialize
             )
         )
-        lastLoadedLocation = location
+        baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
+        updateZones()
+        zone?.enterZone(this)
     }
+
+    private fun updateZones() {
+        zone = world.zone(location)
+
+        val baseZoneX = baseZoneLocation.x
+        val baseZoneZ = baseZoneLocation.z
+        val rangeX = max(baseZoneX, location.zoneX - 3)..min(baseZoneX + 11, location.zoneX + 3)
+        val rangeZ = max(baseZoneZ, location.zoneZ - 3)..min(baseZoneZ + 11, location.zoneZ + 3)
+        val existing = zones.toMutableSet()
+
+        zones.clear()
+
+        for (x in rangeX) {
+            for (z in rangeZ) {
+                val zoneLocation = ZoneLocation(x, z, location.level)
+                val zonePackedLocation = zoneLocation.packedLocation
+
+                zones += zonePackedLocation
+
+                if (!existing.contains(zonePackedLocation)) {
+                    val location = ZoneLocation(zonePackedLocation)
+                    val xInScene = (location.x - baseZoneX) shl 3
+                    val yInScene = (location.z - baseZoneZ) shl 3
+                    session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
+                     updateExistingZoneStatus(location)
+                }
+            }
+        }
+    }
+
+    private fun updateExistingZoneStatus(location: ZoneLocation) = world.zone(location).buildZoneUpdates(this)
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
 
@@ -127,10 +168,10 @@ class Player(
     }
 
     private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
-        if (lastLoadedLocation == null || lastLoadedLocation == location) return false
+        if (lastLoadedLocation == location) return false
 
-        val lastZoneX = lastLoadedLocation!!.zoneX
-        val lastZoneZ = lastLoadedLocation!!.zoneZ
+        val lastZoneX = lastLoadedLocation.zoneX
+        val lastZoneZ = lastLoadedLocation.zoneZ
         val zoneX = location.zoneX
         val zoneZ = location.zoneZ
         val limit = ((buildArea shr 3) / 2) - 1

@@ -6,11 +6,13 @@ import com.osrs.game.tick.task.SyncTask
 import com.osrs.game.tick.task.player.PlayerSyncTask
 import com.osrs.game.tick.task.world.WorldSyncTask
 import com.osrs.game.world.World
+import com.osrs.game.world.map.zone.ZoneManager
 import kotlin.system.measureTimeMillis
 
 
 class GameTick(
     private val world: World,
+    zoneManager: ZoneManager,
     playerUpdateBlocks: PlayerUpdateBlocks
 ) : Runnable {
     private val logger = InlineLogger()
@@ -18,7 +20,7 @@ class GameTick(
 
     private val syncTask = setOf(
         WorldSyncTask(world),
-        PlayerSyncTask(world, playerUpdateBlocks)
+        PlayerSyncTask(world, zoneManager, playerUpdateBlocks)
     )
 
     override fun run() {
