@@ -119,6 +119,38 @@ _This project uses ktor for the networking, therefore the application is powered
   ```
 - Run the application!
 
+# Features
+
+### Packets
+
+  #### Client Packets Implemented:
+  - Idle
+  - IfButton
+  - MoveGame
+  - MoveMiniMap
+  - NoTimeout
+  - WindowStatus
+  #### Server Packets Implemented:
+   - CameraReset
+   - HintArrow
+   - IfOpenSub
+   - IfOpenTop
+   - MessageGame
+   - MidiSong
+   - ObjAdd
+   - PlayerInfo
+   - RebuildNormal
+   - RunClientScript
+   - SetPlayerOption
+   - UpdateContainerFull
+   - UpdateRunEnergy
+   - UpdateStat
+   - UpdateZoneFullFollows
+   - UpdateZonePartialEnclosed
+   - UpdateZonePartialFollows
+   - VarpLarge
+   - VarpSmall
+
 ### Media
 ![Test](https://i.gyazo.com/a2e43f3143a2a7f67fc2d22a84d2000c.jpg)
 
