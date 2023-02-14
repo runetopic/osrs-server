@@ -132,13 +132,11 @@ class Player(
                     val xInScene = (location.x - baseZoneX) shl 3
                     val yInScene = (location.z - baseZoneZ) shl 3
                     session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                     updateExistingZoneStatus(location)
+                    world.zone(location).buildZoneUpdates(this)
                 }
             }
         }
     }
-
-    private fun updateExistingZoneStatus(location: ZoneLocation) = world.zone(location).buildZoneUpdates(this)
 
     fun writeAndFlush() = session.invokeAndClearWritePool()
 
