@@ -18,7 +18,7 @@ class Zone(
     val location: Location,
     val players: HashSet<Player> = HashSet(),
 ) {
-    private val objs: HashSet<FloorItem> = HashSet()
+    val objs: HashSet<FloorItem> = HashSet()
     private val objRequests = HashMap<FloorItem, Boolean>()
 
     fun enterZone(player: Player) {

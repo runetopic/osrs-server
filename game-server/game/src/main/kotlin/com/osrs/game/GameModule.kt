@@ -1,6 +1,7 @@
 package com.osrs.game
 
 import com.osrs.common.ui.InterfaceInfoMap
+import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
@@ -19,6 +20,7 @@ import org.rsmod.pathfinder.ZoneFlags
 
 object GameModule : KotlinModule() {
     override fun configure() {
+        install(CommandModule)
         install(UserInterfaceModule)
         bind<InterfaceInfoMap>().asEagerSingleton()
         bind<ZoneFlags>().toInstance(ZoneFlags())

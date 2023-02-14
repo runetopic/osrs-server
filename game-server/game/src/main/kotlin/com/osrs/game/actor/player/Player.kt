@@ -202,6 +202,10 @@ class Player(
         return this.appearance
     }
 
+    fun message(string: String) {
+        session.write(MessageGamePacket(0, string, false))
+    }
+
     fun logout() {
         online = false
     }

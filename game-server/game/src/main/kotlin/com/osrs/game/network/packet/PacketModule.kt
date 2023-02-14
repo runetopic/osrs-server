@@ -21,6 +21,7 @@ import com.osrs.game.network.packet.builder.impl.UpdateZonePartialFollowsPacketB
 import com.osrs.game.network.packet.builder.impl.VarpLargePacketBuilder
 import com.osrs.game.network.packet.builder.impl.VarpSmallPacketBuilder
 import com.osrs.game.network.packet.handler.PacketHandler
+import com.osrs.game.network.packet.handler.impl.CheatPacketHandler
 import com.osrs.game.network.packet.handler.impl.IdlePacketHandler
 import com.osrs.game.network.packet.handler.impl.IfButtonPacketHandler
 import com.osrs.game.network.packet.handler.impl.MoveGamePacketHandler
@@ -28,6 +29,7 @@ import com.osrs.game.network.packet.handler.impl.MoveMiniMapPacketHandler
 import com.osrs.game.network.packet.handler.impl.NoTimeoutPacketHandler
 import com.osrs.game.network.packet.handler.impl.WindowStatusPacketHandler
 import com.osrs.game.network.packet.reader.PacketReader
+import com.osrs.game.network.packet.reader.impl.CheatPacketReader
 import com.osrs.game.network.packet.reader.impl.IdlePacketReader
 import com.osrs.game.network.packet.reader.impl.IfButton10PacketReader
 import com.osrs.game.network.packet.reader.impl.IfButton1PacketReader
@@ -42,6 +44,7 @@ import com.osrs.game.network.packet.reader.impl.IfButton9PacketReader
 import com.osrs.game.network.packet.reader.impl.MoveGamePacketReader
 import com.osrs.game.network.packet.reader.impl.NoTimeoutPacketReader
 import com.osrs.game.network.packet.reader.impl.WindowStatusPacketReader
+import com.osrs.game.network.packet.type.client.CheatPacket
 import com.osrs.game.network.packet.type.client.IdlePacket
 import com.osrs.game.network.packet.type.client.IfButtonPacket
 import com.osrs.game.network.packet.type.client.MoveGamePacket
@@ -111,6 +114,7 @@ object PacketModule : KotlinModule() {
         readers.addBinding().to<IfButton8PacketReader>().asEagerSingleton()
         readers.addBinding().to<IfButton9PacketReader>().asEagerSingleton()
         readers.addBinding().to<IfButton10PacketReader>().asEagerSingleton()
+        readers.addBinding().to<CheatPacketReader>().asEagerSingleton()
 
         val handlers = KotlinMapBinder.newMapBinder<KClass<*>, PacketHandler<Packet>>(kotlinBinder)
 
@@ -120,5 +124,6 @@ object PacketModule : KotlinModule() {
         handlers.addBinding(IdlePacket::class).to<IdlePacketHandler>().asEagerSingleton()
         handlers.addBinding(WindowStatusPacket::class).to<WindowStatusPacketHandler>().asEagerSingleton()
         handlers.addBinding(NoTimeoutPacket::class).to<NoTimeoutPacketHandler>().asEagerSingleton()
+        handlers.addBinding(CheatPacket::class).to<CheatPacketHandler>().asEagerSingleton()
     }
 }

@@ -3,6 +3,11 @@ package com.osrs.common.buffer
 import com.runetopic.cryptography.isaac.ISAAC
 import io.ktor.utils.io.ByteReadChannel
 
+suspend fun ByteReadChannel.readStringCp1252NullTerminated() = buildString {
+    var char: Char
+    while (readByte().toInt().also { char = it.toChar() } != 0) append(char)
+}
+
 suspend fun ByteReadChannel.readUByte() = readByte().toInt() and 0xff
 suspend fun ByteReadChannel.readUByteSubtract() = readUByte() - 128 and 0xff
 suspend fun ByteReadChannel.readUByteAdd() = readUByte() + 128 and 0xff

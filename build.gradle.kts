@@ -60,5 +60,7 @@ allprojects {
         implementation("org.mindrot:jbcrypt:0.4")
         // Kaml - Yaml parser.
         implementation("com.charleskorn.kaml:kaml:0.50.0")
+        // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
+        implementation("io.github.classgraph:classgraph:4.8.154")
     }
 }
