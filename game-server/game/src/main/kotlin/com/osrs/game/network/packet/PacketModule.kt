@@ -11,6 +11,7 @@ import com.osrs.game.network.packet.builder.impl.MidiSongPacketBuilder
 import com.osrs.game.network.packet.builder.impl.ObjAddPacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
+import com.osrs.game.network.packet.builder.impl.RunClientScriptPacketBuilder
 import com.osrs.game.network.packet.builder.impl.SetPlayerOptionPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateContainerFullPacketBuilder
 import com.osrs.game.network.packet.builder.impl.UpdateZoneFullFollowsPacketBuilder
@@ -52,6 +53,7 @@ import com.osrs.game.network.packet.type.client.MoveMiniMapPacket
 import com.osrs.game.network.packet.type.client.NoTimeoutPacket
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
 import com.osrs.game.network.packet.type.server.CameraReset
+import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
@@ -96,6 +98,7 @@ object PacketModule : KotlinModule() {
         builders.addBinding(UpdateZonePartialFollowsPacket::class).to<UpdateZonePartialFollowsPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateZonePartialEnclosedPacket::class).to<UpdateZonePartialEnclosedPacketBuilder>().asEagerSingleton()
         builders.addBinding(ObjAddPacket::class).to<ObjAddPacketBuilder>().asEagerSingleton()
+        builders.addBinding(ClientScriptPacket::class).to<RunClientScriptPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

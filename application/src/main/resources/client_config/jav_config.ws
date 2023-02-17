@@ -44,27 +44,27 @@ msg=err_get_file=Error getting file
 msg=new_version=Update available! You can now launch the client directly from the OldSchool website.\nGet the new version from the link on the OldSchool homepage: http://oldschool.runescape.com/
 msg=new_version_linktext=Open OldSchool Homepage
 msg=new_version_link=http://oldschool.runescape.com/
-param=2=https://payments.jagex.com/
-param=3=true
-param=4=1
-param=5=1
 param=6=0
-param=7=0
-param=8=true
-param=9=ElZAIrq5NpKN6D3mDdihco3oPeYN2KFy2DCquj7JMmECPmLrDP3Bnw
-param=10=5
-param=11=https://auth.jagex.com/
-param=12=420
 param=13=.runescape.com
-param=14=0
-param=15=0
-param=16=false
-param=17=http://www.runescape.com/g=oldscape/slr.ws?order=LPWM
-param=18=
 param=19=196515767263-1oo20deqm6edn7ujlihl6rpadk9drhva.apps.googleusercontent.com
-param=20=https://social.auth.jagex.com/
-param=21=0
+param=7=0
+param=3=true
+param=17=http://www.runescape.com/g=oldscape/slr.ws?order=LPWM
+param=16=false
 param=25=211
+param=8=true
+param=21=0
+param=5=1
+param=18=
 param=28=https://account.jagex.com/
+param=20=https://social.auth.jagex.com/
+param=2=https://payments.jagex.com/
+param=15=0
+param=9=ElZAIrq5NpJXb0MtXvoAyorBdr*x6eboHxcezBcRLsnH-6jMLL7qnQ
+param=14=0
+param=10=5
+param=4=1
+param=11=https://auth.jagex.com/
+param=12=321
 
 

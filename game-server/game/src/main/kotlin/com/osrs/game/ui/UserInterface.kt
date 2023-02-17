@@ -45,7 +45,7 @@ sealed class UserInterface (
             CombatOptions,
             CharacterSummary,
             UnknownOverlay,
-            ChatChannel
+            ChatChannel,
         )
     }
 }

@@ -25,6 +25,9 @@
 - id: 162
   name: chat_box
   resizableChildId: 94
+- id: 728
+  name: idk
+  resizableChildId: 66
 - id: 182
   name: logout
   resizableChildId: 85

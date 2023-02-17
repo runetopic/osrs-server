@@ -10,7 +10,7 @@ class ZoneCommand : CommandListener(
 ) {
     override fun execute(command: String, player: Player) {
         val zone = player.world.zone(player.location)
-
-        player.message("Current items in the zone: ${zone.objs.size}")
+        player.message("Items in the zone: ${zone.objs.size}")
+        player.message("Zone count: ${player.zones.size}")
     }
 }

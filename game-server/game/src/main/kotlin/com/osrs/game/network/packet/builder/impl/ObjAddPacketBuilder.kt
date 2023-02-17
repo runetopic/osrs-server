@@ -17,12 +17,12 @@ class ObjAddPacketBuilder : PacketBuilder<ObjAddPacket>(
 ) {
     override fun build(packet: ObjAddPacket, buffer: ByteBuffer) {
         buffer.writeByte(packet.packedOffset)
-        buffer.writeByteAdd(0) // Unsure what this is used for
-        buffer.writeByteAdd(0) // Unsure what this is used for
-        buffer.writeShortLittleEndian(0) // Unsure what this is used for
+        buffer.writeByteAdd(0x0) // Unsure to disable options 0x0 to disable all 5 0x1 to enable options.
+        buffer.writeByteAdd(0) // Unused
+        buffer.writeShortLittleEndian(0) // Unused
         buffer.writeShortAdd(packet.id)
         buffer.writeInt(packet.amount)
-        buffer.writeByteAdd(0) // Unsure what this is used for
-        buffer.writeShortAdd(0) // Unsure what this is used for
+        buffer.writeByteAdd(0) // Unused
+        buffer.writeShortAdd(0) // Unused
     }
 }
