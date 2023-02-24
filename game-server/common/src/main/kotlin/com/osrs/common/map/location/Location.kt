@@ -1,5 +1,8 @@
 package com.osrs.common.map.location
 
+import kotlin.math.abs
+import kotlin.math.max
+
 @JvmInline
 value class Location(
     val packedLocation: Int
@@ -29,6 +32,12 @@ value class Location(
     }
 }
 
+fun Location.distanceTo(to: Location): Int {
+    val x = abs(to.x - x)
+    val z = abs(to.z - z)
+    return max(x, z)
+}
+
 fun Location.withinDistance(other: Location, distance: Int = 15): Boolean {
     if (other.level != level) return false
     val deltaX = other.x - x
@@ -46,3 +55,5 @@ fun Location.transform(xOffset: Int, yOffset: Int, levelOffset: Int = 0) = Locat
     z = z + yOffset,
     level = level + levelOffset
 )
+
+

@@ -6,9 +6,11 @@ import com.osrs.game.network.packet.builder.impl.CameraResetPacketBuilder
 import com.osrs.game.network.packet.builder.impl.HintArrowPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenSubPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
+import com.osrs.game.network.packet.builder.impl.MapProjAnimPacketBuilder
 import com.osrs.game.network.packet.builder.impl.MessageGamePacketBuilder
 import com.osrs.game.network.packet.builder.impl.MidiSongPacketBuilder
 import com.osrs.game.network.packet.builder.impl.ObjAddPacketBuilder
+import com.osrs.game.network.packet.builder.impl.ObjRemovePacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RebuildNormalPacketBuilder
 import com.osrs.game.network.packet.builder.impl.RunClientScriptPacketBuilder
@@ -57,9 +59,11 @@ import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
+import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.MidiSongPacket
 import com.osrs.game.network.packet.type.server.ObjAddPacket
+import com.osrs.game.network.packet.type.server.ObjRemovePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
@@ -84,6 +88,7 @@ object PacketModule : KotlinModule() {
         builders.addBinding(IfOpenTopPacket::class).to<IfOpenTopPacketBuilder>().asEagerSingleton()
         builders.addBinding(PlayerInfoPacket::class).to<PlayerInfoPacketBuilder>().asEagerSingleton()
         builders.addBinding(IfOpenSubPacket::class).to<IfOpenSubPacketBuilder>().asEagerSingleton()
+        builders.addBinding(ClientScriptPacket::class).to<RunClientScriptPacketBuilder>().asEagerSingleton()
         builders.addBinding(VarpLargePacket::class).to<VarpLargePacketBuilder>().asEagerSingleton()
         builders.addBinding(VarpSmallPacket::class).to<VarpSmallPacketBuilder>().asEagerSingleton()
         builders.addBinding(MessageGamePacket::class).to<MessageGamePacketBuilder>().asEagerSingleton()
@@ -94,11 +99,12 @@ object PacketModule : KotlinModule() {
         builders.addBinding(MidiSongPacket::class).to<MidiSongPacketBuilder>().asEagerSingleton()
         builders.addBinding(HintArrowPacket::class).to<HintArrowPacketBuilder>().asEagerSingleton()
         builders.addBinding(SetPlayerOptionPacket::class).to<SetPlayerOptionPacketBuilder>().asEagerSingleton()
+        builders.addBinding(ObjAddPacket::class).to<ObjAddPacketBuilder>().asEagerSingleton()
+        builders.addBinding(ObjRemovePacket::class).to<ObjRemovePacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateZoneFullFollowsPacket::class).to<UpdateZoneFullFollowsPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateZonePartialFollowsPacket::class).to<UpdateZonePartialFollowsPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateZonePartialEnclosedPacket::class).to<UpdateZonePartialEnclosedPacketBuilder>().asEagerSingleton()
-        builders.addBinding(ObjAddPacket::class).to<ObjAddPacketBuilder>().asEagerSingleton()
-        builders.addBinding(ClientScriptPacket::class).to<RunClientScriptPacketBuilder>().asEagerSingleton()
+        builders.addBinding(MapProjAnimPacket::class).to<MapProjAnimPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

@@ -11,7 +11,6 @@ import com.osrs.game.actor.render.HintArrowType.LOCATION
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.container.Inventory
-import com.osrs.game.item.FloorItem
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -51,6 +50,8 @@ class Player(
     var lastLoadedLocation: Location = Location.None
 
     val movementQueue = MovementQueue(this)
+
+    override var zone = world.zone(location)
 
     override var moveDirection: MoveDirection? = null
 
@@ -97,7 +98,6 @@ class Player(
         )
 
         scripts.forEach(session::write)
-        world.zone(location).requestAddObj(FloorItem(995, Int.MAX_VALUE, location))
         online = true
     }
 
@@ -112,11 +112,12 @@ class Player(
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
         updateZones()
-        zone?.enterZone(this)
     }
 
     private fun updateZones() {
+        zone.leaveZone(this)
         zone = world.zone(location)
+        zone.enterZone(this)
 
         val baseZoneX = baseZoneLocation.x
         val baseZoneZ = baseZoneLocation.z
@@ -138,7 +139,7 @@ class Player(
                     val xInScene = (location.x - baseZoneX) shl 3
                     val yInScene = (location.z - baseZoneZ) shl 3
                     session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                    world.zone(location).buildZoneUpdates(this)
+                    world.zone(location).writeInitialZoneUpdates(this)
                 }
             }
         }
@@ -156,6 +157,10 @@ class Player(
         movementQueue.process()
 
         if (shouldRebuildMap()) loadMapRegion(false)
+
+        if (shouldUpdateZones()) {
+            updateZones()
+        }
     }
 
     fun processGroupedPackets() {
@@ -181,6 +186,8 @@ class Player(
         val limit = ((buildArea shr 3) / 2) - 1
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
+
+    private fun shouldUpdateZones() = zone.location.id != location.zoneId
 
     private fun updateStats() {
         Skill.values().forEach {
@@ -214,6 +221,7 @@ class Player(
 
     fun logout() {
         online = false
+        zone.leaveZone(this)
     }
 
     fun write(packet: Packet) {

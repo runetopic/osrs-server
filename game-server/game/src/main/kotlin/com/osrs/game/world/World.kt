@@ -67,8 +67,14 @@ data class World(
     }
 
     fun zone(location: Location): Zone {
-        return zoneManager[location]
+        return zoneManager[location.zoneLocation]
     }
+
+    @Suppress("UNCHECKED_CAST")
+    fun players(): List<Player> = players.filter { it != null && it.online } as List<Player>
+
+    @Suppress("UNCHECKED_CAST")
+    fun zones(predicate: (Zone) -> Boolean): List<Zone> = zoneManager.zones.filter { it != null && predicate.invoke(it) } as List<Zone>
 
     companion object {
         const val MAX_PLAYERS = 2048

@@ -17,11 +17,11 @@ class ObjAddPacketBuilder : PacketBuilder<ObjAddPacket>(
 ) {
     override fun build(packet: ObjAddPacket, buffer: ByteBuffer) {
         buffer.writeByte(packet.packedOffset)
-        buffer.writeByteAdd(0x0) // Unsure to disable options 0x0 to disable all 5 0x1 to enable options.
+        buffer.writeByteAdd(packet.disabledOptions.fold(0x1F) { options, option -> options and (1 shl option).inv() }) // Clear bit at position 'option' to disable that option
         buffer.writeByteAdd(0) // Unused
         buffer.writeShortLittleEndian(0) // Unused
         buffer.writeShortAdd(packet.id)
-        buffer.writeInt(packet.amount)
+        buffer.writeInt(packet.quantity)
         buffer.writeByteAdd(0) // Unused
         buffer.writeShortAdd(0) // Unused
     }
