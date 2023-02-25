@@ -35,6 +35,8 @@ class Zone(
     }
 
     fun writeInitialZoneUpdates(player: Player) {
+        if (objs.isEmpty() && projectiles.isEmpty()) return
+
         val updates = buildZoneUpdates(player)
 
         if (updates.isEmpty()) return
@@ -109,17 +111,7 @@ class Zone(
         return updates
     }
 
-    private fun HashSet<Packet>.addObjRequest(request: ObjUpdateRequest, player: Player) {
-        val id = request.floorItem.id
-        val quantity = request.floorItem.quantity
-        val packedOffset = player.location.packedOffset
 
-        if (request.remove) {
-            this += ObjRemovePacket(id, quantity, packedOffset)
-        } else {
-            this += ObjAddPacket(id, quantity, packedOffset)
-        }
-    }
 
     fun update(request: ZoneUpdateRequest) {
         zoneUpdatesRequest += request
@@ -142,6 +134,18 @@ class Zone(
     fun clear() {
         zoneUpdatesRequest.clear()
         projectiles.clear()
+    }
+
+    private fun HashSet<Packet>.addObjRequest(request: ObjUpdateRequest, player: Player) {
+        val id = request.floorItem.id
+        val quantity = request.floorItem.quantity
+        val packedOffset = player.location.packedOffset
+
+        if (request.remove) {
+            this += ObjRemovePacket(id, quantity, packedOffset)
+        } else {
+            this += ObjAddPacket(id, quantity, packedOffset)
+        }
     }
 
     private fun HashSet<Packet>.addMapProjAnim(request: ProjectileRequest) {
