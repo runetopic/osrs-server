@@ -111,8 +111,6 @@ class Zone(
         return updates
     }
 
-
-
     fun update(request: ZoneUpdateRequest) {
         zoneUpdatesRequest += request
 
