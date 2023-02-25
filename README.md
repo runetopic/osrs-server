@@ -55,7 +55,7 @@ _This project uses ktor for the networking, therefore the application is powered
       benchmarking = false
       cores = 4
       build {
-          major = 210
+          major = 211
           minor = 1
           token = "ElZAIrq5NpKN6D3mDdihco3oPeYN2KFy2DCquj7JMmECPmLrDP3Bnw"
       }
