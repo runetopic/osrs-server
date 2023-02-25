@@ -9,6 +9,6 @@ data class Item(
 
 data class FloorItem(
     val id: Int,
-    val amount: Int,
+    val quantity: Int,
     val location: Location
 )

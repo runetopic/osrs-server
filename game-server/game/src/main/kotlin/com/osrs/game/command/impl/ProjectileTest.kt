@@ -1,19 +1,11 @@
 package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.transform
-import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
 import com.osrs.game.command.CommandListener
 import com.osrs.game.projectile.Projectile
-
-class ProjectileRequest(
-    val target: Actor? = null,
-    val from: Location,
-    val to: Location = Location.None,
-    val projectile: Projectile
-)
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 @Singleton
 class ProjectileTest : CommandListener(
@@ -39,6 +31,6 @@ class ProjectileTest : CommandListener(
             )
         )
 
-        zone.requestAddMapProjAnim(projectileRequest)
+        zone.update(projectileRequest)
     }
 }

@@ -25,12 +25,11 @@ class PlayerSyncTask(
 
         players.parallelStream().forEach { player ->
             player.zones.forEach { zoneLocation ->
-                val zone = zoneManager.zones[zoneLocation] ?: throw IllegalAccessError("Zone is null!")
-                zone.writeZoneUpdates(player)
+                zoneManager.zones[zoneLocation]?.writeZoneUpdates(player)
             }
         }
 
-        world.zones(Zone::hasUpdate).forEach(Zone::clear)
+        world.zones(Zone::requiresUpdate).forEach(Zone::clear)
 
         players.parallelStream().forEach(Player::writeAndFlush)
     }

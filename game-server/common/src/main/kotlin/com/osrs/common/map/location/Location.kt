@@ -20,6 +20,7 @@ value class Location(
     inline val regionId get() = (regionX shl 8) or regionZ
     inline val regionLocation get() = z shr 13 or (x shr 13 shl 8) or (level shl 16)
     inline val zoneLocation get() = ZoneLocation(zoneX, zoneZ, level)
+    inline val packedOffset get() = ((x and 0x7) shl 4) or (z and 0x7)
 
     fun clone(): Location = Location(packedLocation)
 
@@ -44,11 +45,6 @@ fun Location.withinDistance(other: Location, distance: Int = 15): Boolean {
     val deltaZ = other.z - z
     return deltaX <= distance && deltaX >= -distance && deltaZ <= distance && deltaZ >= -distance
 }
-
-fun Location.localX(location: Location, size: Int = 104) = x - 8 * (location.zoneX - (size shr 4))
-fun Location.localZ(location: Location, size: Int = 104) = z - 8 * (location.zoneZ - (size shr 4))
-
-fun Location.toLocalLocation(other: Location) = LocalLocation(localX(other) shl 8 or localZ(other))
 
 fun Location.transform(xOffset: Int, yOffset: Int, levelOffset: Int = 0) = Location(
     x = x + xOffset,

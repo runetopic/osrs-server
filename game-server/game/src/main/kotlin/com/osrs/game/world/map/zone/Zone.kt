@@ -3,11 +3,9 @@ package com.osrs.game.world.map.zone
 import com.osrs.common.buffer.writeByte
 import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.distanceTo
-import com.osrs.common.map.location.toLocalLocation
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
-import com.osrs.game.command.impl.ProjectileRequest
 import com.osrs.game.item.FloorItem
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
@@ -15,6 +13,8 @@ import com.osrs.game.network.packet.type.server.ObjAddPacket
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
 import com.osrs.game.network.packet.type.server.UpdateZonePartialEnclosedPacket
 import com.osrs.game.network.packet.type.server.UpdateZonePartialFollowsPacket
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 import io.ktor.util.moveToByteArray
 import java.nio.ByteBuffer
 
@@ -24,8 +24,9 @@ class Zone(
 ) {
     val objs: HashSet<FloorItem> = HashSet()
 
-    private val objRequests = HashMap<FloorItem, Boolean>()
     private val projectiles = HashSet<ProjectileRequest>()
+
+    private val zoneUpdatesRequest = HashSet<ZoneUpdateRequest>()
 
     fun enterZone(actor: Actor) {
         if (actor is Player) {
@@ -34,6 +35,50 @@ class Zone(
     }
 
     fun writeInitialZoneUpdates(player: Player) {
+        val updates = buildZoneUpdates(player)
+
+        if (updates.isEmpty()) return
+
+        player.writeZoneUpdates(updates)
+    }
+
+    fun writeZoneUpdates(player: Player) {
+        if (!requiresUpdate()) return
+
+        val pendingUpdates = buildPendingZoneUpdates(player)
+
+        if (pendingUpdates.isEmpty()) return
+
+        player.writeZoneUpdates(pendingUpdates)
+    }
+
+    private fun Player.writeZoneUpdates(updates: HashSet<Packet>) {
+        val baseZoneX = baseZoneLocation.x
+        val baseZoneZ = baseZoneLocation.z
+
+        val xInScene = (this@Zone.location.x - baseZoneX) shl 3
+        val zInScene = (this@Zone.location.z - baseZoneZ) shl 3
+
+        if (updates.size == 1) {
+            session.write(UpdateZonePartialFollowsPacket(xInScene, zInScene))
+            session.write(updates.first())
+            return
+        }
+
+        var bytes = byteArrayOf()
+
+        for (packet in updates) {
+            val zoneUpdateBuilder = session.builders[packet::class] ?: throw IllegalStateException("Cannot write zone updates. Unhandled zone update $packet")
+            val buffer = ByteBuffer.allocate(1 + zoneUpdateBuilder.size)
+            buffer.writeByte(zonePacketIndexes[packet::class]!!)
+            zoneUpdateBuilder.build(packet, buffer)
+            bytes += buffer.flip().moveToByteArray()
+        }
+
+        session.write(UpdateZonePartialEnclosedPacket(xInScene, zInScene, bytes))
+    }
+
+    private fun buildZoneUpdates(player: Player): HashSet<Packet> {
         val updates = HashSet<Packet>()
 
         for (request in projectiles) {
@@ -41,104 +86,63 @@ class Zone(
         }
 
         for (obj in objs) {
-            updates.addObj(player, obj)
+            updates.addObjRequest(ObjUpdateRequest(floorItem = obj), player)
         }
 
-        updates.writeZoneUpdates(player)
+        return updates
     }
 
-    fun writeZoneUpdates(player: Player) {
-        if (!hasUpdate()) return
-
+    private fun buildPendingZoneUpdates(player: Player): HashSet<Packet> {
         val updates = HashSet<Packet>()
 
-        for (request in projectiles) {
-            updates.addMapProjAnim(request)
-        }
-
-        for (request in objRequests) {
-            if (request.value) {
-                updates.addObj(player, request.key)
-            } else {
-                updates.removeObj(player, request.key)
+        for (request in zoneUpdatesRequest) {
+            when (request) {
+                is ObjUpdateRequest -> {
+                    updates.addObjRequest(request, player)
+                }
+                is ProjectileRequest -> {
+                    updates.addMapProjAnim(request)
+                }
             }
         }
 
-        updates.writeZoneUpdates(player)
+        return updates
     }
 
-    fun requestAddMapProjAnim(projectile: ProjectileRequest): Boolean {
-        if (projectile in projectiles) return false
-        projectiles += projectile
-        return true
+    private fun HashSet<Packet>.addObjRequest(request: ObjUpdateRequest, player: Player) {
+        val id = request.floorItem.id
+        val quantity = request.floorItem.quantity
+        val packedOffset = player.location.packedOffset
+
+        if (request.remove) {
+            this += ObjRemovePacket(id, quantity, packedOffset)
+        } else {
+            this += ObjAddPacket(id, quantity, packedOffset)
+        }
     }
 
-    fun requestAddObj(floorItem: FloorItem): Boolean {
-        objRequests[floorItem] = true
-        objs.add(floorItem)
-        return true
+    fun update(request: ZoneUpdateRequest) {
+        zoneUpdatesRequest += request
+
+        when (request) {
+            is ObjUpdateRequest -> processObjRequest(request)
+            is ProjectileRequest -> projectiles += request
+            else -> throw IllegalStateException("Cannot append zone update. Unhandled zone update request $request")
+        }
     }
 
-    fun requestRemoveObj(floorItem: FloorItem): Boolean {
-        objRequests[floorItem] = false
-        objs.remove(floorItem)
-        return true
+    private fun processObjRequest(request: ObjUpdateRequest) {
+        if (request.remove) {
+            objs.remove(request.floorItem)
+        } else {
+            objs.add(request.floorItem)
+        }
     }
 
     fun clear() {
-        objRequests.clear()
+        zoneUpdatesRequest.clear()
         projectiles.clear()
     }
-
-    private fun writeZoneUpdates(player: Player, xInScene: Int, zInScene: Int, listOfUpdates: HashSet<Packet>) {
-        if (listOfUpdates.size == 1) {
-            player.session.write(UpdateZonePartialFollowsPacket(xInScene, zInScene))
-            player.session.write(listOfUpdates.first())
-            return
-        }
-        var bytes = byteArrayOf()
-        for (packet in listOfUpdates) {
-            val packetBuilder = player.session.builders[packet::class]!!
-            val buffer = ByteBuffer.allocate(1 + packetBuilder.size)
-            buffer.writeByte(zonePacketIndexes[packet::class]!!)
-            packetBuilder.build(packet, buffer)
-            bytes += buffer.flip().moveToByteArray()
-        }
-        player.session.write(UpdateZonePartialEnclosedPacket(xInScene, zInScene, bytes))
-    }
-
-    private fun HashSet<Packet>.writeZoneUpdates(player: Player) {
-        val baseZoneX = player.baseZoneLocation.x
-        val baseZoneZ = player.baseZoneLocation.z
-
-        val xInScene = (location.x - baseZoneX) shl 3
-        val zInScene = (location.z - baseZoneZ) shl 3
-
-        writeZoneUpdates(
-            player,
-            xInScene,
-            zInScene,
-            this
-        )
-    }
-
-    private fun HashSet<Packet>.addObj(player: Player, floorItem: FloorItem) {
-        add(
-            ObjAddPacket(
-                id = floorItem.id,
-                quantity = floorItem.amount,
-                packedOffset = floorItem.location.toLocalLocation(player.lastLoadedLocation).packedOffset
-            )
-        )
-    }
-
-    private fun HashSet<Packet>.removeObj(player: Player, floorItem: FloorItem) = add(
-        ObjRemovePacket(
-            id = floorItem.id,
-            quantity = floorItem.amount,
-            packedOffset = floorItem.location.toLocalLocation(player.lastLoadedLocation).packedOffset
-        )
-    )
 
     private fun HashSet<Packet>.addMapProjAnim(request: ProjectileRequest) {
         val projectile = request.projectile
@@ -157,24 +161,22 @@ class Zone(
         val distanceZ = to.z - from.z
         val flightTime = projectile.flightTime(from.distanceTo(to))
 
-        add(
-            MapProjAnimPacket(
-                id = projectile.id,
-                startHeight = projectile.startHeight,
-                endHeight = projectile.endHeight,
-                delay = projectile.delay,
-                angle = projectile.angle,
-                distOffset = projectile.distOffset,// Moves the projectile closer to the end location by units of 1/128 with 128 being a tile
-                packedOffset = ((from.x and 0x7) shl 4) or (from.z and 0x7),
-                targetIndex = targetIndex,
-                distanceX = distanceX,
-                distanceZ = distanceZ,
-                flightTime = flightTime,
-            )
+        this += MapProjAnimPacket(
+            id = projectile.id,
+            startHeight = projectile.startHeight,
+            endHeight = projectile.endHeight,
+            delay = projectile.delay,
+            angle = projectile.angle,
+            distOffset = projectile.distOffset,// Moves the projectile closer to the end location by units of 1/128 with 128 being a tile
+            packedOffset = request.from.packedOffset,
+            targetIndex = targetIndex,
+            distanceX = distanceX,
+            distanceZ = distanceZ,
+            flightTime = flightTime,
         )
     }
 
-    fun hasUpdate(): Boolean = objRequests.isNotEmpty() || projectiles.isNotEmpty()
+    fun requiresUpdate(): Boolean = zoneUpdatesRequest.isNotEmpty() || projectiles.isNotEmpty()
 
     fun leaveZone(actor: Actor) {
         if (actor is Player) {
