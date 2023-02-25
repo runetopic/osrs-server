@@ -75,9 +75,6 @@ _This project uses ktor for the networking, therefore the application is powered
           exponent = "c1d3827d26f642394175bc3c67ed5edc848f2654b28977678b911008d30988f4a6425e0af3cf8dc27d6d4c986726f9a99308d5ad21cdd72e07782bdd82fddc74fab02d5650848b8867b72728a42eec96f85f1682e515cc0881932d80dc9d4e2664e3d4983b295b2cd8cd62871db459178d194c6ada9e4faf9ac49af0cb28a89"
           modulus = "9081ec4aacbe0be1718d5dcdf7bbfd3ba738b15b4ed5e7e9a4769f0fda07e8e2094b08553ae1b78c794a1e064d29613f80495e303fbaa4f056f77b8b162a96616b2ca50dcd1a76bee4ba9fb67c4b7cd463da1f8c610f9a2e108efd5a571a958c78c4e4a5bfb40ee9bd2d99ae56f7ba18574b5a71d037ad538aee992bbee56375"
       }
-      map {
-          xteas = "/map/xteas210.json"
-      }
   }
   
   mongo {
