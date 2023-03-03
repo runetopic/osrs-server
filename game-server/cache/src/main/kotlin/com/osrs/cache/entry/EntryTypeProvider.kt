@@ -7,7 +7,15 @@ import com.osrs.common.buffer.readUMedium
 import java.nio.ByteBuffer
 
 abstract class EntryTypeProvider<T> : Iterable<T> {
-    internal val data by lazy(::loadTypeMap)
+    private var _data: Map<Int, T>? = null
+
+    internal val data: Map<Int, T>
+        get() {
+            if (_data == null) {
+                _data = loadTypeMap()
+            }
+            return _data!!
+        }
 
     override fun iterator(): Iterator<T> = data.values.iterator()
 

@@ -13,8 +13,16 @@ sealed class ZoneUpdateRequest {
         val projectile: Projectile
     ) : ZoneUpdateRequest()
 
+    class ObjAddRequest(
+        val floorItem: FloorItem
+    ) : ZoneUpdateRequest()
+
     class ObjUpdateRequest(
+        val floorItem: FloorItem
+    ) : ZoneUpdateRequest()
+
+    class ObjRemoveRequest(
         val floorItem: FloorItem,
-        val remove: Boolean = false
+        val receiver: Int = -1
     ) : ZoneUpdateRequest()
 }

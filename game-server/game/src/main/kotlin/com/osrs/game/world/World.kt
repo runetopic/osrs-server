@@ -21,7 +21,6 @@ data class World(
     val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
     val stepValidator: StepValidator,
-    val zoneManager: ZoneManager
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
@@ -36,6 +35,7 @@ data class World(
 
     fun processLoginRequest() {
         if (!isOnline) return
+        if (loginRequests.isEmpty()) return
 
         loginRequests.entries.take(50).onEach {
             players.add(it.key)
@@ -45,6 +45,7 @@ data class World(
 
     fun processLogoutRequest() {
         if (!isOnline) return
+        if (logoutRequest.isEmpty()) return
 
         logoutRequest.entries.onEach {
             players.remove(it.key)
@@ -62,19 +63,9 @@ data class World(
         this.logoutRequest[player] = player.session
     }
 
-    fun zone(location: ZoneLocation): Zone {
-        return zoneManager[location]
-    }
+    fun zone(location: ZoneLocation): Zone = ZoneManager[location]
 
-    fun zone(location: Location): Zone {
-        return zoneManager[location.zoneLocation]
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun players(): List<Player> = players.filter { it != null && it.online } as List<Player>
-
-    @Suppress("UNCHECKED_CAST")
-    fun zones(predicate: (Zone) -> Boolean): List<Zone> = zoneManager.zones.filter { it != null && predicate.invoke(it) } as List<Zone>
+    fun zone(location: Location): Zone = ZoneManager[location.zoneLocation]
 
     companion object {
         const val MAX_PLAYERS = 2048

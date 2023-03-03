@@ -18,12 +18,12 @@ class ProjectileTest : CommandListener(
 
         val projectileRequest = ProjectileRequest(
             from = player.location,
-            to = player.location.transform(1, 0, 0),
+            to = player.location.transform(12, 0, 0),
             projectile = Projectile(
-                id = 2281,
+                id = 1465,
                 startHeight = 35,
                 endHeight = 36,
-                delay = 15,
+                delay = 12,
                 angle = 127,
                 lengthAdjustment = -3,
                 distOffset = 11,
@@ -31,6 +31,23 @@ class ProjectileTest : CommandListener(
             )
         )
 
+        val projectileRequest2 = ProjectileRequest(
+            from = player.location,
+            to = player.location.transform(12, 0, 0),
+            projectile = Projectile(
+                id = 1465,
+                startHeight = 35,
+                endHeight = 36,
+                delay = 20,
+                angle = 127,
+                lengthAdjustment = -3,
+                distOffset = 11,
+                stepMultiplier = 4
+            )
+        )
+
+
         zone.update(projectileRequest)
+        zone.update(projectileRequest2)
     }
 }

@@ -13,13 +13,13 @@ allprojects {
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_19.majorVersion))
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
         }
     }
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_19.majorVersion))
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
         }
     }
 

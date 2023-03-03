@@ -1,13 +1,19 @@
 package com.osrs.game.world.map.zone
 
 import com.osrs.common.map.location.ZoneLocation
+import com.osrs.game.network.packet.Packet
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
 
-class ZoneManager {
+object ZoneManager {
     val zones: Array<Zone?> = arrayOfNulls(2048 * 2048 * 4)
 
-    operator fun get(zoneLocation: ZoneLocation): Zone {
-        return zones[zoneLocation.packedLocation] ?: createZone(zoneLocation)
-    }
+    private val observedZones = mutableSetOf<Int>()
+
+    private val zoneUpdates = mutableMapOf<Int, Sequence<Packet>>()
+
+    operator fun get(zoneLocation: ZoneLocation): Zone = zones[zoneLocation.packedLocation] ?: createZone(zoneLocation)
 
     fun createZone(location: ZoneLocation): Zone {
         val currentZone = zones[location.packedLocation]
@@ -16,4 +22,33 @@ class ZoneManager {
         zones[location.packedLocation] = newZone
         return newZone
     }
+
+    fun appendObservedZone(zones: Set<Int>) {
+        observedZones += zones
+    }
+
+    fun buildSharedZoneUpdates() {
+        for (trackedZone in observedZones) {
+            val zone = get(ZoneLocation(trackedZone))
+            val updates = zone.getZoneUpdateRequests()
+            val sharedUpdates = updates.asSequence().filter(::filterSharedUpdates)
+            if (sharedUpdates.none()) continue
+            zoneUpdates[trackedZone] = zone.buildSharedUpdates(sharedUpdates)
+        }
+    }
+
+    private fun filterSharedUpdates(request: ZoneUpdateRequest): Boolean {
+        if (request is ObjAddRequest || request is ObjUpdateRequest) return false
+        if (request is ObjRemoveRequest && request.receiver != -1) return false
+        return true
+    }
+
+    fun clear() {
+         if (observedZones.isNotEmpty()) observedZones.clear()
+         if (zoneUpdates.isNotEmpty()) zoneUpdates.clear()
+    }
+
+    fun getZoneUpdates(zoneLocation: Int): Sequence<Packet>? = zoneUpdates[zoneLocation]
 }
+
+

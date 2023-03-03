@@ -18,7 +18,6 @@ class MapProjAnimPacketBuilder : PacketBuilder<MapProjAnimPacket>(
     size = 16
 ) {
     override fun build(packet: MapProjAnimPacket, buffer: ByteBuffer) {
-//        val packedZoneCoordinates = ((packet.from.x and 0x7) shl 4) or (packet.from.z and 0x7)
         buffer.writeShortLittleEndianAdd(packet.id)
         buffer.writeByte(packet.angle)
         buffer.writeMedium(packet.targetIndex)

@@ -4,7 +4,7 @@ import com.google.inject.Singleton
 import com.osrs.game.actor.player.Player
 import com.osrs.game.command.CommandListener
 import com.osrs.game.item.FloorItem
-import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 
 @Singleton
 class AddItemTest : CommandListener(
@@ -13,7 +13,7 @@ class AddItemTest : CommandListener(
     override fun execute(command: String, player: Player) {
         val zone = player.world.zone(player.location)
         zone.update(
-            ObjUpdateRequest(
+            ObjAddRequest(
                 FloorItem(995, 1, player.location)
             )
         )
