@@ -11,6 +11,7 @@ import com.osrs.game.actor.render.HintArrowType.LOCATION
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.container.Inventory
+import com.osrs.game.item.FloorItem
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -52,6 +53,8 @@ class Player(
     val movementQueue = MovementQueue(this)
 
     override var zone = world.zone(location)
+
+    var groundItems = ArrayList<FloorItem>()
 
     override var moveDirection: MoveDirection? = null
 
@@ -96,6 +99,7 @@ class Player(
             ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
             ClientScriptPacket(2498, arrayOf(0, 0, 0))
         )
+
 
         scripts.forEach(session::write)
         online = true

@@ -84,8 +84,7 @@ class CollisionMap @Inject constructor(
                         if (!locations.contains(it.id)) return@forEach
                         val gameObject = GameObject(it.id, location, it.shape, it.rotation)
                         addObjectCollision(gameObject)
-                        ZoneManager.createZone(location.zoneLocation)
-                        // TODO add object into zone
+                        ZoneManager.createZone(location.zoneLocation).addGameObject(gameObject)
                     }
                 }
             }

@@ -47,6 +47,7 @@ import com.osrs.game.network.packet.reader.impl.IfButton9PacketReader
 import com.osrs.game.network.packet.reader.impl.MoveGamePacketReader
 import com.osrs.game.network.packet.reader.impl.NoTimeoutPacketReader
 import com.osrs.game.network.packet.reader.impl.WindowStatusPacketReader
+import com.osrs.game.network.packet.type.LocAddPacket
 import com.osrs.game.network.packet.type.client.CheatPacket
 import com.osrs.game.network.packet.type.client.IdlePacket
 import com.osrs.game.network.packet.type.client.IfButtonPacket
@@ -59,6 +60,7 @@ import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
+import com.osrs.game.network.packet.type.server.LocAddPacketBuilder
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.MidiSongPacket
@@ -105,6 +107,7 @@ object PacketModule : KotlinModule() {
         builders.addBinding(UpdateZonePartialFollowsPacket::class).to<UpdateZonePartialFollowsPacketBuilder>().asEagerSingleton()
         builders.addBinding(UpdateZonePartialEnclosedPacket::class).to<UpdateZonePartialEnclosedPacketBuilder>().asEagerSingleton()
         builders.addBinding(MapProjAnimPacket::class).to<MapProjAnimPacketBuilder>().asEagerSingleton()
+        builders.addBinding(LocAddPacket::class).to<LocAddPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

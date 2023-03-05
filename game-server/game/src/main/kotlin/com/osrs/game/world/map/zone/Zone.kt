@@ -6,11 +6,14 @@ import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
 import com.osrs.game.item.FloorItem
 import com.osrs.game.network.packet.Packet
+import com.osrs.game.network.packet.type.LocAddPacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.ObjAddPacket
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
-import com.osrs.game.network.packet.type.server.UpdateZoneFullFollowsPacket
 import com.osrs.game.network.packet.type.server.UpdateZonePartialEnclosedPacket
+import com.osrs.game.network.packet.type.server.UpdateZonePartialFollowsPacket
+import com.osrs.game.world.map.GameObject
+import com.osrs.game.world.map.zone.ZoneUpdateRequest.LocAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
@@ -18,9 +21,10 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 class Zone(
     val location: ZoneLocation,
-    val players: HashSet<Player> = HashSet()
 ) {
-    val objs: HashSet<FloorItem> = HashSet()
+    private val players = HashSet<Player>()
+    private val objs = ArrayList<FloorItem>()
+    private val locs = ArrayList<GameObject>()
 
     private val zoneUpdateRequest = ArrayList<ZoneUpdateRequest>()
     private val zoneUpdates = ArrayList<Packet>()
@@ -38,14 +42,17 @@ class Zone(
     }
 
     fun writeInitialZoneUpdates(player: Player) {
-        if (objs.isNotEmpty()) {
-            for (obj in objs) {
-                val id = obj.id
-                val quantity = obj.quantity
-                val packedOffset = obj.location.packedOffset
-                player.write(ObjAddPacket(id, quantity, packedOffset))
-            }
-        }
+        player.sendObjs()
+        player.sendLocs()
+    }
+
+    private fun Player.sendLocs() {
+        for (loc in locs) sendLocAddPacket(loc)
+    }
+
+    private fun Player.sendObjs() {
+        for (obj in this@Zone.objs) sendObjAddPacket(obj)
+        for (obj in groundItems) sendObjAddPacket(obj)
     }
 
     fun writeZoneUpdates(player: Player) {
@@ -55,26 +62,32 @@ class Zone(
         val xInScene = (location.x - baseZoneX) shl 3
         val zInScene = (location.z - baseZoneZ) shl 3
 
-        if (!requiresUpdate()) return
+        player.writeUpdates(xInScene, zInScene)
+        player.writeGlobalUpdates(xInScene, zInScene)
+    }
 
-        player.session.write(UpdateZoneFullFollowsPacket(xInScene, zInScene))
+    private fun Player.writeUpdates(xInScene: Int, zInScene: Int) {
+        write(UpdateZonePartialFollowsPacket(xInScene, zInScene))
 
-        for (obj in objs) {
-            val id = obj.id
-            val quantity = obj.quantity
-            val packedOffset = obj.location.packedOffset
-            player.write(ObjAddPacket(id, quantity, packedOffset))
+        for (request in zoneUpdateRequest) {
+            if (request is ObjAddRequest && request.isVisible(this)) {
+                sendObjAddPacket(request.floorItem)
+            }
+
+            if (request is ObjRemoveRequest && request.receiver == -1) {
+                sendObjRemovePacket(request.floorItem)
+            }
         }
+    }
 
-        val sharedUpdates = ZoneManager.getZoneUpdates(location.packedLocation)
-
-        if (sharedUpdates != null) {
-            player.session.write(
+    private fun Player.writeGlobalUpdates(xInScene: Int, zInScene: Int) {
+        ZoneManager.getGlobalZoneUpdates(location.zoneLocation.packedLocation).let { updates ->
+            session.write(
                 UpdateZonePartialEnclosedPacket(
                     xInScene,
                     zInScene,
-                    sharedUpdates,
-                    player.session.builders
+                    updates,
+                    session.builders
                 )
             )
         }
@@ -83,9 +96,10 @@ class Zone(
     fun update(request: ZoneUpdateRequest) {
         zoneUpdateRequest += request
 
-        if (request is ObjAddRequest) addObj(request)
-        if (request is ObjRemoveRequest) removeObj(request)
+        if (request is ObjAddRequest && request.receiver == -1) addObj(request)
+        if (request is ObjRemoveRequest && request.receiver == -1) removeObj(request)
         if (request is ObjUpdateRequest) TODO()
+        if (request is LocAddRequest) addLoc(request)
     }
 
     private fun addObj(request: ObjAddRequest) {
@@ -96,6 +110,10 @@ class Zone(
         objs.remove(request.floorItem)
     }
 
+    private fun addLoc(request: LocAddRequest) {
+        locs.add(request.gameObject)
+    }
+
     fun buildSharedUpdates(sharedUpdates: Sequence<ZoneUpdateRequest>): Sequence<Packet> = sequence {
         for (request in sharedUpdates) {
             if (request is ObjRemoveRequest) {
@@ -104,8 +122,37 @@ class Zone(
             if (request is ProjectileRequest) {
                 yieldMapAnimProjPacket(request)
             }
+            if (request is LocAddRequest) {
+                yieldLocAddPacket(request)
+            }
         }
     }
+
+    private fun Player.sendLocAddPacket(gameObject: GameObject) {
+        val packedOffset = gameObject.location.packedOffset
+        write(LocAddPacket(gameObject.id, gameObject.shape, gameObject.rotation, packedOffset))
+    }
+
+    private fun Player.sendObjRemovePacket(floorItem: FloorItem) {
+        val id = floorItem.id
+        val quantity = floorItem.quantity
+        val packedOffset = floorItem.location.packedOffset
+        write(ObjRemovePacket(id, quantity, packedOffset))
+    }
+
+    private fun Player.sendObjAddPacket(floorItem: FloorItem) {
+        val id = floorItem.id
+        val quantity = floorItem.quantity
+        val packedOffset = floorItem.location.packedOffset
+        write(ObjAddPacket(id, quantity, packedOffset))
+    }
+
+    private suspend fun SequenceScope<Packet>.yieldLocAddPacket(request: LocAddRequest) {
+        val gameObject = request.gameObject
+        val packedOffset = gameObject.location.packedOffset
+        yield(LocAddPacket(gameObject.id, gameObject.shape, gameObject.rotation, packedOffset))
+    }
+
     private suspend fun SequenceScope<Packet>.yieldObjRemovePacket(request: ObjRemoveRequest) {
         val floorItem = request.floorItem
         val packedOffset = floorItem.location.packedOffset
@@ -148,5 +195,9 @@ class Zone(
     fun getZoneUpdateRequests() : List<ZoneUpdateRequest> = zoneUpdateRequest
 
     fun requiresUpdate(): Boolean = zoneUpdateRequest.isNotEmpty()
+
+    fun addGameObject(gameObject: GameObject) {
+        locs.add(gameObject)
+    }
 }
 

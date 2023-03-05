@@ -10,8 +10,7 @@ object ZoneManager {
     val zones: Array<Zone?> = arrayOfNulls(2048 * 2048 * 4)
 
     private val observedZones = mutableSetOf<Int>()
-
-    private val zoneUpdates = mutableMapOf<Int, Sequence<Packet>>()
+    private val globalUpdates = mutableMapOf<Int, Sequence<Packet>>()
 
     operator fun get(zoneLocation: ZoneLocation): Zone = zones[zoneLocation.packedLocation] ?: createZone(zoneLocation)
 
@@ -31,9 +30,10 @@ object ZoneManager {
         for (trackedZone in observedZones) {
             val zone = get(ZoneLocation(trackedZone))
             val updates = zone.getZoneUpdateRequests()
+            if (updates.isEmpty()) continue
             val sharedUpdates = updates.asSequence().filter(::filterSharedUpdates)
             if (sharedUpdates.none()) continue
-            zoneUpdates[trackedZone] = zone.buildSharedUpdates(sharedUpdates)
+            globalUpdates[trackedZone] = zone.buildSharedUpdates(sharedUpdates)
         }
     }
 
@@ -45,10 +45,10 @@ object ZoneManager {
 
     fun clear() {
          if (observedZones.isNotEmpty()) observedZones.clear()
-         if (zoneUpdates.isNotEmpty()) zoneUpdates.clear()
+         if (globalUpdates.isNotEmpty()) globalUpdates.clear()
     }
 
-    fun getZoneUpdates(zoneLocation: Int): Sequence<Packet>? = zoneUpdates[zoneLocation]
+    fun getGlobalZoneUpdates(zoneLocation: Int): Sequence<Packet>? = globalUpdates[zoneLocation]
 }
 
 

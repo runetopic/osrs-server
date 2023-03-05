@@ -2,8 +2,10 @@ package com.osrs.game.world.map.zone
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
+import com.osrs.game.actor.player.Player
 import com.osrs.game.item.FloorItem
 import com.osrs.game.projectile.Projectile
+import com.osrs.game.world.map.GameObject
 
 sealed class ZoneUpdateRequest {
     class ProjectileRequest(
@@ -14,8 +16,11 @@ sealed class ZoneUpdateRequest {
     ) : ZoneUpdateRequest()
 
     class ObjAddRequest(
-        val floorItem: FloorItem
-    ) : ZoneUpdateRequest()
+        val floorItem: FloorItem,
+        val receiver: Int = -1
+    ) : ZoneUpdateRequest() {
+        fun isVisible(player: Player) = receiver == player.index || receiver == -1
+    }
 
     class ObjUpdateRequest(
         val floorItem: FloorItem
@@ -24,5 +29,9 @@ sealed class ZoneUpdateRequest {
     class ObjRemoveRequest(
         val floorItem: FloorItem,
         val receiver: Int = -1
+    ) : ZoneUpdateRequest()
+
+    class LocAddRequest(
+        val gameObject: GameObject
     ) : ZoneUpdateRequest()
 }

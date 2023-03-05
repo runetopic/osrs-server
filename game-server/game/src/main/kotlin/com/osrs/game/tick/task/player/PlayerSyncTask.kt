@@ -21,7 +21,7 @@ class PlayerSyncTask(
         players.buildPendingUpdateBlocks()
         players.sendPlayerInfo()
         players.resetPlayers()
-        players.writeSharedZoneUpdates()
+        players.writeZoneUpdates()
         players.writeAndFlush()
     }
 
@@ -62,7 +62,7 @@ class PlayerSyncTask(
         }
     }
 
-    private fun PlayerList.writeSharedZoneUpdates() {
+    private fun PlayerList.writeZoneUpdates() {
         ZoneManager.clear()
 
         for (player in parallelStream()) {

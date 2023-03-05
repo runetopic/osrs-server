@@ -4,6 +4,7 @@ import com.google.inject.Singleton
 import com.osrs.common.buffer.writeByte
 import com.osrs.common.buffer.writeByteNegate
 import com.osrs.game.network.packet.builder.PacketBuilder
+import com.osrs.game.network.packet.type.LocAddPacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.ObjAddPacket
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
@@ -33,7 +34,7 @@ class UpdateZonePartialEnclosedPacketBuilder : PacketBuilder<UpdateZonePartialEn
             ObjRemovePacket::class.java,
             null,
             null,
-            null,
+            LocAddPacket::class.java,
             null,
             null,
             null,
