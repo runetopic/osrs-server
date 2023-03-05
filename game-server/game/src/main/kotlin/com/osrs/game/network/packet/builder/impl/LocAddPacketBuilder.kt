@@ -1,4 +1,4 @@
-package com.osrs.game.network.packet.type.server
+package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
 import com.osrs.common.buffer.writeByte
@@ -6,7 +6,7 @@ import com.osrs.common.buffer.writeByteAdd
 import com.osrs.common.buffer.writeByteNegate
 import com.osrs.common.buffer.writeShortLittleEndian
 import com.osrs.game.network.packet.builder.PacketBuilder
-import com.osrs.game.network.packet.type.LocAddPacket
+import com.osrs.game.network.packet.type.server.LocAddPacket
 import java.nio.ByteBuffer
 
 @Singleton

@@ -6,7 +6,7 @@ import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
 import com.osrs.game.item.FloorItem
 import com.osrs.game.network.packet.Packet
-import com.osrs.game.network.packet.type.LocAddPacket
+import com.osrs.game.network.packet.type.server.LocAddPacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.ObjAddPacket
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
@@ -20,7 +20,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 class Zone(
-    val location: ZoneLocation,
+    val location: ZoneLocation
 ) {
     private val players = HashSet<Player>()
     private val objs = ArrayList<FloorItem>()
@@ -177,12 +177,12 @@ class Zone(
                 endHeight = request.projectile.endHeight,
                 delay = request.projectile.delay,
                 angle = request.projectile.angle,
-                distOffset = request.projectile.distOffset,// Moves the projectile closer to the end location by units of 1/128 with 128 being a tile
+                distOffset = request.projectile.distOffset, // Moves the projectile closer to the end location by units of 1/128 with 128 being a tile
                 packedOffset = request.from.packedOffset,
                 targetIndex = targetIndex,
                 distanceX = distanceX,
                 distanceZ = distanceZ,
-                flightTime = flightTime,
+                flightTime = flightTime
             )
         )
     }
@@ -192,7 +192,7 @@ class Zone(
         zoneUpdateRequest.clear()
     }
 
-    fun getZoneUpdateRequests() : List<ZoneUpdateRequest> = zoneUpdateRequest
+    fun getZoneUpdateRequests(): List<ZoneUpdateRequest> = zoneUpdateRequest
 
     fun requiresUpdate(): Boolean = zoneUpdateRequest.isNotEmpty()
 
@@ -200,4 +200,3 @@ class Zone(
         locs.add(gameObject)
     }
 }
-
