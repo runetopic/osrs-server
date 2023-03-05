@@ -16,7 +16,7 @@ class AddItemTest : CommandListener(
 
         val floorItem =  FloorItem(995, Int.MAX_VALUE, Location(3222, 3222, 0))
 
-        player.groundItems.add(floorItem)
+        player.objs.add(floorItem)
 
         zone.update(
             ObjAddRequest(

@@ -54,7 +54,7 @@ class Player(
 
     override var zone = world.zone(location)
 
-    var groundItems = ArrayList<FloorItem>()
+    var objs = ArrayList<FloorItem>()
 
     override var moveDirection: MoveDirection? = null
 

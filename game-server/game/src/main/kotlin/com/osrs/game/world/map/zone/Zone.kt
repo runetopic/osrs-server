@@ -52,7 +52,7 @@ class Zone(
 
     private fun Player.sendObjs() {
         for (obj in this@Zone.objs) sendObjAddPacket(obj)
-        for (obj in groundItems) sendObjAddPacket(obj)
+        for (obj in objs) sendObjAddPacket(obj)
     }
 
     fun writeZoneUpdates(player: Player) {
