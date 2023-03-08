@@ -177,8 +177,4 @@ Private Updates:
 ### Media
 ![Test](https://i.gyazo.com/a2e43f3143a2a7f67fc2d22a84d2000c.jpg)
 
-### Known issues:
-
-If there is a missing configuration key, or a missing file. It sometimes will throw a weird classpath exception: ```Caused by: java.lang.IllegalArgumentException: Unsupported class file major version xx``` I'm working on figuring this out. It has something to do with guice + ktor application configuration and the way I'm loading it.
-
 If you need help, have any questions, or just wanna chat, feel free to join our [discord!](https://discord.gg/3scgBkrfMG)
