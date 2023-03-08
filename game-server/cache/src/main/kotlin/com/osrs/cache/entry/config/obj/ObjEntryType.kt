@@ -1,7 +1,10 @@
 package com.osrs.cache.entry.config.obj
 
 import com.osrs.cache.entry.EntryType
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ObjEntryType(
     override val id: Int,
     var model: Int = 0,
@@ -18,6 +21,10 @@ data class ObjEntryType(
     var wearPos1: Int = 0,
     var wearPos2: Int = 0,
     var wearPos3: Int = 0,
+    var colorFind: Array<Int?> = emptyArray(),
+    var colorReplace: Array<Int?> = emptyArray(),
+    var textureFind: Array<Int?> = emptyArray(),
+    var textureReplace: Array<Int?> = emptyArray(),
     var isMembersOnly: Boolean = false,
     var groundActions: List<String> = listOf("null", "null", "Take", "null", "null"),
     var inventoryActions: List<String> = listOf("null", "null", "null", "null", "Drop"),
@@ -47,5 +54,5 @@ data class ObjEntryType(
     var notedId: Int = -1,
     var placeholder: Int = -1,
     var placeholderTemplate: Int = -1,
-    var params: Map<Int, Any> = mapOf(),
+    var params: Map<Int, @Contextual Any> = mapOf(),
 ) : EntryType(id)

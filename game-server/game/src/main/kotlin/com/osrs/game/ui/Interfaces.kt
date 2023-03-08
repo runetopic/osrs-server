@@ -15,7 +15,7 @@ class Interfaces constructor(
     val player: Player,
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
-    private val interfaceListeners: Map<KClass<*>, InterfaceListener<*>>,
+    private val interfaceListeners: Map<KClass<*>, InterfaceListener<UserInterface>>,
     private val open: MutableList<UserInterface> = mutableListOf()
 ) : MutableList<UserInterface> by open {
     var layout: InterfaceLayout = RESIZABLE

@@ -48,7 +48,6 @@ import org.rsmod.pathfinder.flag.CollisionFlag.WALL_WEST_ROUTE_BLOCKER
 class CollisionMap @Inject constructor(
     private val locations: LocationEntryProvider,
     private val zoneFlags: ZoneFlags,
-    private val zoneManager: ZoneManager,
     private val stepValidator: StepValidator
 ) {
     fun canTravel(location: Location, direction: Direction): Boolean =
@@ -69,7 +68,7 @@ class CollisionMap @Inject constructor(
 
                     val location = Location(x + baseX, z + baseZ, level)
                     addFloorCollision(location)
-                    zoneManager.createZone(location.zoneLocation)
+                    ZoneManager.createZone(location.zoneLocation)
                 }
             }
         }
@@ -81,12 +80,12 @@ class CollisionMap @Inject constructor(
                     val baseZ = type.regionZ shl 6
 
                     type.locations[level][x][z].forEach {
+                        if (it == null) return@forEach
                         val location = Location(it.x + baseX, it.z + baseZ, it.level)
                         if (!locations.contains(it.id)) return@forEach
                         val gameObject = GameObject(it.id, location, it.shape, it.rotation)
                         addObjectCollision(gameObject)
-                        zoneManager.createZone(location.zoneLocation)
-                        // TODO add object into zone
+                        ZoneManager.createZone(location.zoneLocation).addStaticLoc(gameObject)
                     }
                 }
             }

@@ -16,6 +16,7 @@ import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
+import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.MidiSongPacket
@@ -26,7 +27,6 @@ import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
 import com.osrs.game.network.packet.type.server.UpdateStatPacket
 import com.osrs.game.network.packet.type.server.UpdateZoneFullFollowsPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
-import com.osrs.game.ui.InterfaceLayout.RESIZABLE
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
@@ -51,6 +51,10 @@ class Player(
     var lastLoadedLocation: Location = Location.None
 
     val movementQueue = MovementQueue(this)
+
+    override var zone = world.zone(location)
+
+    var objs = ArrayList<FloorItem>()
 
     override var moveDirection: MoveDirection? = null
 
@@ -77,22 +81,28 @@ class Player(
         session.writeLoginResponse()
         loadMapRegion(true)
         refreshAppearance()
+        session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
         updateStats()
         updateRunEnergy(runEnergy.toInt())
         session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
-        session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
         session.write(MidiSongPacket(62))
         session.write(SetPlayerOptionPacket("Follow", 1))
         session.write(SetPlayerOptionPacket("Trade", 2))
         session.write(HintArrowPacket(
             type = LOCATION,
-            targetX = this.location.x,
-            targetZ = this.location.z,
-            targetHeight = 255
+            targetX = location.x,
+            targetZ = location.z,
+            targetHeight = 0
         ))
-        this.interfaces.sendInterfaceLayout(RESIZABLE)
+
+        val scripts = arrayOf(
+            ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
+            ClientScriptPacket(2498, arrayOf(0, 0, 0))
+        )
+
+
+        scripts.forEach(session::write)
         online = true
-        world.zone(location).requestAddObj(FloorItem(4151, 1, location))
     }
 
     private fun loadMapRegion(initialize: Boolean) {
@@ -106,11 +116,12 @@ class Player(
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
         updateZones()
-        zone?.enterZone(this)
     }
 
     private fun updateZones() {
+        zone.leaveZone(this)
         zone = world.zone(location)
+        zone.enterZone(this)
 
         val baseZoneX = baseZoneLocation.x
         val baseZoneZ = baseZoneLocation.z
@@ -132,7 +143,7 @@ class Player(
                     val xInScene = (location.x - baseZoneX) shl 3
                     val yInScene = (location.z - baseZoneZ) shl 3
                     session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                    world.zone(location).buildZoneUpdates(this)
+                    world.zone(location).writeInitialZoneUpdates(this)
                 }
             }
         }
@@ -150,6 +161,10 @@ class Player(
         movementQueue.process()
 
         if (shouldRebuildMap()) loadMapRegion(false)
+
+        if (shouldUpdateZones()) {
+            updateZones()
+        }
     }
 
     fun processGroupedPackets() {
@@ -175,6 +190,8 @@ class Player(
         val limit = ((buildArea shr 3) / 2) - 1
         return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
     }
+
+    private fun shouldUpdateZones() = zone.location.id != location.zoneId
 
     private fun updateStats() {
         Skill.values().forEach {
@@ -208,6 +225,7 @@ class Player(
 
     fun logout() {
         online = false
+        zone.leaveZone(this)
     }
 
     fun write(packet: Packet) {

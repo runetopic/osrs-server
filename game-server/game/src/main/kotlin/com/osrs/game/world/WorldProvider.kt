@@ -6,7 +6,6 @@ import com.google.inject.Singleton
 import com.osrs.cache.Cache
 import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.world.map.CollisionMap
-import com.osrs.game.world.map.zone.ZoneManager
 import com.osrs.game.world.service.LoginService
 import org.rsmod.pathfinder.StepValidator
 
@@ -17,7 +16,6 @@ class WorldProvider @Inject constructor(
     private val maps: MapSquareTypeProvider,
     private val collisionMap: CollisionMap,
     private val stepValidator: StepValidator,
-    private val zoneManager: ZoneManager
 ) : Provider<World> {
 
     override fun get(): World = World(
@@ -27,6 +25,5 @@ class WorldProvider @Inject constructor(
         maps,
         collisionMap,
         stepValidator,
-        zoneManager
     )
 }

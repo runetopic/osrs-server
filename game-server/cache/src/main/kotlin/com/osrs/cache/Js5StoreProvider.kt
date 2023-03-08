@@ -13,6 +13,6 @@ class Js5StoreProvider @Inject constructor(
     override fun get(): Js5Store {
         val path = application.environment.config.property("game.cache.path").getString()
         val parallel = application.environment.config.property("game.cache.parallel").getString().toBoolean()
-        return Js5Store(Path.of(path), parallel, intArrayOf(5))
+        return Js5Store(Path.of(path), parallel)
     }
 }

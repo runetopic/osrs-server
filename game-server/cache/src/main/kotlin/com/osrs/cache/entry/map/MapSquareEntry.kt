@@ -8,9 +8,9 @@ class MapSquareEntry(
     val regionX get() = id shr 8
     val regionZ get() = id and 0xFF
     val terrain: Array<Array<Array<MapSquareTerrain?>>> = Array(LEVELS) { Array(MAP_SIZE) { arrayOfNulls(MAP_SIZE) } }
-    val locations: Array<Array<Array<MutableList<MapSquareLocation>>>> = Array(LEVELS) {
+    val locations: Array<Array<Array<Array<MapSquareLocation?>>>> = Array(LEVELS) {
         Array(MAP_SIZE) {
-            Array(MAP_SIZE) { mutableListOf() }
+            Array(MAP_SIZE) { arrayOfNulls(5) }
         }
     }
 

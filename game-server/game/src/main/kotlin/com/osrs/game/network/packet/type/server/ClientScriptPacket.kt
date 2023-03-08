@@ -2,7 +2,7 @@ package com.osrs.game.network.packet.type.server
 
 import com.osrs.game.network.packet.Packet
 
-data class RunClientScriptPacket(
+data class ClientScriptPacket(
     val id: Int,
     val parameters: Array<out Any>
 ) : Packet {
@@ -12,7 +12,7 @@ data class RunClientScriptPacket(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as RunClientScriptPacket
+        other as ClientScriptPacket
 
         if (id != other.id) return false
         if (!parameters.contentEquals(other.parameters)) return false

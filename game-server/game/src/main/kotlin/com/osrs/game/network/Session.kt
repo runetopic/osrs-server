@@ -46,7 +46,7 @@ class Session(
 
     var player: Player? = null
 
-    private val writePool = ByteBuffer.allocateDirect(40000)
+    val writePool = ByteBuffer.allocateDirect(40_000)
 
     suspend fun connect() = codec?.handle(this, readChannel, writeChannel)
 

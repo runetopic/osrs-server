@@ -13,11 +13,11 @@ abstract class Actor {
     abstract var moveDirection: MoveDirection?
     val renderer = ActorRenderer()
     abstract var location: Location
-    var lastLocation: Location? = null
+    var lastLocation: Location = Location.None
     var index = 0
     abstract var world: World
+    abstract var zone: Zone
 
-    var zone: Zone? = null
     var zones = hashSetOf<Int>()
 
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)

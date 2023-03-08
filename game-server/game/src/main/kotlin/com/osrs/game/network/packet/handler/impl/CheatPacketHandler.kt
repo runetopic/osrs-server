@@ -9,7 +9,7 @@ import com.osrs.game.network.packet.type.client.CheatPacket
 
 @Singleton
 class CheatPacketHandler @Inject constructor(
-    private val commands: Set<CommandListener>
+    commands: Set<CommandListener>
 ) : PacketHandler<CheatPacket>() {
 
     private val commandMap = commands.associateBy { it.name }

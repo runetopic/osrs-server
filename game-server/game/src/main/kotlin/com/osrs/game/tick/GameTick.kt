@@ -2,25 +2,20 @@ package com.osrs.game.tick
 
 import com.github.michaelbull.logging.InlineLogger
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
-import com.osrs.game.tick.task.SyncTask
-import com.osrs.game.tick.task.player.PlayerSyncTask
-import com.osrs.game.tick.task.world.WorldSyncTask
+import com.osrs.game.tick.task.WorldSyncTask
 import com.osrs.game.world.World
-import com.osrs.game.world.map.zone.ZoneManager
 import kotlin.system.measureTimeMillis
 
 
 class GameTick(
     private val world: World,
-    zoneManager: ZoneManager,
     playerUpdateBlocks: PlayerUpdateBlocks
 ) : Runnable {
     private val logger = InlineLogger()
     private var tick = 0
 
     private val syncTask = setOf(
-        WorldSyncTask(world),
-        PlayerSyncTask(world, zoneManager, playerUpdateBlocks)
+        WorldSyncTask(world, playerUpdateBlocks),
     )
 
     override fun run() {
@@ -29,7 +24,9 @@ class GameTick(
         try {
             val time = measureTimeMillis {
                 ++tick
-                syncTask.forEach(SyncTask::sync)
+                for (task in syncTask) {
+                    task.sync(tick)
+                }
             }
             val freeMemoryMB = ((Runtime.getRuntime().freeMemory() / 1024) / 1024).toFloat()
             val totalMemoryMB = ((Runtime.getRuntime().totalMemory() / 1024) / 1024).toFloat()

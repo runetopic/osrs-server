@@ -22,9 +22,9 @@ class ObjEntryProvider @Inject constructor(
     override fun loadTypeMap(): Map<Int, ObjEntryType> {
         val objs = cache.index(CONFIG_INDEX)
             .group(OBJ_CONFIG)
-            .files()
-            .map { ByteBuffer.wrap(it.data).loadEntryType(ObjEntryType(it.id)) }
-            .associateBy(ObjEntryType::id)
+            ?.files()
+            ?.map { ByteBuffer.wrap(it.data).loadEntryType(ObjEntryType(it.id)) }
+            ?.associateBy(ObjEntryType::id) ?: emptyMap()
 
         postLoadObjs(objs)
         return objs
@@ -63,11 +63,25 @@ class ObjEntryProvider @Inject constructor(
             in 35..39 -> type.inventoryActions = type.inventoryActions.toMutableList().apply {
                 this[opcode - 35] = readStringCp1252NullTerminated()
             }
-            40 -> repeat(readUByte()) {
-                discard(4) // Discard recolor.
+            40 -> {
+                val length = readUByte()
+                type.colorFind = arrayOfNulls(length)
+                type.colorReplace = arrayOfNulls(length)
+
+                for (var4 in 0 until length) {
+                    type.colorFind[var4] = readUShort()
+                    type.colorReplace[var4] =  readUShort()
+                }
             }
-            41 -> repeat(readUByte()) {
-                discard(4) // Discard retexture.
+            41 -> {
+                val length = readUByte()
+                type.textureFind = arrayOfNulls(length)
+                type.textureReplace = arrayOfNulls(length)
+
+                for (var4 in 0 until length) {
+                    type.textureFind[var4] = readUShort()
+                    type.textureReplace[var4] =  readUShort()
+                }
             }
             42 -> type.shiftClickIndex = readByte()
             65 -> type.isTradeable = true

@@ -19,9 +19,9 @@ class VarBitEntryProvider @Inject constructor(
     override fun loadTypeMap(): Map<Int, VarBitEntry> = cache
         .index(CONFIG_INDEX)
         .group(VARBIT_CONFIG)
-        .files()
-        .map { ByteBuffer.wrap(it.data).loadEntryType(VarBitEntry(it.id)) }
-        .associateBy(VarBitEntry::id)
+        ?.files()
+        ?.map { ByteBuffer.wrap(it.data).loadEntryType(VarBitEntry(it.id)) }
+        ?.associateBy(VarBitEntry::id) ?: emptyMap()
 
     private tailrec fun ByteBuffer.loadEntryType(type: VarBitEntry): VarBitEntry {
         when (val opcode = readUByte()) {
