@@ -6,8 +6,8 @@ import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.actor.render.impl.TemporaryMovementSpeed
 
 class ActorRenderer {
-    private val highDefinitionRenderBlocks: MutableMap<Int, HighDefinitionRenderingBlock<*, *>> = HashMap()
-    private val lowDefinitionRenderBlocks: MutableMap<Int, LowDefinitionRenderingBlock<*, *>> = HashMap()
+    private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderingBlock<*, *>?> = arrayOfNulls(13)
+    private val highDefinitionRenderBlocks: Array<HighDefinitionRenderingBlock<*, *>?> = arrayOfNulls(13)
 
     fun appearance(appearance: Appearance): Appearance {
         val block = appearance.toBlock()
@@ -36,14 +36,23 @@ class ActorRenderer {
         lowDefinitionRenderBlocks[highDefinitionRenderingBlock.block.index] = lowDefinitionRenderingBlock
     }
 
-    fun highDefinitionUpdates(): Collection<HighDefinitionRenderingBlock<*, *>> = highDefinitionRenderBlocks.values
-    fun lowDefinitionUpdates(): Collection<LowDefinitionRenderingBlock<*, *>> = lowDefinitionRenderBlocks.values
+    fun highDefinitionUpdates(): Array<HighDefinitionRenderingBlock<*, *>?> = highDefinitionRenderBlocks
+    fun lowDefinitionUpdates(): Array<LowDefinitionRenderingBlock<*, *>?> = lowDefinitionRenderBlocks
     fun hasHighDefinitionUpdate(): Boolean = highDefinitionRenderBlocks.isNotEmpty()
 
     fun clearUpdates() {
-        highDefinitionRenderBlocks.clear()
-        lowDefinitionRenderBlocks.values.removeIf {
-            it.renderType !is Appearance && it.renderType !is MovementSpeed // TODO FaceAngle
+        highDefinitionRenderBlocks.fill(null)
+
+        for (lowDefBlock in lowDefinitionRenderBlocks) {
+            if (lowDefBlock == null) continue
+
+            if (lowDefBlock.renderType !is Appearance && lowDefBlock.renderType !is MovementSpeed) {
+                val index = lowDefinitionRenderBlocks.indexOf(lowDefBlock)
+
+                if (index == -1) continue
+
+                lowDefinitionRenderBlocks[index] = null
+            }
         }
     }
 }

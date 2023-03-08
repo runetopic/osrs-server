@@ -5,9 +5,9 @@ import com.osrs.game.network.packet.builder.impl.sync.RenderingBlock
 
 data class LowDefinitionRenderingBlock<T : Actor, R : RenderType>(
     val renderType: RenderType,
-    val block: RenderingBlock<T, R>,
+    override val block: RenderingBlock<T, R>,
     val bytes: ByteArray
-) {
+) : AbstractRenderingBlock<T, R>(block) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

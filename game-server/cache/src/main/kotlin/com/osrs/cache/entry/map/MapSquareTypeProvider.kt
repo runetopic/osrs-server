@@ -103,7 +103,7 @@ class MapSquareTypeProvider @Inject constructor(
         }
 
         if (level >= 0) {
-            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOfFirst { it != null } + 1] = (
+            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOf(null)] = (
                 MapSquareLocation(
                     id = locId,
                     x = localX,

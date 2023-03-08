@@ -30,7 +30,7 @@ data class World(
     var isOnline = false
 
     fun start() {
-        maps.forEach(collisionMap::applyCollision)
+        maps.entries.forEach(collisionMap::applyCollision)
     }
 
     fun processLoginRequest() {

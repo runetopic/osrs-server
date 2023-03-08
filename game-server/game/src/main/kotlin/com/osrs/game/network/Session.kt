@@ -38,6 +38,8 @@ class Session(
     private val readChannel = socket.openReadChannel()
     private val writeChannel = socket.openWriteChannel()
 
+    private val writePool = ByteBuffer.allocateDirect(40_000)
+
     private lateinit var clientCipher: ISAAC
     private lateinit var serverCipher: ISAAC
     private var codec = codecs.find { it.instanceOf(HandshakeCodec::class) }
@@ -45,8 +47,6 @@ class Session(
     private val seed = ((Math.random() * 99999999.0).toLong() shl 32) + (Math.random() * 99999999.0).toLong()
 
     var player: Player? = null
-
-    val writePool = ByteBuffer.allocateDirect(40_000)
 
     suspend fun connect() = codec?.handle(this, readChannel, writeChannel)
 

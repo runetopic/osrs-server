@@ -6,7 +6,7 @@ import com.osrs.common.buffer.readUByte
 import com.osrs.common.buffer.readUMedium
 import java.nio.ByteBuffer
 
-abstract class EntryTypeProvider<T: EntryType> : Iterable<T> {
+abstract class EntryTypeProvider<T: EntryType> {
     private var _data: Map<Int, T>? = null
 
     internal val data: Map<Int, T>
@@ -17,7 +17,7 @@ abstract class EntryTypeProvider<T: EntryType> : Iterable<T> {
             return _data!!
         }
 
-    override fun iterator(): Iterator<T> = data.values.iterator()
+    val entries get() = data.values
 
     fun contains(key: Int): Boolean = data.containsKey(key)
 

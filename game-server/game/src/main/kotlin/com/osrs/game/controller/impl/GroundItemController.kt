@@ -14,13 +14,11 @@ class GroundItemController(
     override fun process(world: World) {
         val zone = world.zone(floorItem.location)
 
-        println("processing ground item controller")
-
         floorItem.timer--
 
-        if (floorItem.timer == 20) {
+        if (floorItem.timer == 100) {
             zone.update(ObjAddRequest(floorItem))
-        } else if (floorItem.timer == 10) {
+        } else if (floorItem.timer == 0) {
             zone.update(ObjRemoveRequest(floorItem))
             removeController(this)
         }

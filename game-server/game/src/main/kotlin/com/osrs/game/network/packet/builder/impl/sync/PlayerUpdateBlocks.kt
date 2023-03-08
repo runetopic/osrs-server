@@ -3,6 +3,7 @@ package com.osrs.game.network.packet.builder.impl.sync
 import com.google.inject.Singleton
 import com.osrs.common.buffer.writeBytes
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.render.AbstractRenderingBlock
 import com.osrs.game.actor.render.HighDefinitionRenderingBlock
 import com.osrs.game.actor.render.LowDefinitionRenderingBlock
 import com.osrs.game.world.World
@@ -29,19 +30,39 @@ class PlayerUpdateBlocks(
         this.lowDefinitionUpdates[other.index] = other.renderer.lowDefinitionUpdates().buildLowDefinitionUpdates().readBytes()
     }
 
-    private fun Collection<HighDefinitionRenderingBlock<*, *>>.buildHighDefinitionUpdates(actor: Player): ByteReadPacket = buildPacket {
-        writeMask(fold(0) { current, next -> current or next.block.mask }.let { if (it > 0xff) it or BLOCK_VALUE else it })
-        associateWith { it.block.build(actor, it.renderType).readBytes() }.forEach {
-            actor.renderer.setLowDefinitionRenderingBlock(it.key, it.value)
-            writeBytes(it.value)
+    private fun Array<HighDefinitionRenderingBlock<*, *>?>.buildHighDefinitionUpdates(actor: Player): ByteReadPacket = buildPacket {
+        val mask = calculateMask()
+
+        writeMask(if (mask > 0xff) mask or BLOCK_VALUE else mask)
+
+        for (block in this@buildHighDefinitionUpdates) {
+            if (block == null) continue
+
+            val blockData = block.block.build(actor, block.renderType).readBytes()
+            actor.renderer.setLowDefinitionRenderingBlock(block, blockData)
+            writeBytes(blockData)
         }
     }
 
-    private fun Collection<LowDefinitionRenderingBlock<*, *>>.buildLowDefinitionUpdates(): ByteReadPacket = buildPacket {
-        writeMask(fold(0) { current, next -> current or next.block.mask }.let { if (it > 0xff) it or BLOCK_VALUE else it })
-        map(LowDefinitionRenderingBlock<* ,*>::bytes).forEach {
-            writeBytes(it)
+    private fun Array<LowDefinitionRenderingBlock<*, *>?>.buildLowDefinitionUpdates(): ByteReadPacket = buildPacket {
+        val mask = calculateMask()
+
+        writeMask(if (mask > 0xff) mask or BLOCK_VALUE else mask)
+
+        for (block in this@buildLowDefinitionUpdates) {
+            if (block == null) continue
+            writeBytes(block.bytes)
         }
+    }
+
+    private fun Array<out AbstractRenderingBlock<*, *>?>.calculateMask(): Int {
+        var mask = 0
+
+        for (block in this) {
+            if (block == null) continue
+            mask = mask or block.block.mask
+        }
+        return mask
     }
 
     private fun BytePacketBuilder.writeMask(mask: Int) {
