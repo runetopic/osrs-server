@@ -1,28 +1,40 @@
-package com.osrs.game.tick.task.player
+package com.osrs.game.tick.task
 
 import com.osrs.game.actor.PlayerList
+import com.osrs.game.controller.Controller
+import com.osrs.game.controller.ControllerManager.controllers
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
-import com.osrs.game.tick.task.SyncTask
 import com.osrs.game.world.World
 import com.osrs.game.world.map.zone.ZoneManager
 
-class PlayerSyncTask(
+class WorldSyncTask(
     val world: World,
     private val playerUpdateBlocks: PlayerUpdateBlocks,
 ) : SyncTask {
 
-    override fun sync() {
+    override fun sync(tick: Int) {
+        world.processLoginRequest()
+
         val players = world.players
 
-        if (players.isEmpty()) return
-
         players.processGroupedPackets()
+        controllers.processControllers()
         players.processPlayers()
         players.buildPendingUpdateBlocks()
         players.sendPlayerInfo()
         players.resetPlayers()
         players.writeZoneUpdates()
         players.writeAndFlush()
+
+        world.processLogoutRequest()
+    }
+
+    private fun Array<Controller<*>?>.processControllers() {
+        for(controller in this) {
+            if (controller == null) continue
+
+            controller.process(world)
+        }
     }
 
     private fun PlayerList.writeAndFlush() {
@@ -78,13 +90,13 @@ class PlayerSyncTask(
 
             for (zoneLocation in player.zones) {
                 val zone = ZoneManager.zones[zoneLocation] ?: continue
-                if (!zone.requiresUpdate()) continue
+                if (!zone.requiresSync()) continue
                 zone.writeZoneUpdates(player)
             }
         }
 
         for (zone in ZoneManager.zones) {
-            if (zone == null || !zone.requiresUpdate()) continue
+            if (zone == null || !zone.requiresSync()) continue
 
             zone.clear()
         }

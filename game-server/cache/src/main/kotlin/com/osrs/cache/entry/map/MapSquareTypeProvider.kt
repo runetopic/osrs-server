@@ -16,7 +16,7 @@ import com.osrs.common.buffer.readUShort
 import com.osrs.common.buffer.readUShortSmart
 import com.osrs.common.map.MapSquare
 import com.osrs.common.map.MapSquares
-import com.runetopic.cache.codec.decompress
+import com.runetopic.cache.extension.decompress
 import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
@@ -39,7 +39,7 @@ class MapSquareTypeProvider @Inject constructor(
 
         val mapIndex = cache.index(MAP_INDEX)
         val terrain = mapIndex.group("m${entry.regionX}_${entry.regionZ}")
-        val terrainData = ByteBuffer.wrap(terrain.data.decompress())
+        val terrainData = ByteBuffer.wrap(terrain?.data?.decompress()?.data)
 
         for (level in 0 until LEVELS) {
             for (x in 0 until MAP_SIZE) {
@@ -51,9 +51,9 @@ class MapSquareTypeProvider @Inject constructor(
 
         val locations = mapIndex.group("l${entry.regionX}_${entry.regionZ}")
 
-        if (locations.data.isNotEmpty()) {
+        if (locations?.data?.isNotEmpty() == true) {
             try {
-                ByteBuffer.wrap(locations.data.decompress(square.key)).loadLocs(entry)
+                ByteBuffer.wrap(locations.data.decompress(square.key).data).loadLocs(entry)
             } catch (exception: ZipException) {
                 logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. GroupId=${locations.id}, MapSquare=${square.id}." }
             }
@@ -103,7 +103,7 @@ class MapSquareTypeProvider @Inject constructor(
         }
 
         if (level >= 0) {
-            type.locations[level][localX][localZ].add(
+            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOfFirst { it != null } + 1] = (
                 MapSquareLocation(
                     id = locId,
                     x = localX,

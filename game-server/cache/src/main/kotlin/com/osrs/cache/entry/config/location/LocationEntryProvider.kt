@@ -24,9 +24,9 @@ class LocationEntryProvider @Inject constructor(
     override fun loadTypeMap(): Map<Int, LocationEntry> = cache
         .index(CONFIG_INDEX)
         .group(LOC_CONFIG)
-        .files()
-        .map { ByteBuffer.wrap(it.data).loadEntryType(LocationEntry(it.id)) }
-        .associateBy(LocationEntry::id)
+        ?.files()
+        ?.map { ByteBuffer.wrap(it.data).loadEntryType(LocationEntry(it.id)) }
+        ?.associateBy(LocationEntry::id) ?: emptyMap()
 
     private tailrec fun ByteBuffer.loadEntryType(type: LocationEntry): LocationEntry {
         when (val opcode = readUByte()) {

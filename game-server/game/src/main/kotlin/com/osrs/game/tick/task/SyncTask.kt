@@ -1,5 +1,5 @@
 package com.osrs.game.tick.task
 
 interface SyncTask {
-    fun sync()
+    fun sync(tick: Int)
 }

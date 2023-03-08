@@ -6,7 +6,6 @@ import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.world.World
-import io.ktor.http.parseServerSetCookieHeader
 import io.ktor.network.sockets.ServerSocket
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +46,7 @@ class Network @Inject constructor(
     fun shutdown() {
         world.isOnline = false
         server.close()
+        scope.cancel("Network shutdown")
         logger.info { "Network has been shutdown." }
     }
 }

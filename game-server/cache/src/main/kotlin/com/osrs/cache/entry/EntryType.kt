@@ -1,5 +1,9 @@
 package com.osrs.cache.entry
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+
+@Serializable
 abstract class EntryType(
-    open val id: Int
+    @Transient open val id: Int = -1
 )

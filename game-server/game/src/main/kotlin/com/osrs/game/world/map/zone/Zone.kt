@@ -4,6 +4,9 @@ import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.distanceTo
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
+import com.osrs.game.controller.Controller
+import com.osrs.game.controller.ControllerManager.addController
+import com.osrs.game.controller.impl.GroundItemController
 import com.osrs.game.item.FloorItem
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.type.LocAddPacket
@@ -16,15 +19,20 @@ import com.osrs.game.world.map.GameObject
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.LocAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
-import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 class Zone(
     val location: ZoneLocation,
 ) {
     private val players = HashSet<Player>()
-    private val objs = ArrayList<FloorItem>()
-    private val locs = ArrayList<GameObject>()
+
+    private val controllers = ArrayList<Controller<*>>()
+
+    private val spawnedObjs = ArrayList<FloorItem>()
+    private val removedObjs = ArrayList<FloorItem>()
+
+    private val spawnedLocs = ArrayList<GameObject>()
+    private val staticLocs = ArrayList<GameObject>()
 
     private val zoneUpdateRequest = ArrayList<ZoneUpdateRequest>()
     private val zoneUpdates = ArrayList<Packet>()
@@ -47,12 +55,15 @@ class Zone(
     }
 
     private fun Player.sendLocs() {
-        for (loc in locs) sendLocAddPacket(loc)
+        for (loc in spawnedLocs) sendLocAddPacket(loc)
     }
 
     private fun Player.sendObjs() {
-        for (obj in this@Zone.objs) sendObjAddPacket(obj)
-        for (obj in objs) sendObjAddPacket(obj)
+        for (obj in this@Zone.spawnedObjs) sendObjAddPacket(obj)
+
+        for (obj in objs.filter { it.location.zoneId == this@Zone.location.id }) {
+            sendObjAddPacket(obj)
+        }
     }
 
     fun writeZoneUpdates(player: Player) {
@@ -70,12 +81,12 @@ class Zone(
         write(UpdateZonePartialFollowsPacket(xInScene, zInScene))
 
         for (request in zoneUpdateRequest) {
-            if (request is ObjAddRequest && request.isVisible(this)) {
-                sendObjAddPacket(request.floorItem)
-            }
-
             if (request is ObjRemoveRequest && request.receiver == -1) {
                 sendObjRemovePacket(request.floorItem)
+            }
+
+            if (request is ObjAddRequest && !objs.contains(request.floorItem)) {
+                sendObjAddPacket(request.floorItem)
             }
         }
     }
@@ -93,25 +104,48 @@ class Zone(
         }
     }
 
+    fun update(player: Player, request: ZoneUpdateRequest) {
+        val baseZoneX = player.baseZoneLocation.x
+        val baseZoneZ = player.baseZoneLocation.z
+        val xInScene = (location.x - baseZoneX) shl 3
+        val zInScene = (location.z - baseZoneZ) shl 3
+
+        player.session.write(UpdateZonePartialFollowsPacket(xInScene, zInScene))
+
+        if (request is ObjRemoveRequest) {
+            player.objs.remove(request.floorItem)
+            player.sendObjRemovePacket(request.floorItem)
+        }
+
+        if (request is ObjAddRequest) {
+            player.objs.add(request.floorItem)
+            player.sendObjAddPacket(request.floorItem)
+
+            if (request.floorItem.timer != -1) {
+                addController(GroundItemController(request.floorItem))
+            }
+        }
+    }
+
     fun update(request: ZoneUpdateRequest) {
         zoneUpdateRequest += request
 
-        if (request is ObjAddRequest && request.receiver == -1) addObj(request)
-        if (request is ObjRemoveRequest && request.receiver == -1) removeObj(request)
-        if (request is ObjUpdateRequest) TODO()
+        if (request is ObjAddRequest) addObj(request)
+        if (request is ObjRemoveRequest) removeObj(request)
         if (request is LocAddRequest) addLoc(request)
     }
 
     private fun addObj(request: ObjAddRequest) {
-        objs.add(request.floorItem)
+        spawnedObjs.add(request.floorItem)
     }
 
     private fun removeObj(request: ObjRemoveRequest) {
-        objs.remove(request.floorItem)
+        spawnedObjs.remove(request.floorItem)
+        removedObjs.add(request.floorItem)
     }
 
     private fun addLoc(request: LocAddRequest) {
-        locs.add(request.gameObject)
+        spawnedLocs.add(request.gameObject)
     }
 
     fun buildSharedUpdates(sharedUpdates: Sequence<ZoneUpdateRequest>): Sequence<Packet> = sequence {
@@ -133,18 +167,18 @@ class Zone(
         write(LocAddPacket(gameObject.id, gameObject.shape, gameObject.rotation, packedOffset))
     }
 
-    private fun Player.sendObjRemovePacket(floorItem: FloorItem) {
-        val id = floorItem.id
-        val quantity = floorItem.quantity
-        val packedOffset = floorItem.location.packedOffset
-        write(ObjRemovePacket(id, quantity, packedOffset))
-    }
-
     private fun Player.sendObjAddPacket(floorItem: FloorItem) {
         val id = floorItem.id
         val quantity = floorItem.quantity
         val packedOffset = floorItem.location.packedOffset
         write(ObjAddPacket(id, quantity, packedOffset))
+    }
+
+    private fun Player.sendObjRemovePacket(floorItem: FloorItem) {
+        val id = floorItem.id
+        val quantity = floorItem.quantity
+        val packedOffset = floorItem.location.packedOffset
+        write(ObjRemovePacket(id, quantity, packedOffset))
     }
 
     private suspend fun SequenceScope<Packet>.yieldLocAddPacket(request: LocAddRequest) {
@@ -194,10 +228,14 @@ class Zone(
 
     fun getZoneUpdateRequests() : List<ZoneUpdateRequest> = zoneUpdateRequest
 
-    fun requiresUpdate(): Boolean = zoneUpdateRequest.isNotEmpty()
+    fun requiresSync(): Boolean = zoneUpdateRequest.isNotEmpty()
 
-    fun addGameObject(gameObject: GameObject) {
-        locs.add(gameObject)
+    fun addStaticLoc(gameObject: GameObject) {
+        staticLocs.add(gameObject)
+    }
+
+    fun objAdd(floorItem: FloorItem) {
+        TODO("Not yet implemented")
     }
 }
 

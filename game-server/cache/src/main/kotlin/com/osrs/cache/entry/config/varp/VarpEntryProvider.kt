@@ -16,9 +16,9 @@ class VarpEntryProvider @Inject constructor(
 ): EntryTypeProvider<VarpEntry>() {
     override fun loadTypeMap(): Map<Int, VarpEntry> = cache.index(CONFIG_INDEX)
         .group(VARP_CONFIG)
-        .files()
-        .map { ByteBuffer.wrap(it.data).loadEntryType(VarpEntry(it.id)) }
-        .associateBy(VarpEntry::id)
+        ?.files()
+        ?.map { ByteBuffer.wrap(it.data).loadEntryType(VarpEntry(it.id)) }
+        ?.associateBy(VarpEntry::id) ?: emptyMap()
 
     private tailrec fun ByteBuffer.loadEntryType(type: VarpEntry): VarpEntry {
         when (val opcode = readUByte()) {

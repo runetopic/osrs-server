@@ -35,7 +35,7 @@ allprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.0.10-SNAPSHOT")
-        implementation("com.runetopic.cache:cache:1.6.0")
+        implementation("com.runetopic.cache:cache:1.7.7-SNAPSHOT")
         // Pathfinder
         implementation("com.github.blurite:pathfinder:2.4.2")
         // Logger

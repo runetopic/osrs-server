@@ -20,9 +20,9 @@ class EnumEntryProvider @Inject constructor(
     override fun loadTypeMap(): Map<Int, EnumEntry> = cache
         .index(CONFIG_INDEX)
         .group(ENUM_CONFIG)
-        .files()
-        .map { ByteBuffer.wrap(it.data).loadEntryType(EnumEntry(it.id)) }
-        .associateBy(EnumEntry::id)
+        ?.files()
+        ?.map { ByteBuffer.wrap(it.data).loadEntryType(EnumEntry(it.id)) }
+        ?.associateBy(EnumEntry::id) ?: emptyMap()
 
     private tailrec fun ByteBuffer.loadEntryType(type: EnumEntry): EnumEntry {
         when (val opcode = readUByte()) {
