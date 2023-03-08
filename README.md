@@ -118,6 +118,32 @@ _This project uses ktor for the networking, therefore the application is powered
 
 # Features
 
+### Zones:
+
+Processing:
+- Clear out the previously tracked zones and zone buffer.
+- Collect a set of all the observed zones for each tick
+- Iterate through the observed zones and build out all of the updates.
+- Iterate through all of the players in the observed zones and write the updates.
+- Clear out the zone of any pending updates
+
+Shared Updates:
+  - Shared updates are for updates visible to everyone in the observed zones 
+  - This means we can generate the updates to send to each player every tick instead of having to build this out for each player.
+  - Shared updates are always sent using enclosed packet and consist of:
+      - ObjDelPacket
+      - MapProjAnimPacket
+      - LocAddPacket
+      - LocDelPacket
+
+Private Updates:
+  - Private updates are used for things private to the player. These are things only the current observing player may see this tick.
+  - Private updates are sent using the partial follows packet and consist of:
+      - ObjUpdatePacket
+      - ObjAddPacket
+          - The way this works is they have an item collection that is serialized to the player. (This is used for instanced items, grave items, or when hopping worlds)
+          - Each zone can hold up to 129 of the same item, and if another item is added, it replaces the least valuable item with the new one.
+
 ### Packets
 
   #### Client Packets Implemented:
