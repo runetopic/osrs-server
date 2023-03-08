@@ -143,6 +143,8 @@ Private Updates:
       - ObjAddPacket
           - The way this works is they have an item collection that is serialized to the player. (This is used for instanced items, grave items, or when hopping worlds)
           - Each zone can hold up to 129 of the same item, and if another item is added, it replaces the least valuable item with the new one.
+      - ObjDelPacket
+          - This is used for picking up private items that only the player can see.
 
 ### Packets
 
