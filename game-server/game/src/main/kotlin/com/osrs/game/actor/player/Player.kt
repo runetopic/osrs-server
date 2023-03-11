@@ -77,7 +77,6 @@ class Player(
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        println("Init player $location")
         renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
     }
 
