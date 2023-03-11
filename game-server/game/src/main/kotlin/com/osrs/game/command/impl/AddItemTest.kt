@@ -11,7 +11,7 @@ class AddItemTest : CommandListener(
     name = "drop_item"
 ) {
     override fun execute(command: String, player: Player) {
-        val floorItem = FloorItem(995, Int.MAX_VALUE, player.location, 30)
+        val floorItem = FloorItem(995, Int.MAX_VALUE, player.location, 100)
 
         player.zone.update(
             player,

@@ -20,7 +20,7 @@ class AccountService @Inject constructor(
 
         return accountRepository.createAccount(
             Account(
-                username = username,
+                userName = username,
                 rights = 0,
                 email = email,
                 password = BCrypt.hashpw(password, BCrypt.gensalt(12)),

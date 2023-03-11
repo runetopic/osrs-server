@@ -16,6 +16,7 @@ import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
+import kotlin.math.acos
 
 @Singleton
 @OptIn(ExperimentalSerializationApi::class)
@@ -31,7 +32,8 @@ class AccountDiskRepository @Inject constructor(
         if (findAccountByUsername("admin") == null) {
             createAccount(
                 Account(
-                    username = "admin",
+                    userName = "admin",
+                    displayName = "Admin account",
                     rights = 2,
                     email = "admin@xlitersps.com",
                     password = BCrypt.hashpw("password", BCrypt.gensalt(12)),
@@ -55,20 +57,27 @@ class AccountDiskRepository @Inject constructor(
     }
 
     override fun createAccount(account: Account): Account {
-        val path = Path.of("${playerSaveDirectory}/${account.username}.json")
+        val path = Path.of("${playerSaveDirectory}/${account.userName}.json")
         json.encodeToStream(account, path.outputStream())
         return account
     }
 
     override fun saveAccount(updateAccountRequest: UpdateAccountRequest): Boolean {
-        val account = findAccountByUsername(updateAccountRequest.username) ?: return false
+        val account = findAccountByUsername(updateAccountRequest.userName) ?: return false
 
+        if (account.location != updateAccountRequest.location) {
+            account.location = updateAccountRequest.location
+        }
+
+        if (account.displayName != updateAccountRequest.displayName) {
+            account.displayName = updateAccountRequest.displayName
+        }
+
+        // TODO check diffs for skills and objs
         account.skills = updateAccountRequest.skills
-        account.location = updateAccountRequest.location
-        account.username = updateAccountRequest.username
         account.objs = updateAccountRequest.objs
 
-        val path = Path.of("${playerSaveDirectory}/${account.username}.json")
+        val path = Path.of("${playerSaveDirectory}/${account.userName}.json")
         json.encodeToStream(account, path.outputStream())
         return true
     }

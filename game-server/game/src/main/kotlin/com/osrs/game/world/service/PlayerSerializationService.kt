@@ -15,7 +15,8 @@ class PlayerSerializationService @Inject constructor(
         executor.submit {
             accountService.saveAccount(
                 UpdateAccountRequest(
-                    username = player.username,
+                    userName = player.username,
+                    displayName = player.displayName,
                     skills = player.skills,
                     location = player.location,
                     objs = player.objs

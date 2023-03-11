@@ -40,7 +40,8 @@ class Player(
     override var world: World,
     var session: Session,
 ) : Actor() {
-    val username get() = account.username
+    val username get() = account.userName
+    val displayName get() = account.displayName
     val skills get() = account.skills
 
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)

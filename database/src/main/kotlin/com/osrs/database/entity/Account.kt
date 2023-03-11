@@ -15,7 +15,8 @@ import java.time.Instant
 @Serializable
 data class Account(
     @Contextual val _id: Id<Account> = newId(),
-    var username: String,
+    val userName: String,
+    var displayName: String = "",
     val rights: Int = 0,
     val email: String,
     val password: String,

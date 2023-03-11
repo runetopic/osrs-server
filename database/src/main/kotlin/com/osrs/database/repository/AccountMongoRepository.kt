@@ -21,13 +21,14 @@ class AccountMongoRepository @Inject constructor(
 
     init {
         with(collection) {
-            ensureUniqueIndex(Account::email, Account::username)
-            val adminAccount = find(Account::username eq "admin")
+            ensureUniqueIndex(Account::email, Account::displayName)
+            val adminAccount = find(Account::displayName eq "admin")
 
             if (adminAccount.none()) {
                 insertOne(
                     Account(
-                        username = "admin",
+                        userName = "admin",
+                        displayName = "Admin account",
                         rights = 2,
                         email = "admin@xlitersps.com",
                         password = BCrypt.hashpw("password", BCrypt.gensalt(12)),
@@ -38,11 +39,11 @@ class AccountMongoRepository @Inject constructor(
         }
     }
 
-    override fun findAccountByUsername(username: String): Account? = collection.findOne(Account::username eq username)
+    override fun findAccountByUsername(username: String): Account? = collection.findOne(Account::displayName eq username)
 
     override fun createAccount(account: Account): Account {
         val created = collection.insertOne(account)
-        if (created.insertedId == null) throw InternalError("Failed to create the user in the database. Username: ${account.username}")
+        if (created.insertedId == null) throw InternalError("Failed to create the user in the database. Username: ${account.displayName}")
         return account
     }
 
