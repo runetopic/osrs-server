@@ -2,7 +2,7 @@ package com.osrs.game.controller.impl
 
 import com.osrs.game.controller.Controller
 import com.osrs.game.controller.ControllerManager.removeController
-import com.osrs.game.item.FloorItem
+import com.osrs.common.item.FloorItem
 import com.osrs.game.world.World
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest

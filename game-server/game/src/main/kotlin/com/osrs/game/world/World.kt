@@ -11,6 +11,7 @@ import com.osrs.game.world.map.CollisionMap
 import com.osrs.game.world.map.zone.Zone
 import com.osrs.game.world.map.zone.ZoneManager
 import com.osrs.game.world.service.LoginService
+import com.osrs.game.world.service.PlayerSerializationService
 import org.rsmod.pathfinder.StepValidator
 import java.util.concurrent.ConcurrentHashMap
 
@@ -18,6 +19,7 @@ data class World(
     val worldId: Int,
     val cache: Cache,
     val loginService: LoginService,
+    val playerSerializationService: PlayerSerializationService,
     val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
     val stepValidator: StepValidator,
@@ -60,6 +62,7 @@ data class World(
     }
 
     fun requestLogout(player: Player) {
+        playerSerializationService.savePlayer(player)
         this.logoutRequest[player] = player.session
     }
 

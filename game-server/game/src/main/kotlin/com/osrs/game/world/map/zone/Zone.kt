@@ -1,13 +1,12 @@
 package com.osrs.game.world.map.zone
 
+import com.osrs.common.item.FloorItem
 import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.distanceTo
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
-import com.osrs.game.controller.Controller
 import com.osrs.game.controller.ControllerManager.addController
 import com.osrs.game.controller.impl.GroundItemController
-import com.osrs.game.item.FloorItem
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.type.server.LocAddPacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
@@ -25,8 +24,6 @@ class Zone(
     val location: ZoneLocation
 ) {
     private val players = HashSet<Player>()
-
-    private val controllers = ArrayList<Controller<*>>()
 
     private val spawnedObjs = ArrayList<FloorItem>()
     private val removedObjs = ArrayList<FloorItem>()
@@ -234,7 +231,4 @@ class Zone(
         staticLocs.add(gameObject)
     }
 
-    fun objAdd(floorItem: FloorItem) {
-        TODO("Not yet implemented")
-    }
 }

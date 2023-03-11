@@ -1,5 +1,6 @@
 package com.osrs.game.controller
 
+import com.osrs.common.controller.Controllable
 import com.osrs.game.world.World
 
 abstract class Controller<out T : Controllable> {

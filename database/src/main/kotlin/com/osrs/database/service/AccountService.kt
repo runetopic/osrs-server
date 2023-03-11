@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.common.map.location.Location
 import com.osrs.database.dto.CreateAccountRequest
+import com.osrs.database.dto.UpdateAccountRequest
 import com.osrs.database.entity.Account
 import com.osrs.database.repository.AccountRepository
 import org.mindrot.jbcrypt.BCrypt
@@ -30,8 +31,8 @@ class AccountService @Inject constructor(
 
     fun findAccountByUsername(username: String): Account? = accountRepository.findAccountByUsername(username)
 
-    fun validateAccount(account: Account, password: String): Boolean {
-        // TODO: Can add a validation response, depending on if the account has been banned etc.
-        return BCrypt.checkpw(password, account.password)
-    }
+    fun validateAccount(plainText: String, password: String): Boolean = // TODO: Can add a validation response, depending on if the account has been banned etc.
+        BCrypt.checkpw(plainText, password)
+
+    fun saveAccount(updateAccountRequest: UpdateAccountRequest): Boolean = accountRepository.saveAccount(updateAccountRequest)
 }

@@ -4,6 +4,7 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.common.map.location.Location
+import com.osrs.database.dto.UpdateAccountRequest
 import com.osrs.database.entity.Account
 import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -57,5 +58,18 @@ class AccountDiskRepository @Inject constructor(
         val path = Path.of("${playerSaveDirectory}/${account.username}.json")
         json.encodeToStream(account, path.outputStream())
         return account
+    }
+
+    override fun saveAccount(updateAccountRequest: UpdateAccountRequest): Boolean {
+        val account = findAccountByUsername(updateAccountRequest.username) ?: return false
+
+        account.skills = updateAccountRequest.skills
+        account.location = updateAccountRequest.location
+        account.username = updateAccountRequest.username
+        account.objs = updateAccountRequest.objs
+
+        val path = Path.of("${playerSaveDirectory}/${account.username}.json")
+        json.encodeToStream(account, path.outputStream())
+        return true
     }
 }

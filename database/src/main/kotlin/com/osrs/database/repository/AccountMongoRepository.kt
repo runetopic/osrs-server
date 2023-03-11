@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.mongodb.client.MongoClient
 import com.osrs.common.map.location.Location
+import com.osrs.database.dto.UpdateAccountRequest
 import com.osrs.database.entity.Account
 import org.litote.kmongo.ensureUniqueIndex
 import org.litote.kmongo.eq
@@ -43,5 +44,9 @@ class AccountMongoRepository @Inject constructor(
         val created = collection.insertOne(account)
         if (created.insertedId == null) throw InternalError("Failed to create the user in the database. Username: ${account.username}")
         return account
+    }
+
+    override fun saveAccount(updateAccountRequest: UpdateAccountRequest): Boolean {
+        TODO("Not yet implemented")
     }
 }

@@ -2,7 +2,7 @@ package com.osrs.game.world.map.zone
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.item.FloorItem
+import com.osrs.common.item.FloorItem
 import com.osrs.game.projectile.Projectile
 import com.osrs.game.world.map.GameObject
 

@@ -1,9 +1,10 @@
 package com.osrs.game.actor.player
 
+import com.osrs.common.item.FloorItem
 import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.skill.Skill
-import com.osrs.common.skill.Skills
+import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
@@ -11,7 +12,6 @@ import com.osrs.game.actor.render.HintArrowType.LOCATION
 import com.osrs.game.actor.render.impl.Appearance
 import com.osrs.game.actor.render.impl.MovementSpeedType
 import com.osrs.game.container.Inventory
-import com.osrs.game.item.FloorItem
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -36,12 +36,13 @@ import kotlin.math.max
 import kotlin.math.min
 
 class Player(
-    override var location: Location = Location.None,
-    val username: String,
+    val account: Account,
     override var world: World,
-    val skills: Skills,
     var session: Session,
 ) : Actor() {
+    val username get() = account.username
+    val skills get() = account.skills
+
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
 
     lateinit var interfaces: Interfaces
@@ -52,11 +53,11 @@ class Player(
 
     val movementQueue = MovementQueue(this)
 
+    override var location: Location = Location.None
     override var zone = world.zone(location)
+    override var moveDirection: MoveDirection? = null
 
     var objs = ArrayList<FloorItem>()
-
-    override var moveDirection: MoveDirection? = null
 
     var online = false
 
@@ -71,9 +72,12 @@ class Player(
         inventory: Inventory,
     ) {
         this.session.player = this
+        this.location = account.location
         this.lastLocation = location
         this.interfaces = interfaces
         this.inventory = inventory
+        this.objs += account.objs
+        println("Init player $location")
         renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
     }
 
@@ -99,7 +103,6 @@ class Player(
             ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
             ClientScriptPacket(2498, arrayOf(0, 0, 0))
         )
-
 
         scripts.forEach(session::write)
         online = true

@@ -105,11 +105,14 @@ class LoginCodec @Inject constructor(
                     return
                 }
 
-                var reconnectXteas: IntArray? = null
-                var password: String = ""
+                val reconnecting = opcode == LOGIN_RECONNECTING_OPCODE
 
-                if (opcode == LOGIN_RECONNECTING_OPCODE) {
+                var reconnectXteas: IntArray? = null
+                var password = ""
+
+                if (reconnecting) {
                     reconnectXteas = IntArray(4) { rsaBlock.readInt() }
+                    // TODO verify reconnect xteas from previous request
                 } else {
                     // TODO: implement the different authentication types and reconnection
                     when (val authenticationType = rsaBlock.get().toInt()) {
@@ -158,11 +161,7 @@ class LoginCodec @Inject constructor(
 
                 val account = accountService.findAccountByUsername(username)
 
-                if (account == null || opcode != LOGIN_RECONNECTING_OPCODE && !accountService.validateAccount(
-                        account,
-                        password
-                    )
-                ) {
+                if (account == null || !reconnecting && !accountService.validateAccount(password, account.password)) {
                     session.writeAndFlush(INVALID_USERNAME_PASSWORD_OPCODE)
                     session.disconnect("Invalid user credentials. Disconnecting client")
                     return
@@ -170,13 +169,12 @@ class LoginCodec @Inject constructor(
 
                 world.requestLogin(
                     Player(
-                        location = account.location,
-                        username = account.username,
-                        skills = account.skills,
+                        account = account,
                         world = world,
                         session = session,
                     )
                 )
+
                 session.writeAndFlush(LOGIN_SUCCESS_OPCODE)
                 session.setCodec(GameCodec::class)
             }

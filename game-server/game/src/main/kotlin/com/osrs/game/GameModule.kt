@@ -5,6 +5,7 @@ import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
+import com.osrs.game.world.service.PlayerSerializationService
 import com.osrs.game.ui.UserInterfaceModule
 import com.osrs.game.world.World
 import com.osrs.game.world.WorldProvider
@@ -29,6 +30,7 @@ object GameModule : KotlinModule() {
         bind<CollisionMap>().asEagerSingleton()
         bind<PlayerUpdateBlocks>().asEagerSingleton()
         bind<LoginService>().asEagerSingleton()
+        bind<PlayerSerializationService>().asEagerSingleton()
         bind<GameTick>().toProvider<GameTickProvider>().asEagerSingleton()
     }
 }

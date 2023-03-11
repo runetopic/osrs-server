@@ -4,7 +4,7 @@ import com.google.inject.Singleton
 import com.osrs.common.buffer.writeInt
 import com.osrs.common.buffer.writeStringCp1252NullTerminated
 import com.osrs.game.container.Container
-import com.osrs.game.item.Item
+import com.osrs.common.item.Item
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import java.nio.ByteBuffer

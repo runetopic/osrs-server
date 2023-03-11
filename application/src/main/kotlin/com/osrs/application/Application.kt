@@ -14,27 +14,24 @@ object Application {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        try {
-            var injector: Injector
+        var injector: Injector
 
-            val time = measureTimeMillis {
-                injector = Guice.createInjector(ApplicationModule(args))
-                injector.getInstance<Game>().start()
-                injector.getInstance<World>().start()
-            }
-
-            addShutDownHook(injector)
-
-            injector.getInstance<Network>().bind(time)
-        } catch (exception: Exception) {
-            logger.error(exception) { "Exception caught in Application:" }
+        val time = measureTimeMillis {
+            injector = Guice.createInjector(ApplicationModule(args))
+            injector.getInstance<Game>().start()
+            injector.getInstance<World>().start()
         }
+
+        addShutDownHook(injector)
+
+        injector.getInstance<Network>().bind(time)
     }
 
     private fun addShutDownHook(injector: Injector) {
         Runtime.getRuntime().addShutdownHook(
             Thread {
                 logger.info { "Gracefully shutting down the server." }
+                injector.getInstance<Game>().shutdown()
                 injector.getInstance<Network>().shutdown()
             }
         )
