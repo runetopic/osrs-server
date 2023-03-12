@@ -39,12 +39,12 @@ class MapSquareTypeProvider @Inject constructor(
 
         val mapIndex = cache.index(MAP_INDEX)
         val terrain = mapIndex.group("m${entry.regionX}_${entry.regionZ}")
-        val terrainData = ByteBuffer.wrap(terrain?.data?.decompress()?.data)
+        val terrainData = terrain?.data?.decompress()?.buffer
 
         for (level in 0 until LEVELS) {
             for (x in 0 until MAP_SIZE) {
                 for (z in 0 until MAP_SIZE) {
-                    entry.terrain[level][x][z] = terrainData.loadTerrain()
+                    entry.terrain[level][x][z] = terrainData?.loadTerrain()
                 }
             }
         }
@@ -53,7 +53,7 @@ class MapSquareTypeProvider @Inject constructor(
 
         if (locations?.data?.isNotEmpty() == true) {
             try {
-                ByteBuffer.wrap(locations.data.decompress(square.key).data).loadLocs(entry)
+                locations.data.decompress(square.key).buffer.loadLocs(entry)
             } catch (exception: ZipException) {
                 logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. GroupId=${locations.id}, MapSquare=${square.id}." }
             }
@@ -103,15 +103,13 @@ class MapSquareTypeProvider @Inject constructor(
         }
 
         if (level >= 0) {
-            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOf(null)] = (
-                MapSquareLocation(
-                    id = locId,
-                    x = localX,
-                    z = localZ,
-                    level = level,
-                    shape = shape,
-                    rotation = rotation
-                )
+            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOf(null)] = MapSquareLocation(
+                id = locId,
+                x = localX,
+                z = localZ,
+                level = level,
+                shape = shape,
+                rotation = rotation
             )
         }
         return loadLocationCollision(type, locId, packed)

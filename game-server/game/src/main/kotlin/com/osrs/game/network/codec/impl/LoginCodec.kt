@@ -35,7 +35,7 @@ class LoginCodec @Inject constructor(
     private val cache: Cache,
     environment: ApplicationEnvironment,
     val world: World,
-    private val accountService: AccountService,
+    private val accountService: AccountService
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -134,7 +134,7 @@ class LoginCodec @Inject constructor(
                 val availableBuffer = ByteArray(readChannel.availableForRead)
                 readChannel.readAvailable(availableBuffer, 0, availableBuffer.size)
 
-                val xteaBuffer = ByteBuffer.wrap(availableBuffer.fromXTEA(32, clientKeys))
+                val xteaBuffer = availableBuffer.fromXTEA(32, clientKeys)
 
                 val username = xteaBuffer.readStringCp1252NullTerminated()
                 val displayType = xteaBuffer.get().toInt()
@@ -171,7 +171,7 @@ class LoginCodec @Inject constructor(
                     Player(
                         account = account,
                         world = world,
-                        session = session,
+                        session = session
                     )
                 )
 
