@@ -30,7 +30,7 @@ class WorldSyncTask(
     }
 
     private fun Array<Controller<*>?>.processControllers() {
-        for(controller in this) {
+        for (controller in this) {
             if (controller == null) continue
 
             controller.process(world)
