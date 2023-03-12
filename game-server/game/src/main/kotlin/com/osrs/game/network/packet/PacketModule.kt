@@ -5,6 +5,7 @@ import com.osrs.game.network.packet.builder.impl.CameraResetPacketBuilder
 import com.osrs.game.network.packet.builder.impl.HintArrowPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenSubPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
+import com.osrs.game.network.packet.builder.impl.LocAddPacketBuilder
 import com.osrs.game.network.packet.builder.impl.LocRemovePacketBuilder
 import com.osrs.game.network.packet.builder.impl.MapProjAnimPacketBuilder
 import com.osrs.game.network.packet.builder.impl.MessageGamePacketBuilder
@@ -47,8 +48,8 @@ import com.osrs.game.network.packet.reader.impl.IfButton9PacketReader
 import com.osrs.game.network.packet.reader.impl.MoveGamePacketReader
 import com.osrs.game.network.packet.reader.impl.MoveMiniMapPacketReader
 import com.osrs.game.network.packet.reader.impl.NoTimeoutPacketReader
+import com.osrs.game.network.packet.reader.impl.PublicChatPacketReader
 import com.osrs.game.network.packet.reader.impl.WindowStatusPacketReader
-import com.osrs.game.network.packet.type.server.LocAddPacket
 import com.osrs.game.network.packet.type.client.CheatPacket
 import com.osrs.game.network.packet.type.client.IdlePacket
 import com.osrs.game.network.packet.type.client.IfButtonPacket
@@ -61,7 +62,7 @@ import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
-import com.osrs.game.network.packet.builder.impl.LocAddPacketBuilder
+import com.osrs.game.network.packet.type.server.LocAddPacket
 import com.osrs.game.network.packet.type.server.LocRemovePacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
@@ -130,6 +131,7 @@ object PacketModule : KotlinModule() {
         readers.addBinding().to<IfButton9PacketReader>().asEagerSingleton()
         readers.addBinding().to<IfButton10PacketReader>().asEagerSingleton()
         readers.addBinding().to<CheatPacketReader>().asEagerSingleton()
+        readers.addBinding().to<PublicChatPacketReader>().asEagerSingleton()
 
         val handlers = KotlinMapBinder.newMapBinder<KClass<*>, PacketHandler<Packet>>(kotlinBinder)
 
