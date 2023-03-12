@@ -1,5 +1,6 @@
 package com.osrs.cache
 
+import com.osrs.cache.entry.binary.huffman.HuffmanEntryProvider
 import com.osrs.cache.entry.config.enum.EnumEntryProvider
 import com.osrs.cache.entry.config.location.LocationEntryProvider
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
@@ -20,6 +21,7 @@ object CacheModule : KotlinModule() {
         bind<VarBitEntryProvider>().asEagerSingleton()
         bind<VarpEntryProvider>().asEagerSingleton()
         bind<ObjEntryProvider>().asEagerSingleton()
+        bind<HuffmanEntryProvider>().asEagerSingleton()
     }
 
     // Indexes.
