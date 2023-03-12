@@ -5,7 +5,9 @@ import com.google.inject.Singleton
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.BINARY_INDEX
 import com.osrs.cache.entry.EntryTypeProvider
+import com.runetopic.cache.extension.decompress
 import com.runetopic.cryptography.huffman.Huffman
+import java.nio.ByteBuffer
 
 /**
  * @author Jordan Abraham
@@ -18,12 +20,12 @@ class HuffmanEntryProvider @Inject constructor(
         .index(BINARY_INDEX)
         .group(groupName = "huffman")
         ?.file(fileId = 0)
-        ?.let { mapOf(it.id to it.data.loadEntryType(HuffmanEntry(it.id))) }
+        ?.let { mapOf(it.id to it.data.decompress().buffer.loadEntryType(HuffmanEntry(it.id))) }
         ?: emptyMap()
 
-    private fun ByteArray.loadEntryType(type: HuffmanEntry): HuffmanEntry = type.apply {
+    private fun ByteBuffer.loadEntryType(type: HuffmanEntry): HuffmanEntry = type.apply {
         huffman = Huffman(
-            sizes = this@loadEntryType,
+            sizes = array(),
             limit = 75
         )
     }
