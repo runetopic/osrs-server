@@ -2,7 +2,7 @@ package com.osrs.game
 
 import com.osrs.common.ui.InterfaceInfoMap
 import com.osrs.game.command.CommandModule
-import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
 import com.osrs.game.world.service.PlayerSerializationService

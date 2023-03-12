@@ -3,7 +3,7 @@ package com.osrs.game.tick.task
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.controller.Controller
 import com.osrs.game.controller.ControllerManager.controllers
-import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.world.World
 import com.osrs.game.world.map.zone.ZoneManager
 

@@ -1,43 +1,43 @@
 package com.osrs.game.actor.render
 
-import com.osrs.game.actor.render.impl.Appearance
-import com.osrs.game.actor.render.impl.MovementSpeed
-import com.osrs.game.actor.render.impl.MovementSpeedType
-import com.osrs.game.actor.render.impl.TemporaryMovementSpeed
+import com.osrs.game.actor.render.type.Appearance
+import com.osrs.game.actor.render.type.MovementSpeed
+import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.TemporaryMovementSpeed
 
 class ActorRenderer {
-    private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderingBlock<*, *>?> = arrayOfNulls(13)
-    private val highDefinitionRenderBlocks: Array<HighDefinitionRenderingBlock<*, *>?> = arrayOfNulls(13)
+    private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
+    private val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
 
     fun appearance(appearance: Appearance): Appearance {
         val block = appearance.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderingBlock(appearance, block)
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(appearance, block)
         return appearance
     }
 
     fun updateMovementSpeed(speed: MovementSpeedType) {
         val type = MovementSpeed(speed)
         val block = type.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderingBlock(type, block)
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)
     }
 
     fun temporaryMovementSpeed(speed: MovementSpeedType) {
         val type = TemporaryMovementSpeed(speed)
         val block = type.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderingBlock(type, block)
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)
     }
 
-    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderingBlock<*, *>, bytes: ByteArray) {
-        val lowDefinitionRenderingBlock = LowDefinitionRenderingBlock(
+    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*, *>, bytes: ByteArray) {
+        val lowDefinitionRenderingBlock = LowDefinitionRenderBlock(
             renderType = highDefinitionRenderingBlock.renderType,
-            block = highDefinitionRenderingBlock.block,
+            builder = highDefinitionRenderingBlock.builder,
             bytes = bytes
         )
-        lowDefinitionRenderBlocks[highDefinitionRenderingBlock.block.index] = lowDefinitionRenderingBlock
+        lowDefinitionRenderBlocks[highDefinitionRenderingBlock.builder.index] = lowDefinitionRenderingBlock
     }
 
-    fun highDefinitionUpdates(): Array<HighDefinitionRenderingBlock<*, *>?> = highDefinitionRenderBlocks
-    fun lowDefinitionUpdates(): Array<LowDefinitionRenderingBlock<*, *>?> = lowDefinitionRenderBlocks
+    fun highDefinitionUpdates(): Array<HighDefinitionRenderBlock<*, *>?> = highDefinitionRenderBlocks
+    fun lowDefinitionUpdates(): Array<LowDefinitionRenderBlock<*, *>?> = lowDefinitionRenderBlocks
     fun hasHighDefinitionUpdate(): Boolean = highDefinitionRenderBlocks.isNotEmpty()
 
     fun clearUpdates() {

@@ -1,7 +1,7 @@
 package com.osrs.game.tick
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.game.network.packet.builder.impl.sync.PlayerUpdateBlocks
+import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.tick.task.WorldSyncTask
 import com.osrs.game.world.World
 import kotlin.system.measureTimeMillis
