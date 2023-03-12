@@ -66,5 +66,3 @@ param=10=5
 param=4=1
 param=11=https://auth.jagex.com/
 param=12=321
-
-
