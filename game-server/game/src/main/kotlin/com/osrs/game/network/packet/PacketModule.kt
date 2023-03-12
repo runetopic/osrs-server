@@ -31,6 +31,7 @@ import com.osrs.game.network.packet.handler.impl.IfButtonPacketHandler
 import com.osrs.game.network.packet.handler.impl.MoveGamePacketHandler
 import com.osrs.game.network.packet.handler.impl.MoveMiniMapPacketHandler
 import com.osrs.game.network.packet.handler.impl.NoTimeoutPacketHandler
+import com.osrs.game.network.packet.handler.impl.PublicChatPacketHandler
 import com.osrs.game.network.packet.handler.impl.WindowStatusPacketHandler
 import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.reader.impl.CheatPacketReader
@@ -56,6 +57,7 @@ import com.osrs.game.network.packet.type.client.IfButtonPacket
 import com.osrs.game.network.packet.type.client.MoveGamePacket
 import com.osrs.game.network.packet.type.client.MoveMiniMapPacket
 import com.osrs.game.network.packet.type.client.NoTimeoutPacket
+import com.osrs.game.network.packet.type.client.PublicChatPacket
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
 import com.osrs.game.network.packet.type.server.CameraReset
 import com.osrs.game.network.packet.type.server.ClientScriptPacket
@@ -142,5 +144,6 @@ object PacketModule : KotlinModule() {
         handlers.addBinding(WindowStatusPacket::class).to<WindowStatusPacketHandler>().asEagerSingleton()
         handlers.addBinding(NoTimeoutPacket::class).to<NoTimeoutPacketHandler>().asEagerSingleton()
         handlers.addBinding(CheatPacket::class).to<CheatPacketHandler>().asEagerSingleton()
+        handlers.addBinding(PublicChatPacket::class).to<PublicChatPacketHandler>().asEagerSingleton()
     }
 }

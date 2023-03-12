@@ -18,12 +18,14 @@ class PublicChatPacketReader : PacketReader<PublicChatPacket>(
 ) {
     override suspend fun read(readChannel: ByteReadChannel, size: Int): PublicChatPacket {
         val mark = readChannel.availableForRead
+        val type = readChannel.readUByte()
         return PublicChatPacket(
-            idk = readChannel.readUByte(),
+            unknown1 = type,
             color = readChannel.readUByte(),
             effect = readChannel.readUByte(),
-            length = readChannel.readUShortSmart(),
-            bytes = readChannel.readPacket(size - (mark - readChannel.availableForRead)).readBytes()
+            compressedSize = readChannel.readUShortSmart(),
+            compressedBytes = readChannel.readPacket(size - (mark - (readChannel.availableForRead - if (type == 3) 1 else 0))).readBytes(),
+            unknown2 = if (type == 3) readChannel.readUByte() else -1
         )
     }
 }

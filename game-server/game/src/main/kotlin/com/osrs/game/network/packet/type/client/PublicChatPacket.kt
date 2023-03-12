@@ -6,9 +6,10 @@ import com.osrs.game.network.packet.Packet
  * @author Jordan Abraham
  */
 data class PublicChatPacket(
-    val idk: Int,
+    val unknown1: Int,
     val color: Int,
     val effect: Int,
-    val length: Int,
-    val bytes: ByteArray
+    val compressedSize: Int,
+    val compressedBytes: ByteArray,
+    val unknown2: Int
 ) : Packet
