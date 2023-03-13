@@ -8,7 +8,7 @@ import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 
 class TemporaryMovementTypeBlockBuilder : RenderBlockBuilder<Player, TemporaryMovementSpeed>(
-    index = 2,
+    index = 11,
     mask = 0x200
 ) {
     override fun build(actor: Player, render: TemporaryMovementSpeed): ByteReadPacket = buildPacket {

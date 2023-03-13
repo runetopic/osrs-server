@@ -9,7 +9,7 @@ import com.osrs.game.world.map.zone.ZoneManager
 
 class WorldSyncTask(
     val world: World,
-    private val playerUpdateBlocks: PlayerUpdateBlocks,
+    private val playerUpdateBlocks: PlayerUpdateBlocks
 ) : SyncTask {
 
     override fun sync(tick: Int) {
@@ -30,7 +30,7 @@ class WorldSyncTask(
     }
 
     private fun Array<Controller<*>?>.processControllers() {
-        for(controller in this) {
+        for (controller in this) {
             if (controller == null) continue
 
             controller.process(world)

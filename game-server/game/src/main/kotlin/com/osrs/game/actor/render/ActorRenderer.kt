@@ -3,6 +3,7 @@ package com.osrs.game.actor.render
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.actor.render.type.TemporaryMovementSpeed
 
 class ActorRenderer {
@@ -25,6 +26,11 @@ class ActorRenderer {
         val type = TemporaryMovementSpeed(speed)
         val block = type.toBlock()
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)
+    }
+
+    fun publicChat(publicChat: PublicChat) {
+        val block = publicChat.toBlock()
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(publicChat, block)
     }
 
     fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*, *>, bytes: ByteArray) {
