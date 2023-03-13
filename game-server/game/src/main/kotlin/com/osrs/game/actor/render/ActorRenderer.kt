@@ -6,6 +6,7 @@ import com.osrs.game.actor.render.type.MovementSpeedType
 import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.actor.render.type.Recolor
 import com.osrs.game.actor.render.type.TemporaryMovementSpeed
+import com.osrs.game.actor.render.type.UserNameOverride
 
 class ActorRenderer {
     private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
@@ -14,6 +15,11 @@ class ActorRenderer {
     fun recolor(recolor: Recolor) {
         val block = recolor.toBlock()
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(recolor, block)
+    }
+
+    fun userNameOverride(override: UserNameOverride) {
+        val block = override.toBlock()
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(override, block)
     }
 
     fun appearance(appearance: Appearance): Appearance {

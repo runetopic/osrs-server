@@ -5,11 +5,13 @@ import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.actor.render.type.Recolor
 import com.osrs.game.actor.render.type.TemporaryMovementSpeed
+import com.osrs.game.actor.render.type.UserNameOverride
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.MovementTypeBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.PublicChatBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.RecolorBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.TemporaryMovementTypeBlockBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.UserNameOverrideBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.PlayerAppearanceBlockBuilder
 
 interface RenderType {
@@ -19,6 +21,7 @@ interface RenderType {
         is TemporaryMovementSpeed -> Renders.temporaryMovementTypeBlockBuilder
         is Recolor -> Renders.recolorBlockBuilder
         is PublicChat -> Renders.publicChatBlockBuilder
+        is UserNameOverride -> Renders.userNameOverrideBlockBuilder
         else -> throw IllegalStateException("Unhandled player block in PlayerInfo. Block was $this")
     }
 }
@@ -29,4 +32,5 @@ private object Renders {
     val temporaryMovementTypeBlockBuilder = TemporaryMovementTypeBlockBuilder()
     val recolorBlockBuilder = RecolorBlockBuilder()
     val publicChatBlockBuilder = PublicChatBlockBuilder()
+    val userNameOverrideBlockBuilder = UserNameOverrideBlockBuilder()
 }
