@@ -7,7 +7,6 @@ class Game @Inject constructor(
     private val playerSerializationService: PlayerSerializationService,
 ) {
     fun start() {
-
     }
 
     fun shutdown() {

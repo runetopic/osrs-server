@@ -8,10 +8,9 @@ import io.ktor.utils.io.ByteReadChannel
 @Singleton
 class NoTimeoutPacketReader : PacketReader<NoTimeoutPacket>(
     opcode = 0,
-    size = 0
-){
+    size = 0,
+) {
     private val noTimeoutPacket = NoTimeoutPacket()
 
-    override suspend fun read(readChannel: ByteReadChannel, size: Int): NoTimeoutPacket  = noTimeoutPacket
+    override suspend fun read(readChannel: ByteReadChannel, size: Int): NoTimeoutPacket = noTimeoutPacket
 }
-

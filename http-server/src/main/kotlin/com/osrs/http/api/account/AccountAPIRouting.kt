@@ -3,9 +3,9 @@ package com.osrs.http.api.account
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.database.service.AccountService
 import com.osrs.database.dto.CreateAccountRequest
 import com.osrs.database.dto.CreateAccountResponse
+import com.osrs.database.service.AccountService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -16,7 +16,7 @@ import io.ktor.server.routing.post
 @Singleton
 class AccountAPIRouting @Inject constructor(
     routing: Routing,
-    private val accountService: AccountService
+    private val accountService: AccountService,
 ) {
 
     private val logger = InlineLogger()
@@ -32,15 +32,15 @@ class AccountAPIRouting @Inject constructor(
                     call.respond(
                         status = HttpStatusCode.Created,
                         CreateAccountResponse(
-                            message = "Account successfully created."
-                        )
+                            message = "Account successfully created.",
+                        ),
                     )
                 } catch (exception: Exception) {
                     call.respond(
                         status = HttpStatusCode.InternalServerError,
                         CreateAccountResponse(
-                            message = "Account failed during creation. Please try again later."
-                        )
+                            message = "Account failed during creation. Please try again later.",
+                        ),
                     )
                 }
             }

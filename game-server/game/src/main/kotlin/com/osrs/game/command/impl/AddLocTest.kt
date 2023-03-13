@@ -8,7 +8,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.LocAddRequest
 
 @Singleton
 class AddLocTest : CommandListener(
-    name = "spawn_loc"
+    name = "spawn_loc",
 ) {
     override fun execute(command: String, player: Player) {
         val zone = player.zone

@@ -14,6 +14,6 @@ include(
         "database",
         "game-server:common",
         "game-server:cache",
-        "game-server:game"
-    )
+        "game-server:game",
+    ),
 )

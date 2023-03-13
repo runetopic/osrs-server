@@ -7,7 +7,7 @@ import com.osrs.game.actor.player.Player
 import java.util.concurrent.Executors
 
 class PlayerSerializationService @Inject constructor(
-    private val accountService: AccountService
+    private val accountService: AccountService,
 ) {
     private val executor = Executors.newSingleThreadScheduledExecutor()
 
@@ -19,8 +19,8 @@ class PlayerSerializationService @Inject constructor(
                     displayName = player.displayName,
                     skills = player.skills,
                     location = player.location,
-                    objs = player.objs
-                )
+                    objs = player.objs,
+                ),
             )
         }
     }

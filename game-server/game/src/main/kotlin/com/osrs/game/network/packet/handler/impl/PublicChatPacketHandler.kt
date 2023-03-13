@@ -15,7 +15,7 @@ import com.runetopic.cryptography.decompressHuffman
  */
 @Singleton
 class PublicChatPacketHandler @Inject constructor(
-    huffmanEntryProvider: HuffmanEntryProvider
+    huffmanEntryProvider: HuffmanEntryProvider,
 ) : PacketHandler<PublicChatPacket>() {
     private val huffman = huffmanEntryProvider[0]?.huffman
 
@@ -25,6 +25,6 @@ class PublicChatPacketHandler @Inject constructor(
         val formatted = packet.compressedBytes.decompressHuffman(huffman, packet.decompressedSize).decodeToString().trim()
         // Compress the formatted public chat message.
         val compressed = formatted.encodeToByteArray().compressHuffman(huffman)
-        player.renderer.publicChat(PublicChat(packet.color, packet.effect, formatted.length, compressed))
+        player.renderer.update(PublicChat(packet.color, packet.effect, formatted.length, compressed))
     }
 }

@@ -48,7 +48,7 @@ import org.rsmod.pathfinder.flag.CollisionFlag.WALL_WEST_ROUTE_BLOCKER
 class CollisionMap @Inject constructor(
     private val locations: LocationEntryProvider,
     private val zoneFlags: ZoneFlags,
-    private val stepValidator: StepValidator
+    private val stepValidator: StepValidator,
 ) {
     fun canTravel(location: Location, direction: Direction): Boolean =
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, 0)
@@ -113,7 +113,7 @@ class CollisionMap @Inject constructor(
                     shape,
                     blockProjectile,
                     !breakRouteFinding,
-                    add
+                    add,
                 )
             }
             shape in GameObjectShape.NORMAL_SHAPES && interactType != 0 -> {
@@ -129,7 +129,7 @@ class CollisionMap @Inject constructor(
                     length,
                     blockProjectile,
                     !breakRouteFinding,
-                    add
+                    add,
                 )
             }
             shape in GameObjectShape.GROUND_DECOR_SHAPES && interactType == 1 -> changeFloorDecor(location, add)
@@ -142,7 +142,7 @@ class CollisionMap @Inject constructor(
         length: Int,
         blocksProjectile: Boolean,
         breakRouteFinding: Boolean,
-        add: Boolean
+        add: Boolean,
     ) {
         var flag = OBJECT
 
@@ -166,7 +166,7 @@ class CollisionMap @Inject constructor(
         location: Location,
         rotation: Int,
         shape: Int,
-        add: Boolean
+        add: Boolean,
     ) {
         when (shape) {
             GameObjectShape.WALL_STRAIGHT -> when (rotation) {
@@ -236,7 +236,7 @@ class CollisionMap @Inject constructor(
         shape: Int,
         blockProjectile: Boolean,
         breakRouteFinding: Boolean,
-        add: Boolean
+        add: Boolean,
     ) {
         changeWallCollision(location, rotation, shape, add)
         if (blockProjectile) changeWallProjectileCollision(location, rotation, shape, add)
@@ -314,7 +314,7 @@ class CollisionMap @Inject constructor(
         location: Location,
         rotation: Int,
         shape: Int,
-        add: Boolean
+        add: Boolean,
     ) {
         when (shape) {
             GameObjectShape.WALL_STRAIGHT -> when (rotation) {

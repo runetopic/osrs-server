@@ -8,7 +8,7 @@ data class PlayerInfoPacket(
     val viewport: Viewport,
     val players: PlayerList,
     val highDefinitionUpdates: Array<ByteArray?>,
-    val lowDefinitionUpdates: Array<ByteArray?>
+    val lowDefinitionUpdates: Array<ByteArray?>,
 ) : Packet {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -21,7 +21,7 @@ import kotlin.math.abs
 @Singleton
 class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     opcode = 3,
-    size = -2
+    size = -2,
 ) {
     override fun build(packet: PlayerInfoPacket, buffer: ByteBuffer) {
         packet.viewport.resize()
@@ -33,7 +33,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
                         packet.viewport,
                         this,
                         packet.highDefinitionUpdates,
-                        it == 0
+                        it == 0,
                     )
                 }
                 repeat(2) {
@@ -42,10 +42,10 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
                         this,
                         packet.lowDefinitionUpdates,
                         packet.players,
-                        it == 0
+                        it == 0,
                     )
                 }
-            }.build().readBytes()
+            }.build().readBytes(),
         )
 
         packet.viewport.update()
@@ -56,7 +56,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         blocks: BytePacketBuilder,
         updates: Array<ByteArray?>,
         players: PlayerList,
-        nsn: Boolean
+        nsn: Boolean,
     ) = withBitAccess {
         var skip = 0
 
@@ -95,7 +95,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         other: Player,
         index: Int,
         blocks: BytePacketBuilder,
-        updates: ByteArray?
+        updates: ByteArray?,
     ) {
         // add an external player to start tracking
         writeBits(2, 0)
@@ -115,7 +115,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     private fun BitAccess.validateLocationChanges(
         viewport: Viewport,
         other: Player?,
-        index: Int
+        index: Int,
     ) {
         val currentPacked = viewport.locations[index]
         val packed = other?.location?.regionLocation ?: currentPacked
@@ -129,7 +129,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
 
     private fun BitAccess.updateCoordinates(
         lastCoordinates: Int,
-        currentCoordinates: Int
+        currentCoordinates: Int,
     ) {
         val lastPlane = lastCoordinates shr 16
         val lastRegionX = lastCoordinates shr 8
@@ -167,7 +167,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     }
 
     private fun BitAccess.writeSkipCount(
-        count: Int
+        count: Int,
     ) {
         when {
             count == 0 -> writeBits(2, 0)
@@ -222,14 +222,13 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         if (skip > 0) throw RuntimeException("Skip count was greater than zero for high definition.")
     }
 
-
     private fun BitAccess.processHighDefinitionPlayer(
         viewport: Viewport,
         blocks: BytePacketBuilder,
         other: Player?,
         index: Int,
         removing: Boolean,
-        updates: ByteArray?
+        updates: ByteArray?,
     ) {
         writeBits(1, if (removing) 0 else 1)
 

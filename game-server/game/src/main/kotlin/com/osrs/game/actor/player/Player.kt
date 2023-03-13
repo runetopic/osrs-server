@@ -8,10 +8,12 @@ import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
-import com.osrs.game.hint.HintArrow.LOCATION
 import com.osrs.game.actor.render.type.Appearance
-import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.MovementSpeed
+import com.osrs.game.actor.render.type.MovementType
+import com.osrs.game.actor.render.type.MovementType.WALK
 import com.osrs.game.container.Inventory
+import com.osrs.game.hint.HintArrow.LOCATION
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -78,7 +80,7 @@ class Player(
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
+        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
     }
 
     fun login() {
@@ -92,16 +94,18 @@ class Player(
         session.write(MidiSongPacket(62))
         session.write(SetPlayerOptionPacket("Follow", 1))
         session.write(SetPlayerOptionPacket("Trade", 2))
-        session.write(HintArrowPacket(
-            type = LOCATION,
-            targetX = location.x,
-            targetZ = location.z,
-            targetHeight = 0
-        ))
+        session.write(
+            HintArrowPacket(
+                type = LOCATION,
+                targetX = location.x,
+                targetZ = location.z,
+                targetHeight = 0,
+            ),
+        )
 
         val scripts = arrayOf(
             ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
-            ClientScriptPacket(2498, arrayOf(0, 0, 0))
+            ClientScriptPacket(2498, arrayOf(0, 0, 0)),
         )
 
         scripts.forEach(session::write)
@@ -114,8 +118,8 @@ class Player(
             RebuildNormalPacket(
                 viewport,
                 location,
-                initialize
-            )
+                initialize,
+            ),
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
         updateZones()
@@ -213,12 +217,12 @@ class Player(
             viewport = viewport,
             players = world.players,
             highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
-            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
-        )
+            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates,
+        ),
     )
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
-        this.appearance = renderer.appearance(appearance)
+        this.appearance = renderer.update(appearance)
         return this.appearance
     }
 

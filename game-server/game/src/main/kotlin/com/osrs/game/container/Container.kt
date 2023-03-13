@@ -48,7 +48,7 @@ abstract class Container(
      */
     private fun addItemNonStacking(
         item: Item,
-        function: ContainerUpdate
+        function: ContainerUpdate,
     ): Boolean {
         val entry = objEntryProvider[item.id] ?: return false
 
@@ -115,7 +115,7 @@ abstract class Container(
     private fun replaceItem(
         slotId: Int,
         item: Item,
-        function: ContainerUpdate
+        function: ContainerUpdate,
     ): Boolean {
         val entry = objEntryProvider[item.id] ?: return false
 
@@ -127,7 +127,7 @@ abstract class Container(
             entry.isStackable && !isFull() -> {
                 items[slotId] = item.copy(
                     id = item.id,
-                    amount = item.amount + existingItem.amount
+                    amount = item.amount + existingItem.amount,
                 )
                 function.invoke(item, listOf(slotId))
                 true
@@ -177,6 +177,5 @@ abstract class Container(
 
     fun hasItem(id: Int): Boolean = slotId(id) != -1
 }
-
 
 typealias ContainerUpdate = (Item).(List<Int>) -> Unit

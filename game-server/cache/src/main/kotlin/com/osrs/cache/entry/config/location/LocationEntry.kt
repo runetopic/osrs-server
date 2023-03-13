@@ -40,5 +40,5 @@ data class LocationEntry(
     var int6: Int = 0,
     var boolean3: Boolean = true,
     var transforms: List<Int> = listOf(),
-    var params: Map<Int, @Contextual Any> = mapOf()
+    var params: Map<Int, @Contextual Any> = mapOf(),
 ) : EntryType(id)

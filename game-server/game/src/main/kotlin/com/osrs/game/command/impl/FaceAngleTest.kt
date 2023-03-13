@@ -2,19 +2,17 @@ package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
 import com.osrs.game.actor.player.Player
-import com.osrs.game.actor.render.type.UserNameOverride
+import com.osrs.game.actor.render.type.FaceAngle
 import com.osrs.game.command.CommandListener
 
 @Singleton
-class UserNameOverrideTest : CommandListener(
-    name = "username_override",
+class FaceAngleTest : CommandListener(
+    name = "face_angle",
 ) {
     override fun execute(command: String, player: Player) {
         player.renderer.update(
-            UserNameOverride(
-                prefix = "Testing",
-                infix = "UserName",
-                suffix = "Override",
+            FaceAngle(
+                angle = 512,
             ),
         )
     }

@@ -12,19 +12,21 @@ import java.util.*
 @Singleton
 class AccountRepositoryProvider @Inject constructor(
     private val environment: ApplicationEnvironment,
-    private val mongoClient: Optional<MongoClient>
+    private val mongoClient: Optional<MongoClient>,
 ) : Provider<AccountRepository> {
     private val isLocal = environment.config.property("game.local").getString().toBoolean()
 
     override fun get(): AccountRepository {
         if (isLocal || !mongoClient.isPresent) {
-            return AccountDiskRepository(environment, Json {
-                serializersModule = IdKotlinXSerializationModule
-                prettyPrint = true
-            })
+            return AccountDiskRepository(
+                environment,
+                Json {
+                    serializersModule = IdKotlinXSerializationModule
+                    prettyPrint = true
+                },
+            )
         }
 
         return AccountMongoRepository(mongoClient.get())
     }
 }
-

@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 @Singleton
 class LocAddPacketBuilder : PacketBuilder<LocAddPacket>(
     opcode = 23,
-    size = 5
+    size = 5,
 ) {
     override fun build(packet: LocAddPacket, buffer: ByteBuffer) {
         buffer.writeByteAdd(packet.disabledOptions.fold(0x1F) { options, option -> options and (1 shl option).inv() }) // Clear bit at position 'option' to disable that option

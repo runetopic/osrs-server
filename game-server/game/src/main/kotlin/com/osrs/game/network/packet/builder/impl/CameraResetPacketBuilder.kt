@@ -8,7 +8,7 @@ import java.nio.ByteBuffer
 @Singleton
 class CameraResetPacketBuilder : PacketBuilder<CameraReset>(
     opcode = 11,
-    size = 0
+    size = 0,
 ) {
     override fun build(packet: CameraReset, buffer: ByteBuffer) { }
 }

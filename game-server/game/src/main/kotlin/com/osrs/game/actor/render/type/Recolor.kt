@@ -8,5 +8,5 @@ data class Recolor(
     val luminance: Int,
     val opacity: Int,
     val delay: Int,
-    val duration: Int
+    val duration: Int,
 ) : RenderType

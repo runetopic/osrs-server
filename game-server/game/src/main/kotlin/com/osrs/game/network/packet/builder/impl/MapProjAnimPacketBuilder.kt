@@ -15,7 +15,7 @@ import java.nio.ByteBuffer
 @Singleton
 class MapProjAnimPacketBuilder : PacketBuilder<MapProjAnimPacket>(
     opcode = 107,
-    size = 16
+    size = 16,
 ) {
     override fun build(packet: MapProjAnimPacket, buffer: ByteBuffer) {
         buffer.writeShortLittleEndianAdd(packet.id)

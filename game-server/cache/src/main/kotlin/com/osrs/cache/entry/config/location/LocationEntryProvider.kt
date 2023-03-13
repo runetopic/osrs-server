@@ -18,7 +18,7 @@ import java.nio.ByteBuffer
 
 @Singleton
 class LocationEntryProvider @Inject constructor(
-    private val cache: Cache
+    private val cache: Cache,
 ) : EntryTypeProvider<LocationEntry>() {
 
     override fun loadTypeMap(): Map<Int, LocationEntry> = cache

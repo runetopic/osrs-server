@@ -19,7 +19,7 @@ class NettyApplicationProvider : Provider<NettyApplicationEngine> {
                 Json {
                     serializersModule = IdKotlinXSerializationModule
                     prettyPrint = true
-                }
+                },
             )
         }
     }.start(wait = false)

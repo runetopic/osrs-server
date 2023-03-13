@@ -11,7 +11,7 @@ import java.nio.ByteBuffer
 @Singleton
 class MessageGamePacketBuilder : PacketBuilder<MessageGamePacket>(
     opcode = 32,
-    size = -1
+    size = -1,
 ) {
     override fun build(packet: MessageGamePacket, buffer: ByteBuffer) {
         buffer.writeSmart(packet.type)

@@ -16,7 +16,7 @@ import io.ktor.utils.io.core.writeShortLittleEndian
  */
 class PublicChatBlockBuilder : RenderBlockBuilder<Player, PublicChat>(
     index = 2,
-    mask = 0x8
+    mask = 0x8,
 ) {
     override fun build(actor: Player, render: PublicChat): ByteReadPacket = buildPacket {
         writeShortLittleEndian((render.color shl 8 or render.effect).toShort())

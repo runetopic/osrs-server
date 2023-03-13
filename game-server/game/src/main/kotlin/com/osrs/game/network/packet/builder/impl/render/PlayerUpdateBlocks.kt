@@ -3,9 +3,9 @@ package com.osrs.game.network.packet.builder.impl.render
 import com.google.inject.Singleton
 import com.osrs.common.buffer.writeBytes
 import com.osrs.game.actor.player.Player
-import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.actor.render.LowDefinitionRenderBlock
+import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.world.World
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
@@ -16,7 +16,7 @@ import io.ktor.utils.io.core.writeShortLittleEndian
 @Singleton
 class PlayerUpdateBlocks(
     val highDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
-    val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS)
+    val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
 ) {
     fun clear() {
         lowDefinitionUpdates.fill(null)

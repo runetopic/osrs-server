@@ -16,7 +16,7 @@ class LoginService @Inject constructor(
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
     private val objEntryProvider: ObjEntryProvider,
-    private val interfaceListeners: Map<KClass<*>, InterfaceListener<*>>
+    private val interfaceListeners: Map<KClass<*>, InterfaceListener<*>>,
 ) {
     fun login(player: Player) {
         player.initialize(
@@ -24,9 +24,9 @@ class LoginService @Inject constructor(
                 player,
                 interfaceInfoMap,
                 enumEntryProvider,
-                interfaceListeners
+                interfaceListeners,
             ),
-            inventory = Inventory(player, objEntryProvider)
+            inventory = Inventory(player, objEntryProvider),
         )
         player.login()
     }

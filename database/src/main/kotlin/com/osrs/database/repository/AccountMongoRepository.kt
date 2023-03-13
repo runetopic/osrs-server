@@ -14,7 +14,7 @@ import org.mindrot.jbcrypt.BCrypt
 
 @Singleton
 class AccountMongoRepository @Inject constructor(
-    mongoClient: MongoClient
+    mongoClient: MongoClient,
 ) : AccountRepository {
 
     private val collection = mongoClient.getDatabase("api").getCollection<Account>("account")
@@ -32,8 +32,8 @@ class AccountMongoRepository @Inject constructor(
                         rights = 2,
                         email = "admin@xlitersps.com",
                         password = BCrypt.hashpw("password", BCrypt.gensalt(12)),
-                        location = Location.Default
-                    )
+                        location = Location.Default,
+                    ),
                 )
             }
         }

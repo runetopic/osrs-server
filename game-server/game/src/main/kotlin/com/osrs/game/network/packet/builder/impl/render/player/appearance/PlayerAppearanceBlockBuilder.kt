@@ -55,8 +55,8 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Player, Appearance>(1, 0
                 this,
                 BodyPartCompanion(
                     render.gender,
-                    render.bodyParts.getOrDefault(it.bodyPart, 0)
-                )
+                    render.bodyParts.getOrDefault(it.bodyPart, 0),
+                ),
             )
         }
 

@@ -5,7 +5,7 @@ import com.osrs.game.world.World.Companion.MAX_PLAYERS
 import java.nio.ByteBuffer
 
 class Viewport(
-    val player: Player
+    val player: Player,
 ) {
     val nsnFlags = IntArray(MAX_PLAYERS)
     val locations = IntArray(MAX_PLAYERS)
@@ -36,8 +36,11 @@ class Viewport(
         highDefinitionsCount = 0
         lowDefinitionsCount = 0
         for (index in 1 until MAX_PLAYERS) {
-            if (players[index] == null) lowDefinitions[lowDefinitionsCount++] = index
-            else highDefinitions[highDefinitionsCount++] = index
+            if (players[index] == null) {
+                lowDefinitions[lowDefinitionsCount++] = index
+            } else {
+                highDefinitions[highDefinitionsCount++] = index
+            }
             nsnFlags[index] = (nsnFlags[index] shr 1)
         }
     }

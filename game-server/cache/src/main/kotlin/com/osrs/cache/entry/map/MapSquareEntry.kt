@@ -3,7 +3,7 @@ package com.osrs.cache.entry.map
 import com.osrs.cache.entry.EntryType
 
 class MapSquareEntry(
-    override val id: Int
+    override val id: Int,
 ) : EntryType(id) {
     val regionX get() = id shr 8
     val regionZ get() = id and 0xFF

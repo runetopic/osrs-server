@@ -26,7 +26,8 @@ enum class Skill(val id: Int) {
     FARMING(19),
     RUNECRAFTING(20),
     HUNTER(21),
-    CONSTRUCTION(22);
+    CONSTRUCTION(22),
+    ;
 
     companion object {
         const val MAX_SKILLS = 25

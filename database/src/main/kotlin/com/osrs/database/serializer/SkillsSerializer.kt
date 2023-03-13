@@ -44,7 +44,7 @@ class SkillsSerializer : KSerializer<Skills> {
             MapSerializer(String.serializer(), Int.serializer()),
             Skill.values().associate {
                 it.name.lowercase(Locale.getDefault()) to value.level(it)
-            }
+            },
         )
         encodeSerializableElement(
             descriptor,
@@ -52,7 +52,7 @@ class SkillsSerializer : KSerializer<Skills> {
             MapSerializer(String.serializer(), Double.serializer()),
             Skill.values().associate {
                 it.name.lowercase(Locale.getDefault()) to value.xp(it)
-            }
+            },
         )
     }
 }

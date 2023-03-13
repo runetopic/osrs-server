@@ -12,8 +12,8 @@ import java.nio.ByteBuffer
 
 @Singleton
 class VarpEntryProvider @Inject constructor(
-    val cache: Cache
-): EntryTypeProvider<VarpEntry>() {
+    val cache: Cache,
+) : EntryTypeProvider<VarpEntry>() {
     override fun loadTypeMap(): Map<Int, VarpEntry> = cache.index(CONFIG_INDEX)
         .group(VARP_CONFIG)
         ?.files()

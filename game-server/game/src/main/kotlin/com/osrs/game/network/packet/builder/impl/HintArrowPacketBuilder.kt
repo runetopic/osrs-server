@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 @Singleton
 class HintArrowPacketBuilder : PacketBuilder<HintArrowPacket>(
     opcode = 78,
-    size = 6
+    size = 6,
 ) {
     override fun build(packet: HintArrowPacket, buffer: ByteBuffer) {
         buffer.writeByte(packet.type.id)

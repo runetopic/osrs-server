@@ -7,5 +7,5 @@ import com.osrs.game.network.packet.Packet
 data class RebuildNormalPacket(
     val viewport: Viewport,
     val location: Location,
-    val initialize: Boolean
+    val initialize: Boolean,
 ) : Packet

@@ -5,8 +5,6 @@ import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
 import com.osrs.game.ui.InterfaceLayout
-import com.osrs.game.ui.InterfaceLayout.FIXED
-import com.osrs.game.ui.UserInterface
 import com.osrs.game.ui.UserInterface.Companion.GameInterfaces
 
 @Singleton

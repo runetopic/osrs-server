@@ -1,8 +1,8 @@
 package com.osrs.game.container
 
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
-import com.osrs.game.actor.player.Player
 import com.osrs.common.item.Item
+import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.type.server.UpdateContainerFullPacket
 
 const val INVENTORY_ID = 149
@@ -12,7 +12,7 @@ const val INVENTORY_CAPACITY = 28
 
 class Inventory(
     val player: Player,
-    objEntryProvider: ObjEntryProvider
+    objEntryProvider: ObjEntryProvider,
 ) : Container(INVENTORY_CONTAINER_KEY, INVENTORY_CAPACITY, objEntryProvider) {
 
     fun refresh() {
@@ -21,8 +21,8 @@ class Inventory(
             UpdateContainerFullPacket(
                 PACKED_INVENTORY_ID,
                 INVENTORY_CONTAINER_KEY,
-                this
-            )
+                this,
+            ),
         )
     }
 }

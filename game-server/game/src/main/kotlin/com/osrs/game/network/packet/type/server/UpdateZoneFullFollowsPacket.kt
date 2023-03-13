@@ -4,5 +4,5 @@ import com.osrs.game.network.packet.Packet
 
 data class UpdateZoneFullFollowsPacket(
     val xInScene: Int,
-    val zInScene: Int
+    val zInScene: Int,
 ) : Packet

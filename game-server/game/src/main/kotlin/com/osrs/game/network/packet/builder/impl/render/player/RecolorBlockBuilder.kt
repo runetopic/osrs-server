@@ -13,7 +13,7 @@ import io.ktor.utils.io.core.writeShortLittleEndian
 
 class RecolorBlockBuilder : RenderBlockBuilder<Player, Recolor>(
     mask = 0x400,
-    index = 0
+    index = 0,
 ) {
     override fun build(actor: Player, render: Recolor): ByteReadPacket = buildPacket {
         writeShortLittleEndian(render.delay.toShort())

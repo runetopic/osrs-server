@@ -5,5 +5,5 @@ import kotlinx.serialization.Transient
 
 @Serializable
 abstract class EntryType(
-    @Transient open val id: Int = -1
+    @Transient open val id: Int = -1,
 )

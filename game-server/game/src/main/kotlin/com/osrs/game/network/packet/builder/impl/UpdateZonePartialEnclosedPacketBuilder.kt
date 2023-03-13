@@ -14,7 +14,7 @@ import java.nio.ByteBuffer
 @Singleton
 class UpdateZonePartialEnclosedPacketBuilder : PacketBuilder<UpdateZonePartialEnclosedPacket>(
     opcode = 105,
-    size = -2
+    size = -2,
 ) {
     override fun build(packet: UpdateZonePartialEnclosedPacket, buffer: ByteBuffer) {
         buffer.writeByteNegate(packet.zInScene)
@@ -40,7 +40,7 @@ class UpdateZonePartialEnclosedPacketBuilder : PacketBuilder<UpdateZonePartialEn
             null,
             ObjAddPacket::class.java,
             null,
-            null
+            null,
         )
     }
 }

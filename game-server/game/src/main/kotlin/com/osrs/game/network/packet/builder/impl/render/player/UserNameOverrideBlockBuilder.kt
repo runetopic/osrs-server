@@ -9,7 +9,7 @@ import io.ktor.utils.io.core.buildPacket
 
 class UserNameOverrideBlockBuilder : RenderBlockBuilder<Player, UserNameOverride>(
     mask = 0x1000,
-    index = 4
+    index = 4,
 ) {
     override fun build(actor: Player, render: UserNameOverride): ByteReadPacket = buildPacket {
         writeStringCp1252NullTerminated(render.prefix)

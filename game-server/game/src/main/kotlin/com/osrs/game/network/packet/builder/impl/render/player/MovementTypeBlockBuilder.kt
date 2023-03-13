@@ -9,7 +9,7 @@ import io.ktor.utils.io.core.buildPacket
 
 class MovementTypeBlockBuilder : RenderBlockBuilder<Player, MovementSpeed>(
     index = 3,
-    mask = 0x4000
+    mask = 0x4000,
 ) {
     override fun build(actor: Player, render: MovementSpeed): ByteReadPacket = buildPacket {
         writeByteAdd(render.type.id.toByte())

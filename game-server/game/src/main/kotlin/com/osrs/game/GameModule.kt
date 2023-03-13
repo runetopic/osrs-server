@@ -5,7 +5,6 @@ import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick
 import com.osrs.game.tick.GameTickProvider
-import com.osrs.game.world.service.PlayerSerializationService
 import com.osrs.game.ui.UserInterfaceModule
 import com.osrs.game.world.World
 import com.osrs.game.world.WorldProvider
@@ -13,6 +12,7 @@ import com.osrs.game.world.map.CollisionMap
 import com.osrs.game.world.map.path.PathFinderProvider
 import com.osrs.game.world.map.path.StepValidatorProvider
 import com.osrs.game.world.service.LoginService
+import com.osrs.game.world.service.PlayerSerializationService
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.rsmod.pathfinder.PathFinder
 import org.rsmod.pathfinder.StepValidator
