@@ -23,7 +23,7 @@ class PublicChatPacketReader : PacketReader<PublicChatPacket>(
             unknown1 = type,
             color = readChannel.readUByte(),
             effect = readChannel.readUByte(),
-            compressedSize = readChannel.readUShortSmart(),
+            decompressedSize = readChannel.readUShortSmart(),
             compressedBytes = readChannel.readPacket(size - (mark - (readChannel.availableForRead - if (type == 3) 1 else 0))).readBytes(),
             unknown2 = if (type == 3) readChannel.readUByte() else -1
         )

@@ -9,7 +9,7 @@ data class PublicChatPacket(
     val unknown1: Int,
     val color: Int,
     val effect: Int,
-    val compressedSize: Int,
+    val decompressedSize: Int,
     val compressedBytes: ByteArray,
     val unknown2: Int
 ) : Packet

@@ -71,3 +71,11 @@ fun BytePacketBuilder.writeIntV2(value: Int) {
     writeByte(value.toByte())
     writeByte((value shr 8).toByte())
 }
+
+fun BytePacketBuilder.writeSmartByteShort(value: Int) {
+    if (value in 0..127) {
+        writeByte(value.toByte())
+    } else {
+        writeShort((value + 32768).toShort())
+    }
+}
