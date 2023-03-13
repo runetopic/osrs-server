@@ -21,9 +21,10 @@ class PublicChatPacketHandler @Inject constructor(
 
     override fun handlePacket(packet: PublicChatPacket, player: Player) {
         if (huffman == null) return
+        // Format incoming public chat message to our standards.
         val formatted = packet.compressedBytes.decompressHuffman(huffman, packet.decompressedSize).decodeToString().trim()
+        // Compress the formatted public chat message.
         val compressed = formatted.encodeToByteArray().compressHuffman(huffman)
-        check(compressed.contentEquals(packet.compressedBytes))
         player.renderer.publicChat(PublicChat(packet.color, packet.effect, formatted.length, compressed))
     }
 }

@@ -2,13 +2,13 @@ package com.osrs.game.network.packet.builder.impl.render.player
 
 import com.osrs.common.buffer.writeByteNegate
 import com.osrs.common.buffer.writeByteSubtract
-import com.osrs.common.buffer.writeBytes
 import com.osrs.common.buffer.writeSmartByteShort
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShortLittleEndian
 
 /**
@@ -22,9 +22,8 @@ class PublicChatBlockBuilder : RenderBlockBuilder<Player, PublicChat>(
         writeShortLittleEndian((render.color shl 8 or render.effect).toShort())
         writeByteNegate(actor.rights.toByte())
         writeByteSubtract(0) // Auto chatting.
-        val compressed = render.compressedBytes
-        writeByteSubtract((compressed.size + 1).toByte())
+        writeByteSubtract((render.compressedBytes.size + 1).toByte())
         writeSmartByteShort(render.decompressedSize)
-        writeBytes(compressed)
+        writeFully(render.compressedBytes)
     }
 }
