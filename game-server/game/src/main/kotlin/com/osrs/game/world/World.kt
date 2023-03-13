@@ -52,6 +52,7 @@ data class World(
         logoutRequest.entries.onEach {
             players.remove(it.key)
             it.key.logout()
+            playerSerializationService.savePlayer(it.key)
         }
 
         logoutRequest.clear()
@@ -62,7 +63,6 @@ data class World(
     }
 
     fun requestLogout(player: Player) {
-        playerSerializationService.savePlayer(player)
         this.logoutRequest[player] = player.session
     }
 
