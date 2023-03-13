@@ -22,7 +22,7 @@ class PublicChatBlockBuilder : RenderBlockBuilder<Player, PublicChat>(
         writeShortLittleEndian((render.color shl 8 or render.effect).toShort())
         writeByteNegate(actor.rights.toByte())
         writeByteSubtract(0) // Auto chatting.
-        writeByteSubtract((render.compressedBytes.size + 1).toByte())
+        writeByteSubtract((render.compressedBytes.size + (if (render.decompressedSize > Byte.MAX_VALUE) 2 else 1)).toByte())
         writeSmartByteShort(render.decompressedSize)
         writeFully(render.compressedBytes)
     }
