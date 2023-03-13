@@ -16,11 +16,11 @@ class RecolorBlockBuilder : RenderBlockBuilder<Player, Recolor>(
     index = 0
 ) {
     override fun build(actor: Player, render: Recolor): ByteReadPacket = buildPacket {
-        writeShortLittleEndian(render.startDelay.toShort())
-        writeShortAdd(render.endDelay.toShort())
+        writeShortLittleEndian(render.delay.toShort())
+        writeShortAdd(render.duration.toShort())
         writeByteNegate(render.hue.toByte())
         writeByteAdd(render.saturation.toByte())
         writeByteSubtract(render.luminance.toByte())
-        writeByteSubtract(render.amount.toByte())
+        writeByteSubtract(render.opacity.toByte())
     }
 }

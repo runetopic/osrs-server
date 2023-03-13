@@ -4,11 +4,17 @@ import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.actor.render.type.MovementSpeedType
 import com.osrs.game.actor.render.type.PublicChat
+import com.osrs.game.actor.render.type.Recolor
 import com.osrs.game.actor.render.type.TemporaryMovementSpeed
 
 class ActorRenderer {
     private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
     private val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
+
+    fun recolor(recolor: Recolor) {
+        val block = recolor.toBlock()
+        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(recolor, block)
+    }
 
     fun appearance(appearance: Appearance): Appearance {
         val block = appearance.toBlock()
