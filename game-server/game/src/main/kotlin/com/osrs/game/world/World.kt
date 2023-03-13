@@ -33,6 +33,7 @@ data class World(
 
     fun start() {
         maps.entries.forEach(collisionMap::applyCollision)
+        playerSerializationService.start(this)
     }
 
     fun processLoginRequest() {
