@@ -6,7 +6,7 @@ import com.osrs.game.actor.render.type.SpotAnimation
 import com.osrs.game.command.CommandListener
 
 @Singleton
-class SpotAnimationCommand : CommandListener(
+class SpotAnimationTest : CommandListener(
     name = "spot_anim",
 ) {
     override fun execute(command: String, player: Player) {
