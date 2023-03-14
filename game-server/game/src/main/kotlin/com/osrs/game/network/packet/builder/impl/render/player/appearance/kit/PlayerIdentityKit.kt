@@ -9,7 +9,7 @@ import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.in
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.JawInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.LegInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.NeckInfo
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ShieldInfo
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.OffHandInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.TorsoInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.MainHandInfo
 
@@ -24,7 +24,7 @@ enum class PlayerIdentityKit(
     HANDS(HandInfo(), BodyPart.HANDS),
     LEGS(LegInfo(), BodyPart.LEGS),
     FEET(FootInfo(), BodyPart.FEET),
-    SHIELD(ShieldInfo()),
+    SHIELD(OffHandInfo()),
     HEAD(HeadInfo()),
     CAPE(BackInfo()),
     NECK(NeckInfo()),
