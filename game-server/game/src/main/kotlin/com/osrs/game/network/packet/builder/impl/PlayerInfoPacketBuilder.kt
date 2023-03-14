@@ -20,22 +20,14 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     size = -2
 ) {
     override fun build(packet: PlayerInfoPacket, buffer: ByteBuffer) {
+        val players = packet.players
         val viewport = packet.viewport
         viewport.resize()
-        buffer.putSync(viewport, packet.highDefinitionUpdates, packet.lowDefinitionUpdates, packet.players)
+        val highDefinitionBytes = buffer.syncHighDefinition(viewport, packet.highDefinitionUpdates, players)
+        val lowDefinitionBytes = buffer.syncLowDefinition(viewport, packet.lowDefinitionUpdates, players)
+        buffer.put(highDefinitionBytes)
+        buffer.put(lowDefinitionBytes)
         viewport.reset()
-    }
-
-    private fun ByteBuffer.putSync(
-        viewport: Viewport,
-        highDefinitionUpdates: Array<ByteArray?>,
-        lowDefinitionUpdates: Array<ByteArray?>,
-        players: PlayerList
-    ) {
-        val highDefinitionBytes = syncHighDefinition(viewport, highDefinitionUpdates, players)
-        val lowDefinitionBytes = syncLowDefinition(viewport, lowDefinitionUpdates, players)
-        put(highDefinitionBytes)
-        put(lowDefinitionBytes)
     }
 
     private tailrec fun ByteBuffer.syncHighDefinition(
