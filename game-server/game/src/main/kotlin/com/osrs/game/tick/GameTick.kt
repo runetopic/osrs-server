@@ -6,10 +6,9 @@ import com.osrs.game.tick.task.WorldSyncTask
 import com.osrs.game.world.World
 import kotlin.system.measureTimeMillis
 
-
 class GameTick(
     private val world: World,
-    playerUpdateBlocks: PlayerUpdateBlocks
+    playerUpdateBlocks: PlayerUpdateBlocks,
 ) : Runnable {
     private val logger = InlineLogger()
     private var tick = 0

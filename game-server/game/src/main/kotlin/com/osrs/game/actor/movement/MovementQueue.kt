@@ -2,7 +2,8 @@ package com.osrs.game.actor.movement
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.MovementSpeed
+import com.osrs.game.actor.render.type.MovementType
 import org.rsmod.pathfinder.Route
 import org.rsmod.pathfinder.RouteCoordinates
 import java.util.*
@@ -10,7 +11,7 @@ import kotlin.math.sign
 
 class MovementQueue(
     val actor: Actor,
-    private val steps: Deque<Location> = LinkedList()
+    private val steps: Deque<Location> = LinkedList(),
 ) : Deque<Location> by steps {
     private val routeSteps: Deque<RouteCoordinates> = LinkedList()
 
@@ -33,7 +34,7 @@ class MovementQueue(
             appendNextStep(location)
 
             nextWalkStep = poll() ?: return run {
-                actor.renderer.temporaryMovementSpeed(MovementSpeedType.WALK)
+                actor.renderer.update(MovementSpeed(type = MovementType.WALK, temporary = true))
                 moveTo(location, MoveDirection(walkDirection, null))
             }
 
@@ -48,7 +49,7 @@ class MovementQueue(
         }
 
         if (runDirection != null) {
-            actor.renderer.temporaryMovementSpeed(MovementSpeedType.RUN)
+            actor.renderer.update(MovementSpeed(MovementType.RUN, temporary = true))
         }
 
         moveTo(location, MoveDirection(walkDirection, runDirection))
@@ -56,7 +57,7 @@ class MovementQueue(
 
     private fun moveTo(
         location: Location,
-        direction: MoveDirection
+        direction: MoveDirection,
     ) {
         actor.location = location
         actor.moveDirection = direction

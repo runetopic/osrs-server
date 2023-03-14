@@ -13,5 +13,5 @@ data class MapProjAnimPacket(
     val endHeight: Int,
     val angle: Int,
     val delay: Int,
-    val flightTime: Int
+    val flightTime: Int,
 ) : Packet

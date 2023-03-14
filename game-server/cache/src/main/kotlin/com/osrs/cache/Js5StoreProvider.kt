@@ -7,7 +7,7 @@ import io.ktor.server.application.Application
 import java.nio.file.Path
 
 class Js5StoreProvider @Inject constructor(
-    private val application: Application
+    private val application: Application,
 ) : Provider<Js5Store> {
 
     override fun get(): Js5Store {

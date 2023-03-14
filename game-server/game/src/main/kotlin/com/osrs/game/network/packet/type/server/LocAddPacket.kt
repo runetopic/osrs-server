@@ -7,7 +7,7 @@ data class LocAddPacket(
     val shape: Int,
     val rotation: Int,
     val packedOffset: Int,
-    val disabledOptions: IntArray = intArrayOf()
+    val disabledOptions: IntArray = intArrayOf(),
 ) : Packet {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

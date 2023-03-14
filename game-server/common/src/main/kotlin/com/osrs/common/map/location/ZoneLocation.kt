@@ -2,7 +2,7 @@ package com.osrs.common.map.location
 
 @JvmInline
 value class ZoneLocation(
-    val packedLocation: Int
+    val packedLocation: Int,
 ) {
     constructor(x: Int, z: Int, level: Int = 0) : this((x and 0x7ff) or ((z and 0x7ff) shl 11) or ((level and 0x3) shl 22))
     inline val id get() = x or (z shl 11) or (level shl 22)

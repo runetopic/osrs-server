@@ -14,7 +14,7 @@ import java.nio.ByteBuffer
  */
 @Singleton
 class HuffmanEntryProvider @Inject constructor(
-    private val cache: Cache
+    private val cache: Cache,
 ) : EntryTypeProvider<HuffmanEntry>() {
     override fun loadTypeMap(): Map<Int, HuffmanEntry> = cache
         .index(BINARY_INDEX)
@@ -26,7 +26,7 @@ class HuffmanEntryProvider @Inject constructor(
     private fun ByteBuffer.loadEntryType(type: HuffmanEntry): HuffmanEntry = type.apply {
         huffman = Huffman(
             sizes = array(),
-            limit = 75
+            limit = 75,
         )
     }
 }

@@ -2,9 +2,9 @@ package com.osrs.database.entity
 
 import com.osrs.common.item.FloorItem
 import com.osrs.common.map.location.Location
+import com.osrs.common.map.location.LocationSerializer
 import com.osrs.common.skill.Skills
 import com.osrs.database.serializer.InstantSerializer
-import com.osrs.common.map.location.LocationSerializer
 import com.osrs.database.serializer.SkillsSerializer
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -26,5 +26,5 @@ data class Account(
     var location: Location,
     @Serializable(with = SkillsSerializer::class)
     var skills: Skills = Skills(),
-    var objs: List<FloorItem> = emptyList()
+    var objs: List<FloorItem> = emptyList(),
 )

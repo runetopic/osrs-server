@@ -5,7 +5,7 @@ import io.ktor.utils.io.ByteReadChannel
 
 abstract class PacketReader<out T : Packet>(
     open val opcode: Int,
-    open val size: Int
+    open val size: Int,
 ) {
     abstract suspend fun read(readChannel: ByteReadChannel, size: Int): T?
 }

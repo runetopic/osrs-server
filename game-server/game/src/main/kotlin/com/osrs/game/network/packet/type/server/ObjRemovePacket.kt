@@ -5,5 +5,5 @@ import com.osrs.game.network.packet.Packet
 data class ObjRemovePacket(
     val id: Int,
     val quantity: Int,
-    val packedOffset: Int
+    val packedOffset: Int,
 ) : Packet

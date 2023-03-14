@@ -15,7 +15,7 @@ import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.in
 
 enum class PlayerIdentityKit(
     val info: BodyPartInfo,
-    val bodyPart: BodyPart? = null
+    val bodyPart: BodyPart? = null,
 ) {
     HAIR(HairInfo(), BodyPart.HEAD),
     JAW(JawInfo(), BodyPart.JAW),
@@ -28,5 +28,5 @@ enum class PlayerIdentityKit(
     HEAD(HeadInfo()),
     CAPE(CapeInfo()),
     NECK(NeckInfo()),
-    WEAPON(WeaponInfo());
+    WEAPON(WeaponInfo()),
 }

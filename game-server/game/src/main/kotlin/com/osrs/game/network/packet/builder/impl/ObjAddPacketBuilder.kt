@@ -13,7 +13,7 @@ import java.nio.ByteBuffer
 @Singleton
 class ObjAddPacketBuilder : PacketBuilder<ObjAddPacket>(
     opcode = 31,
-    size = 14
+    size = 14,
 ) {
     override fun build(packet: ObjAddPacket, buffer: ByteBuffer) {
         buffer.writeByte(packet.packedOffset)

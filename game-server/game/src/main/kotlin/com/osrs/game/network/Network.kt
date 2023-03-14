@@ -21,14 +21,14 @@ class Network @Inject constructor(
     private val server: ServerSocket,
     private val world: World,
     private val codecs: Set<CodecChannelHandler>,
-    private val builders: Map<KClass<*>, PacketBuilder<Packet>>
+    private val builders: Map<KClass<*>, PacketBuilder<Packet>>,
 ) {
     private val logger = InlineLogger()
 
     private val scope = CoroutineScope(
         coroutineContext + SupervisorJob() + CoroutineExceptionHandler { ctx, throwable ->
             logger.error { "${throwable.message} $ctx" }
-        }
+        },
     )
 
     fun bind(launchTimeInMS: Long) = runBlocking {

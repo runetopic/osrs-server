@@ -10,7 +10,7 @@ data class EnumEntry(
     var defaultString: String = "null",
     var defaultInt: Int = 0,
     var size: Int = 0,
-    var params: Map<Int, Any> = mapOf()
+    var params: Map<Int, Any> = mapOf(),
 ) : EntryType(
-    id
+    id,
 )

@@ -5,5 +5,5 @@ enum class BodyPartColor(val id: Int) {
     TORSO(1),
     LEGS(2),
     FEET(3),
-    SKIN(4)
+    SKIN(4),
 }

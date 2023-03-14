@@ -13,7 +13,7 @@ typealias NPCList = ActorList<NPC?>
 @Serializable
 class ActorList<T>(
     private val initialCapacity: Int,
-    private val actors: MutableList<T?> = createMutableList<T?>(initialCapacity)
+    private val actors: MutableList<T?> = createMutableList<T?>(initialCapacity),
 ) : List<T?> by actors {
     override val size: Int get() = actors.count { it != null }
     val indices: IntRange get() = actors.indices

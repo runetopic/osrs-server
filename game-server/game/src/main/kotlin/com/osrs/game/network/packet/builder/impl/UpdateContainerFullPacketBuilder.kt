@@ -13,7 +13,7 @@ import kotlin.math.min
 @Singleton
 class UpdateContainerFullPacketBuilder : PacketBuilder<UpdateContainerFullPacket>(
     opcode = 44,
-    size = -2
+    size = -2,
 ) {
     override fun build(packet: UpdateContainerFullPacket, buffer: ByteBuffer) {
         buffer.writeInt(packet.packedInterface)

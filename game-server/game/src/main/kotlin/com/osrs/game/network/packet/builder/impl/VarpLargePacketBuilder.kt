@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 @Singleton
 class VarpLargePacketBuilder : PacketBuilder<VarpLargePacket>(
     opcode = 26,
-    size = 6
+    size = 6,
 ) {
     override fun build(packet: VarpLargePacket, buffer: ByteBuffer) {
         buffer.writeShort(packet.id)

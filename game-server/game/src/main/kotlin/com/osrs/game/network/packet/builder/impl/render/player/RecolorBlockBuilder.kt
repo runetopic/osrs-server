@@ -14,12 +14,12 @@ class RecolorBlockBuilder : RenderBlockBuilder<Recolor>(
     index = 0
 ) {
     override fun build(buffer: ByteBuffer, render: Recolor) {
-        buffer.writeShortLittleEndian(render.startDelay)
-        buffer.writeShortAdd(render.endDelay)
+        buffer.writeShortLittleEndian(render.delay)
+        buffer.writeShortAdd(render.duration)
         buffer.writeByteNegate(render.hue)
         buffer.writeByteAdd(render.saturation)
         buffer.writeByteSubtract(render.luminance)
-        buffer.writeByteSubtract(render.amount)
+        buffer.writeByteSubtract(render.opacity)
     }
 
     override fun size(render: Recolor): Int = 8

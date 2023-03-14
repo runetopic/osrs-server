@@ -1,6 +1,6 @@
 package com.osrs.game.ui
 
-sealed class UserInterface (
+sealed class UserInterface(
     val name: String,
 ) {
     object AccountManagement : UserInterface("account_management")

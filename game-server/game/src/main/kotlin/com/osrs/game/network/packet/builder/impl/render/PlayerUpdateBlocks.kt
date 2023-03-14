@@ -14,7 +14,7 @@ import java.nio.ByteBuffer
 @Singleton
 class PlayerUpdateBlocks(
     val highDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
-    val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS)
+    val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
 ) {
     fun clear() {
         lowDefinitionUpdates.fill(null)

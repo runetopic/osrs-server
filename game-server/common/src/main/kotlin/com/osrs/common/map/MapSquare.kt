@@ -12,7 +12,7 @@ data class MapSquare(
     @SerialName("name_hash")
     val nameHash: Int,
     val name: String,
-    val key: IntArray
+    val key: IntArray,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

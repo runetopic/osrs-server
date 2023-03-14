@@ -11,7 +11,7 @@ import org.mindrot.jbcrypt.BCrypt
 
 @Singleton
 class AccountService @Inject constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
 ) {
     fun createAccount(request: CreateAccountRequest): Account? {
         val (username, email, password) = request
@@ -24,8 +24,8 @@ class AccountService @Inject constructor(
                 rights = 0,
                 email = email,
                 password = BCrypt.hashpw(password, BCrypt.gensalt(12)),
-                location = Location.Default
-            )
+                location = Location.Default,
+            ),
         )
     }
 

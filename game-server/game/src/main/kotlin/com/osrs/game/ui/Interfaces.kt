@@ -16,7 +16,7 @@ class Interfaces constructor(
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
     private val interfaceListeners: Map<KClass<*>, InterfaceListener<UserInterface>>,
-    private val open: MutableList<UserInterface> = mutableListOf()
+    private val open: MutableList<UserInterface> = mutableListOf(),
 ) : MutableList<UserInterface> by open {
     var layout: InterfaceLayout = RESIZABLE
 
@@ -35,8 +35,8 @@ class Interfaces constructor(
             IfOpenSubPacket(
                 interfaceId = info.id,
                 toInterface = layout.interfaceId.packInterface(childId),
-                isModal = info.isModal()
-            )
+                isModal = info.isModal(),
+            ),
         )
     }
 

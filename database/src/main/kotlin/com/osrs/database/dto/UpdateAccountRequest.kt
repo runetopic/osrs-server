@@ -9,5 +9,5 @@ data class UpdateAccountRequest(
     val displayName: String,
     val skills: Skills,
     val location: Location,
-    val objs: List<FloorItem> = emptyList()
+    val objs: List<FloorItem> = emptyList(),
 )

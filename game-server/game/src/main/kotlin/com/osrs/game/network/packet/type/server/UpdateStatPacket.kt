@@ -7,4 +7,3 @@ data class UpdateStatPacket(
     val level: Int,
     val xp: Double,
 ) : Packet
-
