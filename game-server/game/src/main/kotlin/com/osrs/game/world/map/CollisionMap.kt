@@ -4,10 +4,6 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.entry.config.location.LocationEntryProvider
 import com.osrs.cache.entry.map.MapSquareEntry
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.BLOCKED_TILE_BIT
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.transform
 import com.osrs.game.actor.movement.Direction
@@ -54,18 +50,16 @@ class CollisionMap @Inject constructor(
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, 0)
 
     fun applyCollision(type: MapSquareEntry) {
-        for (level in 0 until LEVELS) {
-            for (x in 0 until MAP_SIZE) {
-                for (z in 0 until MAP_SIZE) {
-                    if ((type.terrain[level][x][z]!!.collision and BLOCKED_TILE_BIT) != BLOCKED_TILE_BIT) continue
-
-                    val actualLevel = if ((type.terrain[1][x][z]!!.collision and BRIDGE_TILE_BIT) == BRIDGE_TILE_BIT) level - 1 else level
-
+        for (level in 0 until 4) {
+            for (x in 0 until 64) {
+                for (z in 0 until 64) {
+                    // On normal level.
+                    if ((type.terrain[(x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)]!!.collision and 0x1) != 0x1) continue
+                    // On level 1.
+                    val actualLevel = if ((type.terrain[(x and 0x3F shl 6) or (z and 0x3F) or 0x1000]!!.collision and 0x2) == 0x2) level - 1 else level
                     if (actualLevel < 0) continue
-
                     val baseX = type.regionX shl 6
                     val baseZ = type.regionZ shl 6
-
                     val location = Location(x + baseX, z + baseZ, level)
                     addFloorCollision(location)
                     ZoneManager.createZone(location.zoneLocation)
@@ -73,13 +67,13 @@ class CollisionMap @Inject constructor(
             }
         }
 
-        for (level in 0 until LEVELS) {
-            for (x in 0 until MAP_SIZE) {
-                for (z in 0 until MAP_SIZE) {
+        for (level in 0 until 4) {
+            for (x in 0 until 64) {
+                for (z in 0 until 64) {
                     val baseX = type.regionX shl 6
                     val baseZ = type.regionZ shl 6
 
-                    type.locations[level][x][z].forEach {
+                    type.locations[(x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)]?.forEach {
                         if (it == null) return@forEach
                         val location = Location(it.x + baseX, it.z + baseZ, it.level)
                         if (!locations.contains(it.id)) return@forEach

@@ -6,9 +6,6 @@ import com.google.inject.Singleton
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.MAP_INDEX
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
-import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
 import com.osrs.common.buffer.discard
 import com.osrs.common.buffer.readIncrSmallSmart
 import com.osrs.common.buffer.readShort
@@ -21,6 +18,21 @@ import com.runetopic.cache.extension.decompress
 import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
+fun main() {
+    val level = 3
+    val x = 63
+    val z = 22
+    val packed = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
+    println(packed)
+    val localX = packed shr 6 and 0x3F
+    val localZ = packed and 0x3F
+    val localLevel = (packed shr 12)
+    println(localX)
+    println(localZ)
+    println(localLevel)
+    println(1 shl 12)
+}
+
 @Singleton
 class MapSquareTypeProvider @Inject constructor(
     private val cache: Cache,
@@ -28,7 +40,7 @@ class MapSquareTypeProvider @Inject constructor(
 ) : EntryTypeProvider<MapSquareEntry>() {
     private val logger = InlineLogger()
 
-    override fun loadTypeMap(): Map<Int, MapSquareEntry> = mapSquares.values.map(this::loadMapEntry).associateBy(MapSquareEntry::id)
+    override fun loadTypeMap(): Map<Int, MapSquareEntry> = mapSquares.values.map(::loadMapEntry).associateBy(MapSquareEntry::id)
 
     private fun loadMapEntry(square: MapSquare): MapSquareEntry {
         val entry = MapSquareEntry(square.id)
@@ -42,10 +54,10 @@ class MapSquareTypeProvider @Inject constructor(
         val terrain = mapIndex.group("m${entry.regionX}_${entry.regionZ}")
         val terrainData = terrain?.data?.decompress()?.buffer
 
-        for (level in 0 until LEVELS) {
-            for (x in 0 until MAP_SIZE) {
-                for (z in 0 until MAP_SIZE) {
-                    entry.terrain[level][x][z] = terrainData?.loadTerrain()
+        for (level in 0 until 4) {
+            for (x in 0 until 64) {
+                for (z in 0 until 64) {
+                    entry.terrain[entry.pack(level, x, z)] = terrainData?.loadTerrain()
                 }
             }
         }
@@ -85,14 +97,14 @@ class MapSquareTypeProvider @Inject constructor(
         )
     }
 
-    private tailrec fun ByteBuffer.loadLocs(type: MapSquareEntry, locId: Int = -1) {
+    private tailrec fun ByteBuffer.loadLocs(entry: MapSquareEntry, locId: Int = -1) {
         val offset = readIncrSmallSmart()
         if (offset == 0) return
-        loadLocationCollision(type, locId + offset, 0)
-        return loadLocs(type, locId + offset)
+        loadLocationCollision(entry, locId + offset, 0)
+        return loadLocs(entry, locId + offset)
     }
 
-    private tailrec fun ByteBuffer.loadLocationCollision(type: MapSquareEntry, locId: Int, packedLocation: Int) {
+    private tailrec fun ByteBuffer.loadLocationCollision(entry: MapSquareEntry, locId: Int, packedLocation: Int) {
         val offset = readUShortSmart()
         if (offset == 0) return
         val attributes = readUByte()
@@ -100,22 +112,28 @@ class MapSquareTypeProvider @Inject constructor(
         val rotation = attributes and 0x3
 
         val packed = packedLocation + offset - 1
-        val localX = packed shr 6 and 0x3f
-        val localZ = packed and 0x3f
+        val x = packed shr 6 and 0x3F
+        val z = packed and 0x3F
         val level = (packed shr 12).let {
-            if (type.terrain[1][localX][localZ]!!.collision and BRIDGE_TILE_BIT == 2) it - 1 else it
+            if (entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2 == 2) it - 1 else it
         }
+        val adjusted = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
 
         if (level >= 0) {
-            type.locations[level][localX][localZ][type.locations[level][localX][localZ].indexOf(null)] = MapSquareLocation(
+            entry.locations[adjusted] = when (val size = entry.locations[adjusted]?.size ?: 0) {
+                0 -> arrayOfNulls(1)
+                in 1 until 5 -> entry.locations[adjusted]!!.copyOf(size + 1)
+                else -> entry.locations[adjusted]
+            }
+            entry.locations[adjusted]!![entry.locations[adjusted]!!.indexOf(null)] = MapSquareLocation(
                 id = locId,
-                x = localX,
-                z = localZ,
+                x = x,
+                z = z,
                 level = level,
                 shape = shape,
                 rotation = rotation
             )
         }
-        return loadLocationCollision(type, locId, packed)
+        return loadLocationCollision(entry, locId, packed)
     }
 }
