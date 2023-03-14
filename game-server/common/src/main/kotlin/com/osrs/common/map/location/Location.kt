@@ -5,27 +5,29 @@ import kotlin.math.max
 
 @JvmInline
 value class Location(
-    val packedLocation: Int
+    val packed: Int
 ) {
-    constructor(x: Int, z: Int, level: Int = 0) : this((z and 0x3fff) or ((x and 0x3fff) shl 14) or ((level and 0x3) shl 28))
+    constructor(x: Int, z: Int, level: Int = 0) : this(
+        packed = (z and 0x3FFF) or ((x and 0x3FFF) shl 14) or ((level and 0x3) shl 28)
+    )
 
-    inline val level get() = (packedLocation shr 28) and 0x3
-    inline val x get() = (packedLocation shr 14) and 0x3fff
-    inline val z get() = packedLocation and 0x3fff
-    inline val zoneX get() = (x shr 3)
-    inline val zoneZ get() = (z shr 3)
-    inline val zoneId get() = zoneX or (zoneZ shl 11) or (level shl 22)
-    inline val regionX get() = (x shr 6)
-    inline val regionZ get() = (z shr 6)
-    inline val regionId get() = (regionX shl 8) or regionZ
-    inline val regionLocation get() = z shr 13 or (x shr 13 shl 8) or (level shl 16)
-    inline val zoneLocation get() = ZoneLocation(zoneX, zoneZ, level)
-    inline val packedOffset get() = ((x and 0x7) shl 4) or (z and 0x7)
+    val level get() = packed shr 28 and 0x3
+    val x get() = packed shr 14 and 0x3FFF
+    val z get() = packed and 0x3FFF
+    val zoneX get() = (x shr 3)
+    val zoneZ get() = (z shr 3)
+    val zoneId get() = zoneX or (zoneZ shl 11) or (level shl 22)
+    val regionX get() = (x shr 6)
+    val regionZ get() = (z shr 6)
+    val regionId get() = (regionX shl 8) or regionZ
+    val regionLocation get() = z shr 13 or (x shr 13 shl 8) or (level shl 16)
+    val zoneLocation get() = ZoneLocation(zoneX, zoneZ, level)
+    val packedOffset get() = ((x and 0x7) shl 4) or (z and 0x7)
 
-    fun clone(): Location = Location(packedLocation)
+    fun clone(): Location = Location(packed)
 
     override fun toString(): String =
-        "Location(packedCoordinates=$packedLocation, x=$x, z=$z, level=$level, zoneX=$zoneX, zoneZ=$zoneZ, zoneId=$zoneId, regionX=$regionX, regionZ=$regionZ, regionId=$regionId)"
+        "Location(packedCoordinates=$packed, x=$x, z=$z, level=$level, zoneX=$zoneX, zoneZ=$zoneZ, zoneId=$zoneId, regionX=$regionX, regionZ=$regionZ, regionId=$regionId)"
 
     companion object {
         val None = Location(-1, -1, -1)
