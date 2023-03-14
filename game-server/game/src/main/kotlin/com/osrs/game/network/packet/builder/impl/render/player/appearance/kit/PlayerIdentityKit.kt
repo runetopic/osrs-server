@@ -11,7 +11,7 @@ import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.in
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.NeckInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ShieldInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.TorsoInfo
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.WeaponInfo
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.MainHandInfo
 
 enum class PlayerIdentityKit(
     val info: BodyPartInfo,
@@ -28,5 +28,5 @@ enum class PlayerIdentityKit(
     HEAD(HeadInfo()),
     CAPE(BackInfo()),
     NECK(NeckInfo()),
-    WEAPON(WeaponInfo()),
+    WEAPON(MainHandInfo()),
 }

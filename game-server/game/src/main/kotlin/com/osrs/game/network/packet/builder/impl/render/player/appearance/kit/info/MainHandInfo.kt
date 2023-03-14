@@ -7,8 +7,8 @@ import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.Bo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.BodyPartInfo
 import java.nio.ByteBuffer
 
-class WeaponInfo : BodyPartInfo(index = 3) {
-    override fun equipmentIndex(gender: Appearance.Gender): Int = Equipment.SLOT_WEAPON
+class MainHandInfo : BodyPartInfo(index = 3) {
+    override fun equipmentIndex(gender: Appearance.Gender): Int = Equipment.SLOT_MAIN_HAND
     override fun build(buffer: ByteBuffer, kit: BodyPartCompanion) {
         buffer.writeByte(kit.id)
     }
