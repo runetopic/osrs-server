@@ -6,6 +6,7 @@ import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.actor.render.type.OverHeadText
 import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.actor.render.type.Recolor
+import com.osrs.game.actor.render.type.Sequence
 import com.osrs.game.actor.render.type.SpotAnimation
 import com.osrs.game.actor.render.type.UserNameOverride
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
@@ -14,6 +15,7 @@ import com.osrs.game.network.packet.builder.impl.render.player.MovementTypeBlock
 import com.osrs.game.network.packet.builder.impl.render.player.OverHeadTextBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.PublicChatBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.RecolorBlockBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.SequenceBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.SpotAnimationBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.TemporaryMovementTypeBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.UserNameOverrideBlockBuilder
@@ -33,6 +35,7 @@ interface RenderType {
         is FaceAngle -> Renders.faceAngleBlockBuilder
         is SpotAnimation -> Renders.spotAnimationBlockBuilder
         is OverHeadText -> Renders.overHeadTextBlockBuilder
+        is Sequence -> Renders.sequenceBlockBuilder
         else -> throw IllegalStateException("Unhandled player block in PlayerInfo. Block was $this")
     }
 }
@@ -47,4 +50,5 @@ private object Renders {
     val faceAngleBlockBuilder = FaceAngleBlockBuilder()
     val spotAnimationBlockBuilder = SpotAnimationBlockBuilder()
     val overHeadTextBlockBuilder = OverHeadTextBlockBuilder()
+    val sequenceBlockBuilder = SequenceBlockBuilder()
 }
