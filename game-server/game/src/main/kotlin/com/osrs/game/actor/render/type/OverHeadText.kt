@@ -2,4 +2,6 @@ package com.osrs.game.actor.render.type
 
 import com.osrs.game.actor.render.RenderType
 
-class TemporaryMovementSpeed(val type: MovementSpeedType) : RenderType
+data class OverHeadText(
+    val text: String
+) : RenderType

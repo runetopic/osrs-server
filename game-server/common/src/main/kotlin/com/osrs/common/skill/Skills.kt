@@ -20,8 +20,9 @@ class Skills(
 
         this.experience[skill.id] = newExperience
 
-        if (this.levels[skill.id] != level)
+        if (this.levels[skill.id] != level) {
             this.levels[skill.id] = level
+        }
 
         function.invoke(level, newExperience)
     }

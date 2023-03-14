@@ -1,7 +1,7 @@
 package com.osrs.game.ui
 
-sealed class UserInterface (
-    val name: String,
+sealed class UserInterface(
+    val name: String
 ) {
     object AccountManagement : UserInterface("account_management")
     object Settings : UserInterface("settings")
@@ -45,7 +45,7 @@ sealed class UserInterface (
             CombatOptions,
             CharacterSummary,
             UnknownOverlay,
-            ChatChannel,
+            ChatChannel
         )
     }
 }

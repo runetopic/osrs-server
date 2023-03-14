@@ -1,7 +1,7 @@
 package com.osrs.common.item
 
-import com.osrs.common.map.location.Location
 import com.osrs.common.controller.Controllable
+import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.LocationSerializer
 import kotlinx.serialization.Serializable
 

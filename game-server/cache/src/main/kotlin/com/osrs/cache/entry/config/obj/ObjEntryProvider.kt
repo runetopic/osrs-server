@@ -16,7 +16,7 @@ import java.nio.ByteBuffer
 
 @Singleton
 class ObjEntryProvider @Inject constructor(
-    val cache: Cache,
+    val cache: Cache
 ) : EntryTypeProvider<ObjEntryType>() {
 
     override fun loadTypeMap(): Map<Int, ObjEntryType> {
@@ -70,7 +70,7 @@ class ObjEntryProvider @Inject constructor(
 
                 for (var4 in 0 until length) {
                     type.colorFind[var4] = readUShort()
-                    type.colorReplace[var4] =  readUShort()
+                    type.colorReplace[var4] = readUShort()
                 }
             }
             41 -> {
@@ -80,7 +80,7 @@ class ObjEntryProvider @Inject constructor(
 
                 for (var4 in 0 until length) {
                     type.textureFind[var4] = readUShort()
-                    type.textureReplace[var4] =  readUShort()
+                    type.textureReplace[var4] = readUShort()
                 }
             }
             42 -> type.shiftClickIndex = readByte()
@@ -209,5 +209,4 @@ class ObjEntryProvider @Inject constructor(
         isMembersOnly = false
         isTradeable = false
     }
-
 }

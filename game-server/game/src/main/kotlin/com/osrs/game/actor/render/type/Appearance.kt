@@ -10,7 +10,8 @@ data class Appearance(
     val headIcon: Int,
     val skullIcon: Int,
     val transform: Int,
-    val hidden: Boolean
+    val hidden: Boolean,
+    val displayName: String
 ) : RenderType {
     enum class Gender(val mask: Int) { MALE(0x0), FEMALE(0x1); }
 
@@ -35,5 +36,3 @@ data class Appearance(
     fun isMale(): Boolean = gender == Gender.MALE
     fun isFemale(): Boolean = gender == Gender.FEMALE
 }
-
-

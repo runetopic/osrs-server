@@ -17,7 +17,7 @@ class WorldProvider @Inject constructor(
     private val playerSerializationService: PlayerSerializationService,
     private val maps: MapSquareTypeProvider,
     private val collisionMap: CollisionMap,
-    private val stepValidator: StepValidator,
+    private val stepValidator: StepValidator
 ) : Provider<World> {
 
     override fun get(): World = World(
@@ -27,6 +27,6 @@ class WorldProvider @Inject constructor(
         playerSerializationService,
         maps,
         collisionMap,
-        stepValidator,
+        stepValidator
     )
 }

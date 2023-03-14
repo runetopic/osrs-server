@@ -16,14 +16,13 @@ import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
-import kotlin.math.acos
 
 @Singleton
 @OptIn(ExperimentalSerializationApi::class)
 class AccountDiskRepository @Inject constructor(
     environment: ApplicationEnvironment,
-    private val json: Json,
-): AccountRepository {
+    private val json: Json
+) : AccountRepository {
     private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./players/"
 
     private val logger = InlineLogger()
@@ -44,20 +43,20 @@ class AccountDiskRepository @Inject constructor(
     }
 
     override fun findAccountByUsername(username: String): Account? {
-        val path = Path.of("${playerSaveDirectory}/$username.json")
+        val path = Path.of("$playerSaveDirectory/$username.json")
 
         if (!path.exists()) return null
 
         return try {
             json.decodeFromStream(path.inputStream())
-        } catch(exception: Exception) {
+        } catch (exception: Exception) {
             logger.error(exception) { "There was a problem loading the account by the username." }
             return null
         }
     }
 
     override fun createAccount(account: Account): Account {
-        val path = Path.of("${playerSaveDirectory}/${account.userName}.json")
+        val path = Path.of("$playerSaveDirectory/${account.userName}.json")
         json.encodeToStream(account, path.outputStream())
         return account
     }
@@ -77,7 +76,7 @@ class AccountDiskRepository @Inject constructor(
         account.skills = updateAccountRequest.skills
         account.objs = updateAccountRequest.objs
 
-        val path = Path.of("${playerSaveDirectory}/${account.userName}.json")
+        val path = Path.of("$playerSaveDirectory/${account.userName}.json")
         json.encodeToStream(account, path.outputStream())
         return true
     }

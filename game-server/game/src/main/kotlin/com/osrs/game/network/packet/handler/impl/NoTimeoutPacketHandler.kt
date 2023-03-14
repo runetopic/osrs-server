@@ -9,6 +9,5 @@ import com.osrs.game.network.packet.type.client.NoTimeoutPacket
 class NoTimeoutPacketHandler : PacketHandler<NoTimeoutPacket>() {
 
     override fun handlePacket(packet: NoTimeoutPacket, player: Player) {
-
     }
 }

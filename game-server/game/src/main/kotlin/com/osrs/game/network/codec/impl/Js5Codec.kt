@@ -17,7 +17,7 @@ import kotlinx.coroutines.isActive
 import java.nio.ByteBuffer
 
 class Js5Codec @Inject constructor(
-    private val cache: Cache,
+    private val cache: Cache
 ) : CodecChannelHandler {
 
     override suspend fun handle(session: Session, readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {

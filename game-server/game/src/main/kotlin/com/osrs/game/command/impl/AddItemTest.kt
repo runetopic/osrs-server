@@ -1,9 +1,9 @@
 package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
+import com.osrs.common.item.FloorItem
 import com.osrs.game.actor.player.Player
 import com.osrs.game.command.CommandListener
-import com.osrs.common.item.FloorItem
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 
 @Singleton

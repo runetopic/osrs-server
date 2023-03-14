@@ -44,11 +44,9 @@ object ZoneManager {
     }
 
     fun clear() {
-         if (observedZones.isNotEmpty()) observedZones.clear()
-         if (globalUpdates.isNotEmpty()) globalUpdates.clear()
+        if (observedZones.isNotEmpty()) observedZones.clear()
+        if (globalUpdates.isNotEmpty()) globalUpdates.clear()
     }
 
     fun getGlobalZoneUpdates(zoneLocation: Int): Sequence<Packet>? = globalUpdates[zoneLocation]
 }
-
-

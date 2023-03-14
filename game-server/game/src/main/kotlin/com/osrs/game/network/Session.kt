@@ -94,8 +94,11 @@ class Session(
         val endPos = writePool.position()
         val size = endPos - offset
         writePool.position(startPos)
-        if (builder.size == -1) writePool.writeByte(size)
-        else writePool.writeShort(size)
+        if (builder.size == -1) {
+            writePool.writeByte(size)
+        } else {
+            writePool.writeShort(size)
+        }
         writePool.position(endPos)
     }
 

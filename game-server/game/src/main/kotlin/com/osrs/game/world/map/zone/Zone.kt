@@ -230,5 +230,4 @@ class Zone(
     fun addStaticLoc(gameObject: GameObject) {
         staticLocs.add(gameObject)
     }
-
 }

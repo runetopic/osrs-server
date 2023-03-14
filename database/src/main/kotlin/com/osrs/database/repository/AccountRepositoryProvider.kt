@@ -18,13 +18,15 @@ class AccountRepositoryProvider @Inject constructor(
 
     override fun get(): AccountRepository {
         if (isLocal || !mongoClient.isPresent) {
-            return AccountDiskRepository(environment, Json {
-                serializersModule = IdKotlinXSerializationModule
-                prettyPrint = true
-            })
+            return AccountDiskRepository(
+                environment,
+                Json {
+                    serializersModule = IdKotlinXSerializationModule
+                    prettyPrint = true
+                }
+            )
         }
 
         return AccountMongoRepository(mongoClient.get())
     }
 }
-

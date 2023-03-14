@@ -27,4 +27,11 @@ suspend fun ByteReadChannel.readPacketOpcode(isaac: ISAAC) = (readUByte() - isaa
 
 suspend fun ByteReadChannel.readPacketSize(size: Int) = if (size == -1 || size == -2) {
     if (size == -1) readUByte() else readUShort()
-} else size
+} else {
+    size
+}
+
+suspend fun ByteReadChannel.readUShortSmart(): Int {
+    val peek = readUByte()
+    return if (peek < 128) peek else (peek shl 8 or readUByte()) - 32768
+}

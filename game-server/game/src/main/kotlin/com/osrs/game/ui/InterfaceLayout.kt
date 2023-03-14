@@ -10,5 +10,5 @@ enum class InterfaceLayout(
 ) {
     FIXED(548, 1, 1129),
     RESIZABLE(161, 2, 1130),
-    RESIZABLE_MODERN(164, 3, 1131);
+    RESIZABLE_MODERN(164, 3, 1131)
 }

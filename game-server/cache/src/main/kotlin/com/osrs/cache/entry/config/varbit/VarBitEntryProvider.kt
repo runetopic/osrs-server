@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 
 @Singleton
 class VarBitEntryProvider @Inject constructor(
-    val cache: Cache,
+    val cache: Cache
 ) : EntryTypeProvider<VarBitEntry>() {
     val mersennePrime: IntArray = generateMersennePrimeNumbers()
 

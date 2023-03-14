@@ -1,7 +1,6 @@
 package com.osrs.common.buffer
 
 import java.nio.ByteBuffer
-import java.util.*
 
 /**
  * @author Jordan Abraham
@@ -63,7 +62,9 @@ fun ByteBuffer.readUShortSmart(): Int {
 
 fun ByteBuffer.readUIntSmart(): Int {
     val peek = readUByte()
-    return if (peek < 0) ((peek shl 24) or (readUByte() shl 16) or (readUByte() shl 8) or readUByte()) and Integer.MAX_VALUE else {
+    return if (peek < 0) {
+        ((peek shl 24) or (readUByte() shl 16) or (readUByte() shl 8) or readUByte()) and Integer.MAX_VALUE
+    } else {
         (peek shl 8 or readUByte()).toShort().let { if (it == Short.MAX_VALUE) -1 else it }.toInt()
     }
 }
@@ -91,8 +92,20 @@ fun ByteBuffer.writeBytesAdd(bytes: ByteArray) {
     bytes.forEach { writeByteAdd(it.toInt()) }
 }
 
+fun ByteBuffer.writeReversedAdd(bytes: ByteArray) {
+    bytes.indices.reversed().forEach { writeByteAdd(bytes[it].toInt()) }
+}
+
 fun ByteBuffer.writeSmart(value: Int) {
     if (value > 128) putShort(value.toShort()) else put(value.toByte())
+}
+
+fun ByteBuffer.writeSmartByteShort(value: Int) {
+    if (value in 0..127) {
+        writeByte(value)
+    } else {
+        writeShort(value + 32768)
+    }
 }
 
 fun ByteBuffer.writeByte(value: Int) {
@@ -175,10 +188,8 @@ fun ByteBuffer.discardUntilDelimiter(delimiter: Int): Int {
     return count
 }
 
-inline fun ByteBuffer.withBitAccess(block: BitAccess.() -> Unit) {
-    val bitAccess = BitAccess(this)
-    block.invoke(bitAccess)
-    position((bitAccess.bitIndex + 7) / 8)
+fun ByteBuffer.withBitAccess(bits: BitAccess) {
+    position((bits.bitIndex + 7) / 8)
 }
 
 class BitAccess(val buffer: ByteBuffer) {
@@ -222,4 +233,3 @@ class BitAccess(val buffer: ByteBuffer) {
         }
     }
 }
-

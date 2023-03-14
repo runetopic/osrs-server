@@ -1,7 +1,6 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeShortLittleEndian
 import com.osrs.common.buffer.writeShortLittleEndianAdd
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket

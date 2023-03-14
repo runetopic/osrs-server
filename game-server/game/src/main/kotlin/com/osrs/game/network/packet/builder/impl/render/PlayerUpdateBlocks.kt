@@ -1,17 +1,14 @@
 package com.osrs.game.network.packet.builder.impl.render
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeBytes
+import com.osrs.common.buffer.writeByte
+import com.osrs.common.buffer.writeShortLittleEndian
 import com.osrs.game.actor.player.Player
-import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.actor.render.LowDefinitionRenderBlock
+import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.world.World
-import io.ktor.utils.io.core.BytePacketBuilder
-import io.ktor.utils.io.core.ByteReadPacket
-import io.ktor.utils.io.core.buildPacket
-import io.ktor.utils.io.core.readBytes
-import io.ktor.utils.io.core.writeShortLittleEndian
+import java.nio.ByteBuffer
 
 @Singleton
 class PlayerUpdateBlocks(
@@ -23,50 +20,55 @@ class PlayerUpdateBlocks(
         highDefinitionUpdates.fill(null)
     }
 
-    fun buildPendingUpdates(other: Player) {
-        if (other.renderer.hasHighDefinitionUpdate()) {
-            this.highDefinitionUpdates[other.index] = other.renderer.highDefinitionUpdates().buildHighDefinitionUpdates(other).readBytes()
+    fun buildPendingUpdates(player: Player) {
+        if (player.renderer.hasHighDefinitionUpdate()) {
+            this.highDefinitionUpdates[player.index] = player.renderer.highDefinitionRenderBlocks.buildHighDefinitionUpdates(player)
         }
-        this.lowDefinitionUpdates[other.index] = other.renderer.lowDefinitionUpdates().buildLowDefinitionUpdates().readBytes()
+        this.lowDefinitionUpdates[player.index] = player.renderer.lowDefinitionRenderBlocks.buildLowDefinitionUpdates()
     }
 
-    private fun Array<HighDefinitionRenderBlock<*, *>?>.buildHighDefinitionUpdates(actor: Player): ByteReadPacket = buildPacket {
+    private fun Array<HighDefinitionRenderBlock<*>?>.buildHighDefinitionUpdates(player: Player): ByteArray {
         val mask = calculateMask()
-
-        writeMask(if (mask > 0xff) mask or BLOCK_VALUE else mask)
-
-        for (block in this@buildHighDefinitionUpdates) {
-            if (block == null) continue
-
-            val blockData = block.builder.build(actor, block.renderType).readBytes()
-            actor.renderer.setLowDefinitionRenderingBlock(block, blockData)
-            writeBytes(blockData)
-        }
+        val size = calculateSize(mask)
+        return ByteBuffer.allocate(size).also {
+            it.writeMask(mask)
+            for (block in this) {
+                if (block == null) continue
+                val start = it.position()
+                block.builder.build(it, block.renderType)
+                val end = it.position()
+                player.renderer.setLowDefinitionRenderingBlock(block, it.array().sliceArray(start until end))
+            }
+        }.array()
     }
 
-    private fun Array<LowDefinitionRenderBlock<*, *>?>.buildLowDefinitionUpdates(): ByteReadPacket = buildPacket {
+    private fun Array<LowDefinitionRenderBlock<*>?>.buildLowDefinitionUpdates(): ByteArray {
         val mask = calculateMask()
-
-        writeMask(if (mask > 0xff) mask or BLOCK_VALUE else mask)
-
-        for (block in this@buildLowDefinitionUpdates) {
-            if (block == null) continue
-            writeBytes(block.bytes)
-        }
+        val size = calculateSize(mask)
+        return ByteBuffer.allocate(size).also {
+            it.writeMask(mask)
+            for (block in this) {
+                if (block == null) continue
+                it.put(block.bytes)
+            }
+        }.array()
     }
 
-    private fun Array<out RenderBlock<*, *>?>.calculateMask(): Int {
-        var mask = 0
+    private fun Array<out RenderBlock<*>?>.calculateMask(): Int = fold(0) { mask, block ->
+        if (block == null) mask else mask or block.builder.mask
+    }.let { if (it > 0xFF) it or BLOCK_VALUE else it }
 
-        for (block in this) {
-            if (block == null) continue
-            mask = mask or block.builder.mask
+    private fun Array<out RenderBlock<*>?>.calculateSize(mask: Int): Int = fold(0) { size, block ->
+        if (block == null) return@fold size
+        when (block) {
+            is LowDefinitionRenderBlock -> size + block.bytes.size
+            is HighDefinitionRenderBlock -> size + block.builder.size(block.renderType)
+            else -> throw AssertionError("Block is not in correct instance.")
         }
-        return mask
-    }
+    }.let { if (mask > 0xFF) it + 2 else it + 1 }
 
-    private fun BytePacketBuilder.writeMask(mask: Int) {
-        if (mask > 0xff) writeShortLittleEndian(mask.toShort()) else writeByte(mask.toByte())
+    private fun ByteBuffer.writeMask(mask: Int) {
+        if (mask > 0xff) writeShortLittleEndian(mask) else writeByte(mask)
     }
 
     private companion object {

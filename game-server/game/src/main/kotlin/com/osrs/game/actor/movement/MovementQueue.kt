@@ -2,7 +2,8 @@ package com.osrs.game.actor.movement
 
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.MovementSpeed
+import com.osrs.game.actor.render.type.MovementType
 import org.rsmod.pathfinder.Route
 import org.rsmod.pathfinder.RouteCoordinates
 import java.util.*
@@ -33,7 +34,7 @@ class MovementQueue(
             appendNextStep(location)
 
             nextWalkStep = poll() ?: return run {
-                actor.renderer.temporaryMovementSpeed(MovementSpeedType.WALK)
+                actor.renderer.update(MovementSpeed(type = MovementType.WALK, temporary = true))
                 moveTo(location, MoveDirection(walkDirection, null))
             }
 
@@ -48,7 +49,7 @@ class MovementQueue(
         }
 
         if (runDirection != null) {
-            actor.renderer.temporaryMovementSpeed(MovementSpeedType.RUN)
+            actor.renderer.update(MovementSpeed(MovementType.RUN, temporary = true))
         }
 
         moveTo(location, MoveDirection(walkDirection, runDirection))
