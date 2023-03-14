@@ -22,7 +22,7 @@ class Viewport(
 
     fun init(buffer: ByteBuffer) {
         val bits = BitAccess(buffer)
-        bits.writeBits(30, player.location.packedLocation)
+        bits.writeBits(30, player.location.packed)
         players[player.index] = player
         highDefinitions[highDefinitionsCount++] = player.index
         for (index in 1 until MAX_PLAYERS) {
