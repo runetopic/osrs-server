@@ -2,8 +2,13 @@ package com.osrs.game.actor.hit
 
 import com.osrs.game.actor.Actor
 
-enum class HealthBar(val id: Int) {
-    DEFAULT(0), MEDIUM(10), LARGE(20);
+@JvmInline
+value class HealthBar(val id: Int) {
+    companion object {
+        val Default = HealthBar(0)
+        val Medium = HealthBar(10)
+        val Large = HealthBar(20)
+    }
 
     fun percentage(e: Actor): Int {
         val total = e.totalHitpoints()

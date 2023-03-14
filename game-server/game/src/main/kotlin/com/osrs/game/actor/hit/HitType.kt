@@ -1,7 +1,8 @@
 package com.osrs.game.actor.hit
 
-enum class HitType(
-    val id: Int
-) {
-    REGULAR_DAMAGE(16)
+@JvmInline
+value class HitType(val id: Int) {
+    companion object {
+        val Normal = HitType(16)
+    }
 }

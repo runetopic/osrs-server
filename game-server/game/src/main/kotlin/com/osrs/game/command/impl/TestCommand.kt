@@ -1,9 +1,9 @@
 package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
-import com.osrs.game.actor.hit.HealthBar.DEFAULT
+import com.osrs.game.actor.hit.HealthBar.Companion.Default
 import com.osrs.game.actor.hit.HitSplat
-import com.osrs.game.actor.hit.HitType.REGULAR_DAMAGE
+import com.osrs.game.actor.hit.HitType.Companion.Normal
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.type.HealthUpdate
 import com.osrs.game.command.CommandListener
@@ -16,35 +16,34 @@ class TestCommand : CommandListener(
         player.renderer.update(
             HealthUpdate(
                 source = player,
-                splats = listOf(
+                splats = arrayOf(
                     HitSplat(
                         source = player,
-                        type = REGULAR_DAMAGE,
+                        type = Normal,
                         amount = 10,
                         delay = 0
                     ),
                     HitSplat(
                         source = player,
-                        type = REGULAR_DAMAGE,
+                        type = Normal,
                         amount = 10,
-                        delay = 0
+                        delay = 5
                     ),
                     HitSplat(
                         source = player,
-                        type = REGULAR_DAMAGE,
+                        type = Normal,
                         amount = 10,
-                        delay = 0
+                        delay = 10
                     ),
                     HitSplat(
                         source = player,
-                        type = REGULAR_DAMAGE,
+                        type = Normal,
                         amount = 10,
-                        delay = 0
+                        delay = 15
                     )
                 ),
-                bars = listOf(
-                    DEFAULT,
-                    DEFAULT
+                bars = arrayOf(
+                    Default
                 )
             )
         )
