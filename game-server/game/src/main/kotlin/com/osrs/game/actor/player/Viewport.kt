@@ -1,5 +1,6 @@
 package com.osrs.game.actor.player
 
+import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
 import java.nio.ByteBuffer
@@ -12,6 +13,7 @@ class Viewport(
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
     val players = Array<Player?>(MAX_PLAYERS) { null }
+    val updates = Array<ByteArray?>(MAX_PLAYERS) { null }
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
@@ -19,20 +21,22 @@ class Viewport(
 
     private var resizeTickCount = 0
 
-    fun init(builder: ByteBuffer) = builder.withBitAccess {
-        writeBits(30, player.location.packedLocation)
+    fun init(buffer: ByteBuffer) {
+        val bits = BitAccess(buffer)
+        bits.writeBits(30, player.location.packedLocation)
         players[player.index] = player
         highDefinitions[highDefinitionsCount++] = player.index
         for (index in 1 until MAX_PLAYERS) {
             if (index == player.index) continue
             val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
-            writeBits(18, otherRegionCoordinates)
+            bits.writeBits(18, otherRegionCoordinates)
             locations[index] = otherRegionCoordinates
             lowDefinitions[lowDefinitionsCount++] = index
         }
+        buffer.withBitAccess(bits)
     }
 
-    fun update() {
+    fun reset() {
         highDefinitionsCount = 0
         lowDefinitionsCount = 0
         for (index in 1 until MAX_PLAYERS) {
@@ -40,6 +44,7 @@ class Viewport(
             else highDefinitions[highDefinitionsCount++] = index
             nsnFlags[index] = (nsnFlags[index] shr 1)
         }
+        updates.fill(null)
     }
 
     fun resize() {

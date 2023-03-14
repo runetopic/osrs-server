@@ -74,6 +74,7 @@ class Player(
     ) {
         this.session.player = this
         this.location = account.location
+        this.rights = account.rights
         this.lastLocation = location
         this.interfaces = interfaces
         this.inventory = inventory

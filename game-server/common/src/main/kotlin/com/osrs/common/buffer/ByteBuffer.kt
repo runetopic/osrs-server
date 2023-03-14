@@ -175,10 +175,8 @@ fun ByteBuffer.discardUntilDelimiter(delimiter: Int): Int {
     return count
 }
 
-inline fun ByteBuffer.withBitAccess(block: BitAccess.() -> Unit) {
-    val bitAccess = BitAccess(this)
-    block.invoke(bitAccess)
-    position((bitAccess.bitIndex + 7) / 8)
+fun ByteBuffer.withBitAccess(bits: BitAccess) {
+    position((bits.bitIndex + 7) / 8)
 }
 
 class BitAccess(val buffer: ByteBuffer) {
