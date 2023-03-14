@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 
 class JawInfo : BodyPartInfo(index = 11) {
     override fun equipmentIndex(gender: Appearance.Gender): Int =
-        if (gender === Appearance.Gender.MALE) Equipment.SLOT_HEAD else Equipment.SLOT_CHEST
+        if (gender === Appearance.Gender.MALE) Equipment.SLOT_HEAD else Equipment.SLOT_TORSO
 
     override fun build(buffer: ByteBuffer, kit: BodyPartCompanion) {
         if (kit.gender === Appearance.Gender.MALE) {

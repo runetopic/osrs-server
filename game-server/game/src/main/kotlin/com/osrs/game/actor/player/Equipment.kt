@@ -6,7 +6,7 @@ class Equipment {
         const val SLOT_BACK = 1
         const val SLOT_NECK = 2
         const val SLOT_MAIN_HAND = 3
-        const val SLOT_CHEST = 4
+        const val SLOT_TORSO = 4
         const val SLOT_SHIELD = 5
         const val SLOT_LEG = 7
         const val SLOT_HAND = 9
