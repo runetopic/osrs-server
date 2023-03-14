@@ -1,18 +1,17 @@
 package com.osrs.game.actor.render
 
-import com.osrs.game.actor.Actor
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
-data class LowDefinitionRenderBlock<T : Actor, R : RenderType>(
+data class LowDefinitionRenderBlock<R : RenderType>(
     val renderType: RenderType,
-    override val builder: RenderBlockBuilder<T, R>,
+    override val builder: RenderBlockBuilder<R>,
     val bytes: ByteArray
-) : RenderBlock<T, R>(builder) {
+) : RenderBlock<R>(builder) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as LowDefinitionRenderBlock<*, *>
+        other as LowDefinitionRenderBlock<*>
 
         if (renderType != other.renderType) return false
         if (builder != other.builder) return false

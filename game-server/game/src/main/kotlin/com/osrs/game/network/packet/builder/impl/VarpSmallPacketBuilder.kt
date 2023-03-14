@@ -13,8 +13,6 @@ class VarpSmallPacketBuilder : PacketBuilder<VarpSmallPacket>(
     size = 3
 ) {
     override fun build(packet: VarpSmallPacket, buffer: ByteBuffer) {
-
-
         buffer.writeShortAdd(packet.id)
         buffer.writeByteAdd(packet.value)
     }

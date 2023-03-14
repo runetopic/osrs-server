@@ -6,7 +6,6 @@ import com.osrs.game.tick.task.WorldSyncTask
 import com.osrs.game.world.World
 import kotlin.system.measureTimeMillis
 
-
 class GameTick(
     private val world: World,
     playerUpdateBlocks: PlayerUpdateBlocks
@@ -15,7 +14,7 @@ class GameTick(
     private var tick = 0
 
     private val syncTask = setOf(
-        WorldSyncTask(world, playerUpdateBlocks),
+        WorldSyncTask(world, playerUpdateBlocks)
     )
 
     override fun run() {

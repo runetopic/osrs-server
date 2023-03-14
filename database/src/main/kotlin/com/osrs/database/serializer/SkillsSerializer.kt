@@ -26,13 +26,13 @@ class SkillsSerializer : KSerializer<Skills> {
         val levels = decodeSerializableElement(
             descriptor,
             0,
-            MapSerializer(String.serializer(), Int.serializer()),
+            MapSerializer(String.serializer(), Int.serializer())
         ).values.toIntArray()
         decodeElementIndex(descriptor)
         val experience = decodeSerializableElement(
             descriptor,
             1,
-            MapSerializer(String.serializer(), Double.serializer()),
+            MapSerializer(String.serializer(), Double.serializer())
         ).values.toDoubleArray()
         return@decodeStructure Skills(levels, experience)
     }

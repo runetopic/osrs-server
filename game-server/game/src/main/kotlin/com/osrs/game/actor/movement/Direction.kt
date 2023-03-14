@@ -19,7 +19,8 @@ enum class Direction(val opcode: Int) {
 
     SOUTH(opcode = 1),
 
-    SOUTH_EAST(opcode = 2);
+    SOUTH_EAST(opcode = 2)
+    ;
 
     fun getDeltaX(): Int = when (this) {
         SOUTH_EAST, NORTH_EAST, EAST -> 1
@@ -88,7 +89,9 @@ enum class Direction(val opcode: Int) {
             }
             return if (dx == 1 && dz == 1) {
                 7
-            } else -1
+            } else {
+                -1
+            }
         }
 
         fun getPlayerRunningDirection(dx: Int, dz: Int): Int {

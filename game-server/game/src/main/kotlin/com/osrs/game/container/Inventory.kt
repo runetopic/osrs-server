@@ -1,8 +1,8 @@
 package com.osrs.game.container
 
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
-import com.osrs.game.actor.player.Player
 import com.osrs.common.item.Item
+import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.type.server.UpdateContainerFullPacket
 
 const val INVENTORY_ID = 149

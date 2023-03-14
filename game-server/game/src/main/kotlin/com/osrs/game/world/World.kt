@@ -22,7 +22,7 @@ data class World(
     val playerSerializationService: PlayerSerializationService,
     val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
-    val stepValidator: StepValidator,
+    val stepValidator: StepValidator
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 
@@ -33,6 +33,7 @@ data class World(
 
     fun start() {
         maps.entries.forEach(collisionMap::applyCollision)
+        playerSerializationService.start(this)
     }
 
     fun processLoginRequest() {
@@ -52,6 +53,7 @@ data class World(
         logoutRequest.entries.onEach {
             players.remove(it.key)
             it.key.logout()
+            playerSerializationService.savePlayer(it.key)
         }
 
         logoutRequest.clear()
@@ -62,7 +64,6 @@ data class World(
     }
 
     fun requestLogout(player: Player) {
-        playerSerializationService.savePlayer(player)
         this.logoutRequest[player] = player.session
     }
 

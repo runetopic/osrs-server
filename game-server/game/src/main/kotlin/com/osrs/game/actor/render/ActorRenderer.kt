@@ -1,39 +1,21 @@
 package com.osrs.game.actor.render
 
 import com.osrs.game.actor.render.type.Appearance
+import com.osrs.game.actor.render.type.FaceAngle
 import com.osrs.game.actor.render.type.MovementSpeed
-import com.osrs.game.actor.render.type.MovementSpeedType
-import com.osrs.game.actor.render.type.PublicChat
-import com.osrs.game.actor.render.type.TemporaryMovementSpeed
 
-class ActorRenderer {
-    private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
-    private val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
+class ActorRenderer(
+    val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*>?> = arrayOfNulls(13),
+    val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*>?> = arrayOfNulls(13)
+) {
 
-    fun appearance(appearance: Appearance): Appearance {
-        val block = appearance.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(appearance, block)
-        return appearance
-    }
-
-    fun updateMovementSpeed(speed: MovementSpeedType) {
-        val type = MovementSpeed(speed)
+    fun <T : RenderType> update(type: T): T {
         val block = type.toBlock()
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)
+        return type
     }
 
-    fun temporaryMovementSpeed(speed: MovementSpeedType) {
-        val type = TemporaryMovementSpeed(speed)
-        val block = type.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)
-    }
-
-    fun publicChat(publicChat: PublicChat) {
-        val block = publicChat.toBlock()
-        highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(publicChat, block)
-    }
-
-    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*, *>, bytes: ByteArray) {
+    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*>, bytes: ByteArray) {
         val lowDefinitionRenderingBlock = LowDefinitionRenderBlock(
             renderType = highDefinitionRenderingBlock.renderType,
             builder = highDefinitionRenderingBlock.builder,
@@ -42,8 +24,6 @@ class ActorRenderer {
         lowDefinitionRenderBlocks[highDefinitionRenderingBlock.builder.index] = lowDefinitionRenderingBlock
     }
 
-    fun highDefinitionUpdates(): Array<HighDefinitionRenderBlock<*, *>?> = highDefinitionRenderBlocks
-    fun lowDefinitionUpdates(): Array<LowDefinitionRenderBlock<*, *>?> = lowDefinitionRenderBlocks
     fun hasHighDefinitionUpdate(): Boolean = highDefinitionRenderBlocks.isNotEmpty()
 
     fun clearUpdates() {
@@ -52,13 +32,12 @@ class ActorRenderer {
         for (lowDefBlock in lowDefinitionRenderBlocks) {
             if (lowDefBlock == null) continue
 
-            if (lowDefBlock.renderType !is Appearance && lowDefBlock.renderType !is MovementSpeed) {
-                val index = lowDefinitionRenderBlocks.indexOf(lowDefBlock)
+            val renderType = lowDefBlock.renderType
+            if (renderType is Appearance || renderType is MovementSpeed || renderType is FaceAngle) continue
 
-                if (index == -1) continue
-
-                lowDefinitionRenderBlocks[index] = null
-            }
+            val index = lowDefinitionRenderBlocks.indexOf(lowDefBlock)
+            if (index == -1) continue
+            lowDefinitionRenderBlocks[index] = null
         }
     }
 }

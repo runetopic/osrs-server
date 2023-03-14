@@ -7,7 +7,7 @@ abstract class Container(
     val id: Int,
     val capacity: Int,
     private val objEntryProvider: ObjEntryProvider,
-    private val items: MutableList<Item?> = MutableList(capacity) { null },
+    private val items: MutableList<Item?> = MutableList(capacity) { null }
 ) : List<Item?> by items {
 
     protected fun add(item: Item, slotId: Int = slotId(item), function: (Item).(List<Int>) -> Unit = {}): Boolean {
@@ -177,6 +177,5 @@ abstract class Container(
 
     fun hasItem(id: Int): Boolean = slotId(id) != -1
 }
-
 
 typealias ContainerUpdate = (Item).(List<Int>) -> Unit

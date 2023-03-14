@@ -8,10 +8,12 @@ import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
-import com.osrs.game.hint.HintArrow.LOCATION
 import com.osrs.game.actor.render.type.Appearance
-import com.osrs.game.actor.render.type.MovementSpeedType
+import com.osrs.game.actor.render.type.MovementSpeed
+import com.osrs.game.actor.render.type.MovementType
+import com.osrs.game.actor.render.type.MovementType.WALK
 import com.osrs.game.container.Inventory
+import com.osrs.game.hint.HintArrow.LOCATION
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
@@ -38,13 +40,13 @@ import kotlin.math.min
 class Player(
     val account: Account,
     override var world: World,
-    var session: Session,
+    var session: Session
 ) : Actor() {
     val username get() = account.userName
     val displayName get() = account.displayName
     val skills get() = account.skills
 
-    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
+    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
 
     lateinit var interfaces: Interfaces
     lateinit var inventory: Inventory
@@ -70,15 +72,16 @@ class Player(
 
     fun initialize(
         interfaces: Interfaces,
-        inventory: Inventory,
+        inventory: Inventory
     ) {
         this.session.player = this
         this.location = account.location
+        this.rights = account.rights
         this.lastLocation = location
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        renderer.updateMovementSpeed(if (isRunning) MovementSpeedType.RUN else MovementSpeedType.WALK)
+        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
     }
 
     fun login() {
@@ -92,12 +95,14 @@ class Player(
         session.write(MidiSongPacket(62))
         session.write(SetPlayerOptionPacket("Follow", 1))
         session.write(SetPlayerOptionPacket("Trade", 2))
-        session.write(HintArrowPacket(
-            type = LOCATION,
-            targetX = location.x,
-            targetZ = location.z,
-            targetHeight = 0
-        ))
+        session.write(
+            HintArrowPacket(
+                type = LOCATION,
+                targetX = location.x,
+                targetZ = location.z,
+                targetHeight = 0
+            )
+        )
 
         val scripts = arrayOf(
             ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
@@ -218,7 +223,7 @@ class Player(
     )
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
-        this.appearance = renderer.appearance(appearance)
+        this.appearance = renderer.update(appearance)
         return this.appearance
     }
 

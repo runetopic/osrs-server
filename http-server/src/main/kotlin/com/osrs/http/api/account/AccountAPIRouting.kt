@@ -3,9 +3,9 @@ package com.osrs.http.api.account
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.database.service.AccountService
 import com.osrs.database.dto.CreateAccountRequest
 import com.osrs.database.dto.CreateAccountResponse
+import com.osrs.database.service.AccountService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive

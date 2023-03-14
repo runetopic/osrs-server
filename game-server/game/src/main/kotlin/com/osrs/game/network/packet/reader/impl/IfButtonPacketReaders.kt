@@ -44,7 +44,6 @@ class IfButton6PacketReader : IfButtonPacketReader(
     index = 6
 )
 
-
 @Singleton
 class IfButton7PacketReader : IfButtonPacketReader(
     opcode = 78,

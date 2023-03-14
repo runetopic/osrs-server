@@ -31,5 +31,5 @@ enum class ScriptType(
     MAPSCENEICON('£', "mapsceneicon"),
     MAPELEMENT('µ', "mapelement"),
     HITMARK('×', "hitmark"),
-    STRUCT('J', "struct");
+    STRUCT('J', "struct")
 }

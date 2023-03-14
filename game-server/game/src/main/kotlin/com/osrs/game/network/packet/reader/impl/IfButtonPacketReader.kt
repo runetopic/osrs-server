@@ -5,7 +5,7 @@ import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.type.client.IfButtonPacket
 import io.ktor.utils.io.ByteReadChannel
 
-open class IfButtonPacketReader (
+open class IfButtonPacketReader(
     override val opcode: Int,
     override val size: Int,
     val index: Int

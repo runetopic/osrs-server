@@ -46,7 +46,6 @@ class ProjectileTest : CommandListener(
             )
         )
 
-
         zone.update(projectileRequest)
         zone.update(projectileRequest2)
     }

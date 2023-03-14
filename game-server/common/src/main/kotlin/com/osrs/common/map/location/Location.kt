@@ -51,5 +51,3 @@ fun Location.transform(xOffset: Int, yOffset: Int, levelOffset: Int = 0) = Locat
     z = z + yOffset,
     level = level + levelOffset
 )
-
-

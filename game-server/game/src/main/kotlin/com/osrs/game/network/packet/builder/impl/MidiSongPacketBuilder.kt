@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 class MidiSongPacketBuilder : PacketBuilder<MidiSongPacket>(
     opcode = 39,
     size = 2
-){
+) {
     override fun build(packet: MidiSongPacket, buffer: ByteBuffer) {
         buffer.writeShort(packet.trackId)
     }

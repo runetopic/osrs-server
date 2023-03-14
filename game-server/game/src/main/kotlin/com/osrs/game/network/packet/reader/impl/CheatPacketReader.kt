@@ -10,7 +10,7 @@ import io.ktor.utils.io.ByteReadChannel
 class CheatPacketReader : PacketReader<CheatPacket>(
     opcode = 52,
     size = -1
-){
+) {
     override suspend fun read(readChannel: ByteReadChannel, size: Int): CheatPacket = CheatPacket(
         command = readChannel.readStringCp1252NullTerminated()
     )

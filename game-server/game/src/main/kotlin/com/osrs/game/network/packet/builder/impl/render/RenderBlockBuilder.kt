@@ -1,12 +1,12 @@
 package com.osrs.game.network.packet.builder.impl.render
 
-import com.osrs.game.actor.Actor
 import com.osrs.game.actor.render.RenderType
-import io.ktor.utils.io.core.ByteReadPacket
+import java.nio.ByteBuffer
 
-abstract class RenderBlockBuilder<out T: Actor, out R : RenderType>(
+abstract class RenderBlockBuilder<out R : RenderType>(
     val index: Int,
     val mask: Int
 ) {
-    abstract fun build(actor: @UnsafeVariance T, render: @UnsafeVariance R): ByteReadPacket
+    abstract fun build(buffer: ByteBuffer, render: @UnsafeVariance R)
+    abstract fun size(render: @UnsafeVariance R): Int
 }

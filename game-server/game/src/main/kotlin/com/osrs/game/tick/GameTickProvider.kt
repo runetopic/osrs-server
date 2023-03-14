@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 @Singleton
 class GameTickProvider @Inject constructor(
     private val world: World,
-    private val playerUpdateBlocks: PlayerUpdateBlocks,
+    private val playerUpdateBlocks: PlayerUpdateBlocks
 ) : Provider<GameTick> {
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 

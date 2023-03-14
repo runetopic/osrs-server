@@ -10,9 +10,9 @@ class WindowStatusPacketReader : PacketReader<WindowStatusPacket>(
     opcode = 10,
     size = 5
 ) {
-    override suspend fun read(readChannel: ByteReadChannel, size: Int) : WindowStatusPacket = WindowStatusPacket(
+    override suspend fun read(readChannel: ByteReadChannel, size: Int): WindowStatusPacket = WindowStatusPacket(
         displayMode = readChannel.readByte().toInt(),
         width = readChannel.readShort().toInt(),
-        height =  readChannel.readShort().toInt()
+        height = readChannel.readShort().toInt()
     )
 }

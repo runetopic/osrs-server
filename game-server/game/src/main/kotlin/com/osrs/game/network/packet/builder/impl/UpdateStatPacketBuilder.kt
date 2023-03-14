@@ -1,7 +1,6 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeByteNegate
 import com.osrs.common.buffer.writeByteSubtract
 import com.osrs.common.buffer.writeIntV2
 import com.osrs.game.network.packet.builder.PacketBuilder

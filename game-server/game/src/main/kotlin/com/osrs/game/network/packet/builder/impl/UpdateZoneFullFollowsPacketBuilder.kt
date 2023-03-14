@@ -16,5 +16,4 @@ class UpdateZoneFullFollowsPacketBuilder : PacketBuilder<UpdateZoneFullFollowsPa
         buffer.writeByteAdd(packet.xInScene)
         buffer.writeByte(packet.zInScene)
     }
-
 }
