@@ -12,8 +12,8 @@ class Viewport(
     val locations = IntArray(MAX_PLAYERS)
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
-    val players = Array<Player?>(MAX_PLAYERS) { null }
-    val updates = Array<ByteArray?>(MAX_PLAYERS) { null }
+    val players = arrayOfNulls<Player?>(MAX_PLAYERS)
+    val updates = arrayOfNulls<ByteArray?>(MAX_PLAYERS)
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
