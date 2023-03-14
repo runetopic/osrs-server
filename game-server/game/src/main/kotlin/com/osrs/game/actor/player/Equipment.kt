@@ -3,7 +3,7 @@ package com.osrs.game.actor.player
 class Equipment {
     companion object {
         const val SLOT_HEAD = 0
-        const val SLOT_CAPE = 1
+        const val SLOT_BACK = 1
         const val SLOT_NECK = 2
         const val SLOT_WEAPON = 3
         const val SLOT_CHEST = 4

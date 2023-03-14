@@ -1,7 +1,7 @@
 package com.osrs.game.network.packet.builder.impl.render.player.appearance.kit
 
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ArmInfo
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.CapeInfo
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.BackInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.FootInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.HairInfo
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.HandInfo
@@ -26,7 +26,7 @@ enum class PlayerIdentityKit(
     FEET(FootInfo(), BodyPart.FEET),
     SHIELD(ShieldInfo()),
     HEAD(HeadInfo()),
-    CAPE(CapeInfo()),
+    CAPE(BackInfo()),
     NECK(NeckInfo()),
     WEAPON(WeaponInfo()),
 }
