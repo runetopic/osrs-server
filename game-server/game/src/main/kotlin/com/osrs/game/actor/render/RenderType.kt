@@ -13,7 +13,7 @@ import com.osrs.game.network.packet.builder.impl.render.player.TemporaryMovement
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.PlayerAppearanceBlockBuilder
 
 interface RenderType {
-    fun toBlock(): RenderBlockBuilder<*, *> = when (this) {
+    fun toBlock(): RenderBlockBuilder<*> = when (this) {
         is Appearance -> Renders.playerAppearanceBlockBuilder
         is MovementSpeed -> Renders.movementTypeBlockBuilder
         is TemporaryMovementSpeed -> Renders.temporaryMovementTypeBlockBuilder

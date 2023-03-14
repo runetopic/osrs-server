@@ -6,10 +6,10 @@ import com.osrs.game.actor.render.type.MovementSpeedType
 import com.osrs.game.actor.render.type.PublicChat
 import com.osrs.game.actor.render.type.TemporaryMovementSpeed
 
-class ActorRenderer {
-    private val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
-    private val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*, *>?> = arrayOfNulls(13)
-
+class ActorRenderer(
+    val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*>?> = arrayOfNulls(13),
+    val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*>?> = arrayOfNulls(13)
+) {
     fun appearance(appearance: Appearance): Appearance {
         val block = appearance.toBlock()
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(appearance, block)
@@ -33,7 +33,7 @@ class ActorRenderer {
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(publicChat, block)
     }
 
-    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*, *>, bytes: ByteArray) {
+    fun setLowDefinitionRenderingBlock(highDefinitionRenderingBlock: HighDefinitionRenderBlock<*>, bytes: ByteArray) {
         val lowDefinitionRenderingBlock = LowDefinitionRenderBlock(
             renderType = highDefinitionRenderingBlock.renderType,
             builder = highDefinitionRenderingBlock.builder,
@@ -42,8 +42,6 @@ class ActorRenderer {
         lowDefinitionRenderBlocks[highDefinitionRenderingBlock.builder.index] = lowDefinitionRenderingBlock
     }
 
-    fun highDefinitionUpdates(): Array<HighDefinitionRenderBlock<*, *>?> = highDefinitionRenderBlocks
-    fun lowDefinitionUpdates(): Array<LowDefinitionRenderBlock<*, *>?> = lowDefinitionRenderBlocks
     fun hasHighDefinitionUpdate(): Boolean = highDefinitionRenderBlocks.isNotEmpty()
 
     fun clearUpdates() {

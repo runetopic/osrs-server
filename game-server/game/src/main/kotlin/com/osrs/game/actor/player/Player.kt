@@ -44,7 +44,7 @@ class Player(
     val displayName get() = account.displayName
     val skills get() = account.skills
 
-    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false)
+    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
 
     lateinit var interfaces: Interfaces
     lateinit var inventory: Inventory

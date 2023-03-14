@@ -1,7 +1,6 @@
 package com.osrs.common.buffer
 
 import java.nio.ByteBuffer
-import java.util.*
 
 /**
  * @author Jordan Abraham
@@ -91,8 +90,20 @@ fun ByteBuffer.writeBytesAdd(bytes: ByteArray) {
     bytes.forEach { writeByteAdd(it.toInt()) }
 }
 
+fun ByteBuffer.writeReversedAdd(bytes: ByteArray) {
+    bytes.indices.reversed().forEach { writeByteAdd(bytes[it].toInt()) }
+}
+
 fun ByteBuffer.writeSmart(value: Int) {
     if (value > 128) putShort(value.toShort()) else put(value.toByte())
+}
+
+fun ByteBuffer.writeSmartByteShort(value: Int) {
+    if (value in 0..127) {
+        writeByte(value)
+    } else {
+        writeShort(value + 32768)
+    }
 }
 
 fun ByteBuffer.writeByte(value: Int) {
