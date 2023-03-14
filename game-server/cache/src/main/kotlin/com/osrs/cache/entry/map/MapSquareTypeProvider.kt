@@ -18,21 +18,6 @@ import com.runetopic.cache.extension.decompress
 import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
-fun main() {
-    val level = 3
-    val x = 63
-    val z = 22
-    val packed = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
-    println(packed)
-    val localX = packed shr 6 and 0x3F
-    val localZ = packed and 0x3F
-    val localLevel = (packed shr 12)
-    println(localX)
-    println(localZ)
-    println(localLevel)
-    println(1 shl 12)
-}
-
 @Singleton
 class MapSquareTypeProvider @Inject constructor(
     private val cache: Cache,
