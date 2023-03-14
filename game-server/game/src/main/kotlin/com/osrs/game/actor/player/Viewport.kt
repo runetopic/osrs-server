@@ -13,7 +13,6 @@ class Viewport(
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
     val players = arrayOfNulls<Player?>(MAX_PLAYERS)
-    val updates = arrayOfNulls<ByteArray?>(MAX_PLAYERS)
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
@@ -47,7 +46,6 @@ class Viewport(
             }
             nsnFlags[index] = (nsnFlags[index] shr 1)
         }
-        updates.fill(null)
     }
 
     fun resize() {
