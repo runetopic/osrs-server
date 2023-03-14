@@ -8,13 +8,13 @@ import kotlin.system.measureTimeMillis
 
 class GameTick(
     private val world: World,
-    playerUpdateBlocks: PlayerUpdateBlocks,
+    playerUpdateBlocks: PlayerUpdateBlocks
 ) : Runnable {
     private val logger = InlineLogger()
     private var tick = 0
 
     private val syncTask = setOf(
-        WorldSyncTask(world, playerUpdateBlocks),
+        WorldSyncTask(world, playerUpdateBlocks)
     )
 
     override fun run() {

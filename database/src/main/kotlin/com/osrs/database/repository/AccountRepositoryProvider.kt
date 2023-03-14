@@ -12,7 +12,7 @@ import java.util.*
 @Singleton
 class AccountRepositoryProvider @Inject constructor(
     private val environment: ApplicationEnvironment,
-    private val mongoClient: Optional<MongoClient>,
+    private val mongoClient: Optional<MongoClient>
 ) : Provider<AccountRepository> {
     private val isLocal = environment.config.property("game.local").getString().toBoolean()
 
@@ -23,7 +23,7 @@ class AccountRepositoryProvider @Inject constructor(
                 Json {
                     serializersModule = IdKotlinXSerializationModule
                     prettyPrint = true
-                },
+                }
             )
         }
 

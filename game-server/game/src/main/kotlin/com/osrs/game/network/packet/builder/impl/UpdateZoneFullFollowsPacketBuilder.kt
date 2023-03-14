@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 @Singleton
 class UpdateZoneFullFollowsPacketBuilder : PacketBuilder<UpdateZoneFullFollowsPacket>(
     opcode = 12,
-    size = 2,
+    size = 2
 ) {
     override fun build(packet: UpdateZoneFullFollowsPacket, buffer: ByteBuffer) {
         buffer.writeByteAdd(packet.xInScene)

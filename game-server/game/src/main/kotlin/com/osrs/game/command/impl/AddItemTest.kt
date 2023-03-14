@@ -8,7 +8,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 
 @Singleton
 class AddItemTest : CommandListener(
-    name = "drop_item",
+    name = "drop_item"
 ) {
     override fun execute(command: String, player: Player) {
         val floorItem = FloorItem(995, Int.MAX_VALUE, player.location, 100)
@@ -16,8 +16,8 @@ class AddItemTest : CommandListener(
         player.zone.update(
             player,
             ObjAddRequest(
-                floorItem = floorItem,
-            ),
+                floorItem = floorItem
+            )
         )
     }
 }

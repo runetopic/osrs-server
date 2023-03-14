@@ -4,7 +4,7 @@ import com.osrs.game.network.packet.Packet
 
 data class ClientScriptPacket(
     val id: Int,
-    val parameters: Array<out Any>,
+    val parameters: Array<out Any>
 ) : Packet {
     constructor(id: Int) : this(id, emptyArray())
 

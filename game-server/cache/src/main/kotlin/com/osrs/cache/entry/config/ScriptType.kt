@@ -2,7 +2,7 @@ package com.osrs.cache.entry.config
 
 enum class ScriptType(
     val key: Char,
-    val fullName: String,
+    val fullName: String
 ) {
     INTEGER('i', "integer"),
     BOOLEAN('1', "boolean"),
@@ -31,5 +31,5 @@ enum class ScriptType(
     MAPSCENEICON('£', "mapsceneicon"),
     MAPELEMENT('µ', "mapelement"),
     HITMARK('×', "hitmark"),
-    STRUCT('J', "struct"),
+    STRUCT('J', "struct")
 }

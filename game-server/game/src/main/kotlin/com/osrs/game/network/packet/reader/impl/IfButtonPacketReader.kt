@@ -8,13 +8,13 @@ import io.ktor.utils.io.ByteReadChannel
 open class IfButtonPacketReader(
     override val opcode: Int,
     override val size: Int,
-    val index: Int,
+    val index: Int
 ) : PacketReader<IfButtonPacket>(opcode, size) {
 
     override suspend fun read(readChannel: ByteReadChannel, size: Int): IfButtonPacket = IfButtonPacket(
         index = index,
         packedInterface = readChannel.readInt(),
         slotId = readChannel.readUShort(),
-        itemId = readChannel.readUShort(),
+        itemId = readChannel.readUShort()
     )
 }

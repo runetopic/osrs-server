@@ -12,7 +12,7 @@ import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 
 class HandshakeCodec @Inject constructor(
-    environment: ApplicationEnvironment,
+    environment: ApplicationEnvironment
 ) : CodecChannelHandler {
     private val buildMajor = environment.config.property("game.build.major").getString().toInt()
 

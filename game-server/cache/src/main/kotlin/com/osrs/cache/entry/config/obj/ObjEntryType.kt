@@ -54,5 +54,5 @@ data class ObjEntryType(
     var notedId: Int = -1,
     var placeholder: Int = -1,
     var placeholderTemplate: Int = -1,
-    var params: Map<Int, @Contextual Any> = mapOf(),
+    var params: Map<Int, @Contextual Any> = mapOf()
 ) : EntryType(id)

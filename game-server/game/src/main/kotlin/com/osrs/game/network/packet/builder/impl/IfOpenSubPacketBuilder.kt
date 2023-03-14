@@ -11,7 +11,7 @@ import java.nio.ByteBuffer
 @Singleton
 class IfOpenSubPacketBuilder : PacketBuilder<IfOpenSubPacket>(
     opcode = 89,
-    size = 7,
+    size = 7
 ) {
     override fun build(packet: IfOpenSubPacket, buffer: ByteBuffer) {
         buffer.writeShortLittleEndian(packet.interfaceId)

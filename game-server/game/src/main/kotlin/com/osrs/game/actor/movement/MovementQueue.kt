@@ -11,7 +11,7 @@ import kotlin.math.sign
 
 class MovementQueue(
     val actor: Actor,
-    private val steps: Deque<Location> = LinkedList(),
+    private val steps: Deque<Location> = LinkedList()
 ) : Deque<Location> by steps {
     private val routeSteps: Deque<RouteCoordinates> = LinkedList()
 
@@ -57,7 +57,7 @@ class MovementQueue(
 
     private fun moveTo(
         location: Location,
-        direction: MoveDirection,
+        direction: MoveDirection
     ) {
         actor.location = location
         actor.moveDirection = direction

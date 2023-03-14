@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 @Singleton
 class UpdateRunEnergyPacketBuilder : PacketBuilder<UpdateRunEnergyPacket>(
     opcode = 75,
-    size = 2,
+    size = 2
 ) {
     override fun build(packet: UpdateRunEnergyPacket, buffer: ByteBuffer) {
         buffer.writeShort(packet.energy)

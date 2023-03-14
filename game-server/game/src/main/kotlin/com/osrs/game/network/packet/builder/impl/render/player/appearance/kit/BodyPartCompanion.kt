@@ -4,5 +4,5 @@ import com.osrs.game.actor.render.type.Appearance
 
 data class BodyPartCompanion(
     val gender: Appearance.Gender? = null,
-    val id: Int,
+    val id: Int
 )

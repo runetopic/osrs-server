@@ -40,7 +40,7 @@ import kotlin.math.min
 class Player(
     val account: Account,
     override var world: World,
-    var session: Session,
+    var session: Session
 ) : Actor() {
     val username get() = account.userName
     val displayName get() = account.displayName
@@ -72,7 +72,7 @@ class Player(
 
     fun initialize(
         interfaces: Interfaces,
-        inventory: Inventory,
+        inventory: Inventory
     ) {
         this.session.player = this
         this.location = account.location
@@ -100,13 +100,13 @@ class Player(
                 type = LOCATION,
                 targetX = location.x,
                 targetZ = location.z,
-                targetHeight = 0,
-            ),
+                targetHeight = 0
+            )
         )
 
         val scripts = arrayOf(
             ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
-            ClientScriptPacket(2498, arrayOf(0, 0, 0)),
+            ClientScriptPacket(2498, arrayOf(0, 0, 0))
         )
 
         scripts.forEach(session::write)
@@ -119,8 +119,8 @@ class Player(
             RebuildNormalPacket(
                 viewport,
                 location,
-                initialize,
-            ),
+                initialize
+            )
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
         updateZones()
@@ -218,8 +218,8 @@ class Player(
             viewport = viewport,
             players = world.players,
             highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
-            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates,
-        ),
+            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
+        )
     )
 
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {

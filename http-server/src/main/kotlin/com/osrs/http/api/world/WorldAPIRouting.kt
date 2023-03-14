@@ -15,7 +15,7 @@ import io.ktor.server.routing.get
 @Singleton
 class WorldAPIRouting @Inject constructor(
     routing: Routing,
-    private val world: World,
+    private val world: World
 ) {
     init {
         routing {
@@ -24,8 +24,8 @@ class WorldAPIRouting @Inject constructor(
                     call.response.status(HttpStatusCode.BadRequest)
                     return@get call.respond(
                         WorldInfoResponse(
-                            message = "Please provide a world id. ${call.request.uri}/{worldId}",
-                        ),
+                            message = "Please provide a world id. ${call.request.uri}/{worldId}"
+                        )
                     )
                 }
 
@@ -33,8 +33,8 @@ class WorldAPIRouting @Inject constructor(
                     call.response.status(HttpStatusCode.BadRequest)
                     return@get call.respond(
                         WorldInfoResponse(
-                            message = "World with worldId $worldId does not exists.",
-                        ),
+                            message = "World with worldId $worldId does not exists."
+                        )
                     )
                 }
 
@@ -42,9 +42,9 @@ class WorldAPIRouting @Inject constructor(
                     WorldInfoResponse(
                         message = "World is healthy and online.",
                         data = WorldInfoData(
-                            players = world.players.size,
-                        ),
-                    ),
+                            players = world.players.size
+                        )
+                    )
                 )
             }
         }

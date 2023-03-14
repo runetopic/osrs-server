@@ -21,7 +21,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 class Zone(
-    val location: ZoneLocation,
+    val location: ZoneLocation
 ) {
     private val players = HashSet<Player>()
 
@@ -95,8 +95,8 @@ class Zone(
                     xInScene,
                     zInScene,
                     updates,
-                    session.builders,
-                ),
+                    session.builders
+                )
             )
         }
     }
@@ -213,8 +213,8 @@ class Zone(
                 targetIndex = targetIndex,
                 distanceX = distanceX,
                 distanceZ = distanceZ,
-                flightTime = flightTime,
-            ),
+                flightTime = flightTime
+            )
         )
     }
 

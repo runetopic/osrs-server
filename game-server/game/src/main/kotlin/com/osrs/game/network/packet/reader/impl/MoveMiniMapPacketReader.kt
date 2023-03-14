@@ -11,7 +11,7 @@ import io.ktor.utils.io.ByteReadChannel
 @Singleton
 class MoveMiniMapPacketReader : PacketReader<MoveMiniMapPacket>(
     opcode = 26,
-    size = -1,
+    size = -1
 ) {
     override suspend fun read(readChannel: ByteReadChannel, size: Int): MoveMiniMapPacket = MoveMiniMapPacket(
         destinationX = readChannel.readUShort(),
@@ -26,6 +26,6 @@ class MoveMiniMapPacketReader : PacketReader<MoveMiniMapPacket>(
         value4 = readChannel.readUByte(),
         currentX = readChannel.readUShort(),
         currentZ = readChannel.readUShort(),
-        value5 = readChannel.readUByte(),
+        value5 = readChannel.readUByte()
     )
 }

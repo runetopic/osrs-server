@@ -16,7 +16,7 @@ import io.ktor.server.routing.post
 @Singleton
 class AccountAPIRouting @Inject constructor(
     routing: Routing,
-    private val accountService: AccountService,
+    private val accountService: AccountService
 ) {
 
     private val logger = InlineLogger()
@@ -32,15 +32,15 @@ class AccountAPIRouting @Inject constructor(
                     call.respond(
                         status = HttpStatusCode.Created,
                         CreateAccountResponse(
-                            message = "Account successfully created.",
-                        ),
+                            message = "Account successfully created."
+                        )
                     )
                 } catch (exception: Exception) {
                     call.respond(
                         status = HttpStatusCode.InternalServerError,
                         CreateAccountResponse(
-                            message = "Account failed during creation. Please try again later.",
-                        ),
+                            message = "Account failed during creation. Please try again later."
+                        )
                     )
                 }
             }

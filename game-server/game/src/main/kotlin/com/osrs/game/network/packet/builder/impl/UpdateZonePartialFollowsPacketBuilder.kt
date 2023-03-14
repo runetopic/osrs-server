@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 @Singleton
 class UpdateZonePartialFollowsPacketBuilder : PacketBuilder<UpdateZonePartialFollowsPacket>(
     opcode = 13,
-    size = 2,
+    size = 2
 ) {
     override fun build(packet: UpdateZonePartialFollowsPacket, buffer: ByteBuffer) {
         buffer.writeByteNegate(packet.zInScene)

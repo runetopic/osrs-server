@@ -9,9 +9,9 @@ import org.rsmod.pathfinder.PathFinder
 
 @Singleton
 class MoveMiniMapPacketHandler @Inject constructor(
-    private val pathFinder: PathFinder,
+    private val pathFinder: PathFinder
 ) : PacketHandler<MoveMiniMapPacket>(
-    groupId = 1,
+    groupId = 1
 ) {
     override fun handlePacket(packet: MoveMiniMapPacket, player: Player) {
         val path = pathFinder.findPath(
@@ -19,7 +19,7 @@ class MoveMiniMapPacketHandler @Inject constructor(
             srcY = player.location.z,
             destX = packet.destinationX,
             destY = packet.destinationZ,
-            z = player.location.level,
+            z = player.location.level
         )
 
         player.movementQueue.appendRoute(path)

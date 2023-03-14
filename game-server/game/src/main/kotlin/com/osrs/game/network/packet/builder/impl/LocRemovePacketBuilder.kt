@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 @Singleton
 class LocRemovePacketBuilder : PacketBuilder<LocRemovePacket>(
     opcode = 1,
-    size = 2,
+    size = 2
 ) {
     override fun build(packet: LocRemovePacket, buffer: ByteBuffer) {
         buffer.writeByte(packet.packedOffset)

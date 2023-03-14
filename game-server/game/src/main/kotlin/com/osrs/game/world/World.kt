@@ -22,7 +22,7 @@ data class World(
     val playerSerializationService: PlayerSerializationService,
     val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
-    val stepValidator: StepValidator,
+    val stepValidator: StepValidator
 ) {
     val players: PlayerList = PlayerList(MAX_PLAYERS)
 

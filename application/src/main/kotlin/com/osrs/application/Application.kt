@@ -33,7 +33,7 @@ object Application {
                 logger.info { "Gracefully shutting down the server." }
                 injector.getInstance<Game>().shutdown()
                 injector.getInstance<Network>().shutdown()
-            },
+            }
         )
     }
 }

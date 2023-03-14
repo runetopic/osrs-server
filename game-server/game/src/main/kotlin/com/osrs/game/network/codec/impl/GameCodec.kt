@@ -20,7 +20,7 @@ import kotlin.reflect.KClass
 class GameCodec @Inject constructor(
     environment: ApplicationEnvironment,
     packetReaders: Set<PacketReader<Packet>>,
-    private val packetHandlers: Map<KClass<*>, PacketHandler<Packet>>,
+    private val packetHandlers: Map<KClass<*>, PacketHandler<Packet>>
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
     private val packetSizes = environment.config.property("game.packet.sizes").getList().map(String::toInt)

@@ -5,5 +5,5 @@ import com.osrs.game.network.packet.Packet
 data class UpdateStatPacket(
     val id: Int,
     val level: Int,
-    val xp: Double,
+    val xp: Double
 ) : Packet

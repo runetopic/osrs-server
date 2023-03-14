@@ -9,7 +9,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 
 @Singleton
 class ProjectileTest : CommandListener(
-    name = "proj",
+    name = "proj"
 ) {
     override fun execute(command: String, player: Player) {
         val zone = player.zone
@@ -27,8 +27,8 @@ class ProjectileTest : CommandListener(
                 angle = 127,
                 lengthAdjustment = -3,
                 distOffset = 11,
-                stepMultiplier = 4,
-            ),
+                stepMultiplier = 4
+            )
         )
 
         val projectileRequest2 = ProjectileRequest(
@@ -42,8 +42,8 @@ class ProjectileTest : CommandListener(
                 angle = 127,
                 lengthAdjustment = -3,
                 distOffset = 11,
-                stepMultiplier = 4,
-            ),
+                stepMultiplier = 4
+            )
         )
 
         zone.update(projectileRequest)

@@ -11,5 +11,5 @@ data class PublicChatPacket(
     val effect: Int,
     val decompressedSize: Int,
     val compressedBytes: ByteArray,
-    val unknown2: Int,
+    val unknown2: Int
 ) : Packet

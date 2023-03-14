@@ -16,7 +16,7 @@ import java.nio.ByteBuffer
 
 @Singleton
 class ObjEntryProvider @Inject constructor(
-    val cache: Cache,
+    val cache: Cache
 ) : EntryTypeProvider<ObjEntryType>() {
 
     override fun loadTypeMap(): Map<Int, ObjEntryType> {

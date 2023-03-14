@@ -7,7 +7,7 @@ abstract class Container(
     val id: Int,
     val capacity: Int,
     private val objEntryProvider: ObjEntryProvider,
-    private val items: MutableList<Item?> = MutableList(capacity) { null },
+    private val items: MutableList<Item?> = MutableList(capacity) { null }
 ) : List<Item?> by items {
 
     protected fun add(item: Item, slotId: Int = slotId(item), function: (Item).(List<Int>) -> Unit = {}): Boolean {
@@ -48,7 +48,7 @@ abstract class Container(
      */
     private fun addItemNonStacking(
         item: Item,
-        function: ContainerUpdate,
+        function: ContainerUpdate
     ): Boolean {
         val entry = objEntryProvider[item.id] ?: return false
 
@@ -115,7 +115,7 @@ abstract class Container(
     private fun replaceItem(
         slotId: Int,
         item: Item,
-        function: ContainerUpdate,
+        function: ContainerUpdate
     ): Boolean {
         val entry = objEntryProvider[item.id] ?: return false
 
@@ -127,7 +127,7 @@ abstract class Container(
             entry.isStackable && !isFull() -> {
                 items[slotId] = item.copy(
                     id = item.id,
-                    amount = item.amount + existingItem.amount,
+                    amount = item.amount + existingItem.amount
                 )
                 function.invoke(item, listOf(slotId))
                 true

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 data class Item(
     val id: Int,
-    val amount: Int,
+    val amount: Int
 )
 
 @Serializable
@@ -16,5 +16,5 @@ data class FloorItem(
     val quantity: Int,
     @Serializable(with = LocationSerializer::class)
     val location: Location,
-    var timer: Int = -1,
+    var timer: Int = -1
 ) : Controllable

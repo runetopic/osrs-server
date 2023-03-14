@@ -6,7 +6,7 @@ data class ObjAddPacket(
     val id: Int,
     val quantity: Int,
     val packedOffset: Int,
-    val disabledOptions: IntArray = intArrayOf(),
+    val disabledOptions: IntArray = intArrayOf()
 ) : Packet {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

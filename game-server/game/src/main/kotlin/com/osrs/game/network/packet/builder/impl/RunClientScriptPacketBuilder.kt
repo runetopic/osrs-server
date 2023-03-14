@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 @Singleton
 class RunClientScriptPacketBuilder : PacketBuilder<ClientScriptPacket>(
     opcode = 18,
-    size = -2,
+    size = -2
 ) {
     private fun mapParameterType(it: Array<out Any>, count: Int) = when (it[count]) {
         is String -> "s"

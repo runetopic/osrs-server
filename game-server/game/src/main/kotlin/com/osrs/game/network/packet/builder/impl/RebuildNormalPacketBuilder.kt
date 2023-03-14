@@ -13,10 +13,10 @@ import java.nio.ByteBuffer
 
 @Singleton
 class RebuildNormalPacketBuilder @Inject constructor(
-    private val mapSquares: MapSquares,
+    private val mapSquares: MapSquares
 ) : PacketBuilder<RebuildNormalPacket>(
     opcode = 0,
-    size = -2,
+    size = -2
 ) {
     override fun build(packet: RebuildNormalPacket, buffer: ByteBuffer) {
         if (packet.initialize) packet.viewport.init(buffer)

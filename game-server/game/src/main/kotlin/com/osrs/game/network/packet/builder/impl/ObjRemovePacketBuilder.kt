@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class ObjRemovePacketBuilder : PacketBuilder<ObjRemovePacket>(
     opcode = 24,
-    size = 7,
+    size = 7
 ) {
     override fun build(packet: ObjRemovePacket, buffer: ByteBuffer) {
         buffer.writeByteAdd(packet.packedOffset)

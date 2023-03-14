@@ -8,5 +8,5 @@ data class UpdateZonePartialEnclosedPacket(
     val xInScene: Int,
     val zInScene: Int,
     val zoneUpdates: Sequence<Packet>?,
-    val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    val builders: Map<KClass<*>, PacketBuilder<Packet>>
 ) : Packet

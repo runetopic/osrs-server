@@ -8,14 +8,14 @@ import com.osrs.game.command.CommandListener
 
 @Singleton
 class TestCommand : CommandListener(
-    name = "test",
+    name = "test"
 ) {
     override fun execute(command: String, player: Player) {
         player.renderer.update(Sequence(id = 1708))
         player.renderer.update(
             SpotAnimation(
-                id = 320,
-            ),
+                id = 320
+            )
         )
     }
 }

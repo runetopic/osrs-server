@@ -7,7 +7,7 @@ import com.osrs.game.command.CommandListener
 
 @Singleton
 class RecolorTest : CommandListener(
-    name = "recolor",
+    name = "recolor"
 ) {
     override fun execute(command: String, player: Player) {
         player.renderer.update(
@@ -17,8 +17,8 @@ class RecolorTest : CommandListener(
                 luminance = 28,
                 opacity = 112,
                 delay = 0,
-                duration = 240,
-            ),
+                duration = 240
+            )
         )
     }
 }

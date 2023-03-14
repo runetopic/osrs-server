@@ -9,7 +9,7 @@ import com.osrs.common.skill.Skill.Companion.getXpForLevel
 
 class Skills(
     private val levels: IntArray = defaultLevelsAndExperience.first,
-    private val experience: DoubleArray = defaultLevelsAndExperience.second,
+    private val experience: DoubleArray = defaultLevelsAndExperience.second
 ) {
     fun level(skill: Skill): Int = levels[skill.id]
     fun xp(skill: Skill): Double = experience[skill.id]

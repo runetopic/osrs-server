@@ -8,7 +8,7 @@ import org.rsmod.pathfinder.ZoneFlags
 
 @Singleton
 class StepValidatorProvider @Inject constructor(
-    zoneFlags: ZoneFlags,
+    zoneFlags: ZoneFlags
 ) : Provider<StepValidator> {
 
     private val stepValidator = StepValidator(zoneFlags.flags)

@@ -8,7 +8,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
 
 @Singleton
 class RemoveItemTest : CommandListener(
-    name = "remove_item",
+    name = "remove_item"
 ) {
     override fun execute(command: String, player: Player) {
         player.zone.update(ObjRemoveRequest(FloorItem(995, Int.MAX_VALUE, player.location)))

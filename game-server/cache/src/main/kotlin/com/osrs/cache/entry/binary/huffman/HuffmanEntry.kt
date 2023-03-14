@@ -8,5 +8,5 @@ import com.runetopic.cryptography.huffman.Huffman
  */
 data class HuffmanEntry(
     override val id: Int,
-    var huffman: Huffman? = null,
+    var huffman: Huffman? = null
 ) : EntryType(id)

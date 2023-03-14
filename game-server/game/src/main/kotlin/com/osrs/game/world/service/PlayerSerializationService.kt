@@ -10,7 +10,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class PlayerSerializationService @Inject constructor(
-    private val accountService: AccountService,
+    private val accountService: AccountService
 ) {
     private val logger = InlineLogger()
 
@@ -31,8 +31,8 @@ class PlayerSerializationService @Inject constructor(
                         displayName = player.displayName,
                         skills = player.skills,
                         location = player.location,
-                        objs = player.objs,
-                    ),
+                        objs = player.objs
+                    )
                 )
             }
         }, 0, 15, TimeUnit.MINUTES)
@@ -46,8 +46,8 @@ class PlayerSerializationService @Inject constructor(
                     displayName = player.displayName,
                     skills = player.skills,
                     location = player.location,
-                    objs = player.objs,
-                ),
+                    objs = player.objs
+                )
             )
         }
     }

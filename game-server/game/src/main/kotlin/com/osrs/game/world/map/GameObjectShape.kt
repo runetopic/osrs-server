@@ -33,7 +33,7 @@ object GameObjectShape {
         WALL_DIAGONALCORNER,
         WALL_L,
         WALL_SQUARECORNER,
-        WALL_L_ALT,
+        WALL_L_ALT
     )
 
     val WALL_DECOR_SHAPES = intArrayOf(
@@ -42,7 +42,7 @@ object GameObjectShape {
         WALLDECOR_DIAGONAL_OFFSET,
         WALLDECOR_DIAGONAL_NOOFFSET,
         WALLDECOR_DIAGONAL_BOTH,
-        WALLDECOR_DIAGONAL_BOTH_ALT,
+        WALLDECOR_DIAGONAL_BOTH_ALT
     )
 
     val NORMAL_SHAPES = intArrayOf(
@@ -58,10 +58,10 @@ object GameObjectShape {
         ROOFEDGE_L,
         ROOFEDGE_SQUARECORNER,
         CENTREPIECE_STRAIGHT,
-        CENTREPIECE_DIAGONAL,
+        CENTREPIECE_DIAGONAL
     )
 
     val GROUND_DECOR_SHAPES = intArrayOf(
-        GROUNDDECOR,
+        GROUNDDECOR
     )
 }

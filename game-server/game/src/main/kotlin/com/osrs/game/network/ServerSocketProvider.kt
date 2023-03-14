@@ -10,17 +10,17 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import java.util.concurrent.Executors
 
 class ServerSocketProvider @Inject constructor(
-    private val environment: ApplicationEnvironment,
+    private val environment: ApplicationEnvironment
 ) : Provider<ServerSocket> {
     override fun get(): ServerSocket = aSocket(
         ActorSelectorManager(
             Executors
                 .newCachedThreadPool()
-                .asCoroutineDispatcher(),
-        ),
+                .asCoroutineDispatcher()
+        )
     ).tcp().bind(
         hostname = "0.0.0.0",
-        port = environment.config.property("ktor.deployment.port").getString().toInt(),
+        port = environment.config.property("ktor.deployment.port").getString().toInt()
     ) {
         this.backlogSize = 2000
         this.reuseAddress = true

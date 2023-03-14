@@ -15,7 +15,7 @@ import java.nio.ByteBuffer
 
 @Singleton
 class EnumEntryProvider @Inject constructor(
-    private val cache: Cache,
+    private val cache: Cache
 ) : EntryTypeProvider<EnumEntry>() {
     override fun loadTypeMap(): Map<Int, EnumEntry> = cache
         .index(CONFIG_INDEX)

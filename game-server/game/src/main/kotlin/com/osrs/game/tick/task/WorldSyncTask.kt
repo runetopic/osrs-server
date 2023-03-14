@@ -9,7 +9,7 @@ import com.osrs.game.world.map.zone.ZoneManager
 
 class WorldSyncTask(
     val world: World,
-    private val playerUpdateBlocks: PlayerUpdateBlocks,
+    private val playerUpdateBlocks: PlayerUpdateBlocks
 ) : SyncTask {
 
     override fun sync(tick: Int) {

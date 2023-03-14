@@ -19,7 +19,7 @@ enum class Direction(val opcode: Int) {
 
     SOUTH(opcode = 1),
 
-    SOUTH_EAST(opcode = 2),
+    SOUTH_EAST(opcode = 2)
     ;
 
     fun getDeltaX(): Int = when (this) {

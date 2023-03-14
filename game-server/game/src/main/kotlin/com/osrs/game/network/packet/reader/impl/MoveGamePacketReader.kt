@@ -10,11 +10,11 @@ import io.ktor.utils.io.ByteReadChannel
 @Singleton
 class MoveGamePacketReader : PacketReader<MoveGamePacket>(
     opcode = 97,
-    size = -1,
+    size = -1
 ) {
     override suspend fun read(readChannel: ByteReadChannel, size: Int): MoveGamePacket = MoveGamePacket(
         destinationX = readChannel.readUShort(),
         movementType = readChannel.readUByteSubtract() == 1,
-        destinationZ = readChannel.readUShort(),
+        destinationZ = readChannel.readUShort()
     )
 }

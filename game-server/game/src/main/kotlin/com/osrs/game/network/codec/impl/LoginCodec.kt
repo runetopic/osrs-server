@@ -35,7 +35,7 @@ class LoginCodec @Inject constructor(
     private val cache: Cache,
     environment: ApplicationEnvironment,
     val world: World,
-    private val accountService: AccountService,
+    private val accountService: AccountService
 ) : CodecChannelHandler {
     private val logger = InlineLogger()
 
@@ -86,8 +86,8 @@ class LoginCodec @Inject constructor(
                 val rsaBlock = ByteBuffer.wrap(
                     BigInteger(rsaBuffer).modPow(
                         BigInteger(rsaExponent, 16),
-                        BigInteger(rsaModulus, 16),
-                    ).toByteArray(),
+                        BigInteger(rsaModulus, 16)
+                    ).toByteArray()
                 )
 
                 if (rsaBlock.get().toInt() != 1) {
@@ -171,8 +171,8 @@ class LoginCodec @Inject constructor(
                     Player(
                         account = account,
                         world = world,
-                        session = session,
-                    ),
+                        session = session
+                    )
                 )
 
                 session.writeAndFlush(LOGIN_SUCCESS_OPCODE)

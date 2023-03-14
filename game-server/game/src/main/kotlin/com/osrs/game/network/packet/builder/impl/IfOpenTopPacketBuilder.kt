@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 @Singleton
 class IfOpenTopPacketBuilder : PacketBuilder<IfOpenTopPacket>(
     opcode = 48,
-    size = 2,
+    size = 2
 ) {
     override fun build(packet: IfOpenTopPacket, buffer: ByteBuffer) = buffer.writeShortLittleEndianAdd(packet.interfaceId)
 }

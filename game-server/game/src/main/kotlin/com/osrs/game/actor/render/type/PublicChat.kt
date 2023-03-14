@@ -10,5 +10,5 @@ data class PublicChat(
     val color: Int,
     val effect: Int,
     val decompressedSize: Int,
-    val compressedBytes: ByteArray,
+    val compressedBytes: ByteArray
 ) : RenderType

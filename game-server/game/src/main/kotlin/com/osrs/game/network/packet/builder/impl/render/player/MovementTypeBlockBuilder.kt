@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 
 class MovementTypeBlockBuilder : RenderBlockBuilder<MovementSpeed>(
     index = 3,
-    mask = 0x4000,
+    mask = 0x4000
 ) {
     override fun build(buffer: ByteBuffer, render: MovementSpeed) {
         buffer.writeByteAdd(render.type.id)

@@ -7,5 +7,5 @@ enum class BodyPart {
     ARMS,
     HANDS,
     LEGS,
-    FEET,
+    FEET
 }

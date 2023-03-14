@@ -7,7 +7,7 @@ import io.ktor.server.application.ApplicationEnvironment
 
 @Singleton
 class MapSquares(
-    private val squares: Map<Int, MapSquare> = mutableMapOf(),
+    private val squares: Map<Int, MapSquare> = mutableMapOf()
 ) : Map<Int, MapSquare> by squares {
     @Inject constructor(environment: ApplicationEnvironment) : this(
         loadJsonResource<List<MapSquare>>(
@@ -15,7 +15,7 @@ class MapSquares(
                 .config
                 .property("game.configuration.xteas")
                 .getString(),
-            MapSquare::class,
-        ).associateBy { it.id },
+            MapSquare::class
+        ).associateBy { it.id }
     )
 }

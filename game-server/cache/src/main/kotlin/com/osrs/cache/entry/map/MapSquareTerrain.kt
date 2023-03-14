@@ -6,5 +6,5 @@ data class MapSquareTerrain(
     val overlayPath: Int,
     val overlayRotation: Int,
     val collision: Int,
-    val underlayId: Int,
+    val underlayId: Int
 )

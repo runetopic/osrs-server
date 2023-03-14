@@ -12,7 +12,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationEnvironment
 
 class ApplicationModule(
-    private val args: Array<String>,
+    private val args: Array<String>
 ) : KotlinModule() {
     override fun configure() {
         bind<Array<String>>().annotatedWith(Names.named("args")).toInstance(args)

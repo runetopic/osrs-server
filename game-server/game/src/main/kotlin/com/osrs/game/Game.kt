@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.osrs.game.world.service.PlayerSerializationService
 
 class Game @Inject constructor(
-    private val playerSerializationService: PlayerSerializationService,
+    private val playerSerializationService: PlayerSerializationService
 ) {
     fun start() {
     }

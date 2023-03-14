@@ -7,7 +7,7 @@ import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
 
 class HttpRoutingProvider @Inject constructor(
-    private val nettyApplicationEngine: NettyApplicationEngine,
+    private val nettyApplicationEngine: NettyApplicationEngine
 ) : Provider<Routing> {
     override fun get(): Routing = nettyApplicationEngine.application.routing {}
 }

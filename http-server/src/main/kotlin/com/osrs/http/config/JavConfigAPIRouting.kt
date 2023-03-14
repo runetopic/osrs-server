@@ -12,7 +12,7 @@ import io.ktor.server.routing.get
 @Singleton
 class JavConfigAPIRouting @Inject constructor(
     private val routing: Routing,
-    private val world: World,
+    private val world: World
 ) {
     private val javConfigFile: ByteArray = object {}::class.java.getResourceAsStream("/client_config/jav_config.ws")?.readAllBytes() ?: throw IllegalStateException("Missing jav_config.ws in /client_config/")
     private val gamePackFile: ByteArray = object {}::class.java.getResourceAsStream("/client_config/gamepack.jar")?.readAllBytes() ?: throw IllegalStateException("Missing gamepack.jar in /client_config/")

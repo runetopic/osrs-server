@@ -36,5 +36,3 @@ data class Appearance(
     fun isMale(): Boolean = gender == Gender.MALE
     fun isFemale(): Boolean = gender == Gender.FEMALE
 }
-
-

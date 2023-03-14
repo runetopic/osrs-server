@@ -6,5 +6,5 @@ import com.osrs.game.network.packet.Packet
 data class UpdateContainerFullPacket(
     val packedInterface: Int,
     val containerKey: Int,
-    val items: List<Item?>,
+    val items: List<Item?>
 ) : Packet

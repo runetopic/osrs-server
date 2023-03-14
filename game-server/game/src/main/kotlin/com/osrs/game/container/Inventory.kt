@@ -12,7 +12,7 @@ const val INVENTORY_CAPACITY = 28
 
 class Inventory(
     val player: Player,
-    objEntryProvider: ObjEntryProvider,
+    objEntryProvider: ObjEntryProvider
 ) : Container(INVENTORY_CONTAINER_KEY, INVENTORY_CAPACITY, objEntryProvider) {
 
     fun refresh() {
@@ -21,8 +21,8 @@ class Inventory(
             UpdateContainerFullPacket(
                 PACKED_INVENTORY_ID,
                 INVENTORY_CONTAINER_KEY,
-                this,
-            ),
+                this
+            )
         )
     }
 }

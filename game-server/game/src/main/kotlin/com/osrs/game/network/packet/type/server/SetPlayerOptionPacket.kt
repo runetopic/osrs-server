@@ -5,5 +5,5 @@ import com.osrs.game.network.packet.Packet
 data class SetPlayerOptionPacket(
     val option: String,
     val index: Int,
-    val priority: Boolean = false,
+    val priority: Boolean = false
 ) : Packet

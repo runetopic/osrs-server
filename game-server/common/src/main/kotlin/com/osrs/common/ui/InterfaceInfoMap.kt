@@ -7,7 +7,7 @@ import io.ktor.server.application.ApplicationEnvironment
 
 @Singleton
 class InterfaceInfoMap(
-    private val interfaceInfoMap: Map<String, InterfaceInfo> = mutableMapOf(),
+    private val interfaceInfoMap: Map<String, InterfaceInfo> = mutableMapOf()
 ) : Map<String, InterfaceInfo> by interfaceInfoMap {
     @Inject constructor(environment: ApplicationEnvironment) : this(
         loadYamlResource<List<InterfaceInfo>>(
@@ -15,7 +15,7 @@ class InterfaceInfoMap(
                 .config
                 .property("game.configuration.ui")
                 .getString(),
-            InterfaceInfo::class,
-        ).associateBy { it.name },
+            InterfaceInfo::class
+        ).associateBy { it.name }
     )
 }

@@ -6,5 +6,5 @@ data class MapSquareLocation(
     val z: Int,
     val level: Int,
     val shape: Int,
-    val rotation: Int,
+    val rotation: Int
 )

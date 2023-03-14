@@ -8,12 +8,12 @@ import org.rsmod.pathfinder.ZoneFlags
 
 @Singleton
 class PathFinderProvider @Inject constructor(
-    zoneFlags: ZoneFlags,
+    zoneFlags: ZoneFlags
 ) : Provider<PathFinder> {
 
     private val pathFinder = PathFinder(
         flags = zoneFlags.flags,
-        useRouteBlockerFlags = false,
+        useRouteBlockerFlags = false
     )
 
     override fun get(): PathFinder = pathFinder

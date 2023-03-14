@@ -4,5 +4,5 @@ import com.osrs.game.network.packet.Packet
 
 data class LocRemovePacket(
     val packedOffset: Int,
-    val shape: Int,
+    val shape: Int
 ) : Packet

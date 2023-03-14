@@ -23,7 +23,7 @@ import java.util.zip.ZipException
 @Singleton
 class MapSquareTypeProvider @Inject constructor(
     private val cache: Cache,
-    private val mapSquares: MapSquares,
+    private val mapSquares: MapSquares
 ) : EntryTypeProvider<MapSquareEntry>() {
     private val logger = InlineLogger()
 
@@ -67,7 +67,7 @@ class MapSquareTypeProvider @Inject constructor(
         overlayPath: Int = 0,
         overlayRotation: Int = 0,
         collision: Int = 0,
-        underlayId: Int = 0,
+        underlayId: Int = 0
     ): MapSquareTerrain = when (val opcode = readUShort()) {
         0 -> MapSquareTerrain(height, overlayId, overlayPath, overlayRotation, collision, underlayId)
         1 -> MapSquareTerrain(readUByte(), overlayId, overlayPath, overlayRotation, collision, underlayId)
@@ -77,7 +77,7 @@ class MapSquareTypeProvider @Inject constructor(
             overlayPath = if (opcode in 2..49) (opcode - 2) / 4 else overlayPath,
             overlayRotation = if (opcode in 2..49) opcode - 2 and 3 else overlayRotation,
             collision = if (opcode in 50..81) opcode - 49 else collision,
-            underlayId = if (opcode > 81) opcode - 81 else underlayId,
+            underlayId = if (opcode > 81) opcode - 81 else underlayId
         )
     }
 
@@ -109,7 +109,7 @@ class MapSquareTypeProvider @Inject constructor(
                 z = localZ,
                 level = level,
                 shape = shape,
-                rotation = rotation,
+                rotation = rotation
             )
         }
         return loadLocationCollision(type, locId, packed)

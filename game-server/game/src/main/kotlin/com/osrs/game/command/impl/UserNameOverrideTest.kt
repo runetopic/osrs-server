@@ -7,15 +7,15 @@ import com.osrs.game.command.CommandListener
 
 @Singleton
 class UserNameOverrideTest : CommandListener(
-    name = "username_override",
+    name = "username_override"
 ) {
     override fun execute(command: String, player: Player) {
         player.renderer.update(
             UserNameOverride(
                 prefix = "Testing",
                 infix = "UserName",
-                suffix = "Override",
-            ),
+                suffix = "Override"
+            )
         )
     }
 }

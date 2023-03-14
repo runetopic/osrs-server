@@ -5,7 +5,7 @@ import kotlin.math.max
 
 @JvmInline
 value class Location(
-    val packedLocation: Int,
+    val packedLocation: Int
 ) {
     constructor(x: Int, z: Int, level: Int = 0) : this((z and 0x3fff) or ((x and 0x3fff) shl 14) or ((level and 0x3) shl 28))
 
@@ -49,5 +49,5 @@ fun Location.withinDistance(other: Location, distance: Int = 15): Boolean {
 fun Location.transform(xOffset: Int, yOffset: Int, levelOffset: Int = 0) = Location(
     x = x + xOffset,
     z = z + yOffset,
-    level = level + levelOffset,
+    level = level + levelOffset
 )

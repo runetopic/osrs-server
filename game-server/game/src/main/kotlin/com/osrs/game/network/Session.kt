@@ -31,7 +31,7 @@ class Session(
     private val world: World,
     private val socket: Socket,
     private val codecs: Set<CodecChannelHandler>,
-    val builders: Map<KClass<*>, PacketBuilder<Packet>>,
+    val builders: Map<KClass<*>, PacketBuilder<Packet>>
 ) {
     private val logger = InlineLogger()
 

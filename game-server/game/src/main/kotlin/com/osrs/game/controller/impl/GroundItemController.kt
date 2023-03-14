@@ -8,7 +8,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
 
 class GroundItemController(
-    private val floorItem: FloorItem,
+    private val floorItem: FloorItem
 ) : Controller<FloorItem>() {
 
     override fun process(world: World) {

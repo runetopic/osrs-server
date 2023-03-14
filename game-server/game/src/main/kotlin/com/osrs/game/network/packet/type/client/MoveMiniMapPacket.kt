@@ -15,5 +15,5 @@ data class MoveMiniMapPacket(
     val value4: Int,
     val currentX: Int,
     val currentZ: Int,
-    val value5: Int,
+    val value5: Int
 ) : Packet

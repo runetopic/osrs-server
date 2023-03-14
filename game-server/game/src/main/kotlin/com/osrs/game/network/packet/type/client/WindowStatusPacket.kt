@@ -5,5 +5,5 @@ import com.osrs.game.network.packet.Packet
 data class WindowStatusPacket(
     val displayMode: Int,
     val width: Int,
-    val height: Int,
+    val height: Int
 ) : Packet

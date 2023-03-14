@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 @Singleton
 class VarpSmallPacketBuilder : PacketBuilder<VarpSmallPacket>(
     opcode = 97,
-    size = 3,
+    size = 3
 ) {
     override fun build(packet: VarpSmallPacket, buffer: ByteBuffer) {
         buffer.writeShortAdd(packet.id)

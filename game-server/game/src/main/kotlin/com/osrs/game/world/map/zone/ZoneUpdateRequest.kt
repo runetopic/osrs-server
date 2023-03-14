@@ -11,23 +11,23 @@ sealed class ZoneUpdateRequest {
         val target: Actor? = null,
         val from: Location,
         val to: Location = Location.None,
-        val projectile: Projectile,
+        val projectile: Projectile
     ) : ZoneUpdateRequest()
 
     class ObjAddRequest(
-        val floorItem: FloorItem,
+        val floorItem: FloorItem
     ) : ZoneUpdateRequest()
 
     class ObjUpdateRequest(
-        val floorItem: FloorItem,
+        val floorItem: FloorItem
     ) : ZoneUpdateRequest()
 
     class ObjRemoveRequest(
         val floorItem: FloorItem,
-        val receiver: Int = -1,
+        val receiver: Int = -1
     ) : ZoneUpdateRequest()
 
     class LocAddRequest(
-        val gameObject: GameObject,
+        val gameObject: GameObject
     ) : ZoneUpdateRequest()
 }

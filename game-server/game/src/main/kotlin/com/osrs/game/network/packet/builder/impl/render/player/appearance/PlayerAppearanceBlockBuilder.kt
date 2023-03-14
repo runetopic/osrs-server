@@ -66,7 +66,9 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
         val gender = 1
         val skull = 1
         val headIcon = 1
-        val identity = if (render.transform != -1) 4 else {
+        val identity = if (render.transform != -1) {
+            4
+        } else {
             val arm = 2
             val cape = 1
             val foot = 2

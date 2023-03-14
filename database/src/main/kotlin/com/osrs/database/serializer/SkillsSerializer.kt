@@ -26,13 +26,13 @@ class SkillsSerializer : KSerializer<Skills> {
         val levels = decodeSerializableElement(
             descriptor,
             0,
-            MapSerializer(String.serializer(), Int.serializer()),
+            MapSerializer(String.serializer(), Int.serializer())
         ).values.toIntArray()
         decodeElementIndex(descriptor)
         val experience = decodeSerializableElement(
             descriptor,
             1,
-            MapSerializer(String.serializer(), Double.serializer()),
+            MapSerializer(String.serializer(), Double.serializer())
         ).values.toDoubleArray()
         return@decodeStructure Skills(levels, experience)
     }
@@ -44,7 +44,7 @@ class SkillsSerializer : KSerializer<Skills> {
             MapSerializer(String.serializer(), Int.serializer()),
             Skill.values().associate {
                 it.name.lowercase(Locale.getDefault()) to value.level(it)
-            },
+            }
         )
         encodeSerializableElement(
             descriptor,
@@ -52,7 +52,7 @@ class SkillsSerializer : KSerializer<Skills> {
             MapSerializer(String.serializer(), Double.serializer()),
             Skill.values().associate {
                 it.name.lowercase(Locale.getDefault()) to value.xp(it)
-            },
+            }
         )
     }
 }

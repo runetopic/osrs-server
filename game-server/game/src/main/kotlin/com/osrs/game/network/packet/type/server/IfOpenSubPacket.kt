@@ -5,5 +5,5 @@ import com.osrs.game.network.packet.Packet
 data class IfOpenSubPacket(
     val interfaceId: Int,
     val toInterface: Int,
-    val isModal: Boolean,
+    val isModal: Boolean
 ) : Packet

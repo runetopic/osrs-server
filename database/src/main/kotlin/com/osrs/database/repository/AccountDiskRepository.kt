@@ -21,7 +21,7 @@ import kotlin.io.path.outputStream
 @OptIn(ExperimentalSerializationApi::class)
 class AccountDiskRepository @Inject constructor(
     environment: ApplicationEnvironment,
-    private val json: Json,
+    private val json: Json
 ) : AccountRepository {
     private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./players/"
 
@@ -36,8 +36,8 @@ class AccountDiskRepository @Inject constructor(
                     rights = 2,
                     email = "admin@xlitersps.com",
                     password = BCrypt.hashpw("password", BCrypt.gensalt(12)),
-                    location = Location.Default,
-                ),
+                    location = Location.Default
+                )
             )
         }
     }

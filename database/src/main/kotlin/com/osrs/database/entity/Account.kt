@@ -26,5 +26,5 @@ data class Account(
     var location: Location,
     @Serializable(with = SkillsSerializer::class)
     var skills: Skills = Skills(),
-    var objs: List<FloorItem> = emptyList(),
+    var objs: List<FloorItem> = emptyList()
 )

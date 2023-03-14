@@ -7,7 +7,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.engine.commandLineEnvironment
 
 class ApplicationProvider @Inject constructor(
-    @Named("args") val args: Array<String>,
+    @Named("args") val args: Array<String>
 ) : Provider<Application> {
     override fun get(): Application = commandLineEnvironment(args).application
 }

@@ -8,7 +8,7 @@ data class Projectile(
     val angle: Int,
     val lengthAdjustment: Int,
     val distOffset: Int,
-    val stepMultiplier: Int,
+    val stepMultiplier: Int
 ) {
     fun flightTime(distance: Int) = delay + lengthAdjustment + (distance * stepMultiplier)
 }
