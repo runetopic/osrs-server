@@ -1,5 +1,6 @@
 package com.osrs.game.actor.render.type
 
+import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.render.RenderType
 
 class MovementSpeed(
