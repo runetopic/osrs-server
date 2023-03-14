@@ -43,8 +43,8 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         if (index == viewport.highDefinitionsCount) {
             bits.writeSkipCount(skip)
             withBitAccess(bits)
-            if (nsn) return syncHighDefinition(viewport, updates, false)
-            return
+            if (!nsn) return
+            return syncHighDefinition(viewport, updates, false)
         }
         val playerIndex = viewport.highDefinitions[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] != 0)) {
@@ -77,8 +77,8 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         if (index == viewport.lowDefinitionsCount) {
             bits.writeSkipCount(skip)
             withBitAccess(bits)
-            if (nsn) return syncLowDefinition(viewport, updates, players, false)
-            return
+            if (!nsn) return
+            return syncLowDefinition(viewport, updates, players, false)
         }
         val playerIndex = viewport.lowDefinitions[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] == 0)) {
