@@ -9,6 +9,7 @@ import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.BRIDGE_TILE_BIT
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.LEVELS
 import com.osrs.cache.entry.map.MapSquareEntry.Companion.MAP_SIZE
+import com.osrs.common.buffer.discard
 import com.osrs.common.buffer.readIncrSmallSmart
 import com.osrs.common.buffer.readShort
 import com.osrs.common.buffer.readUByte
@@ -69,8 +70,11 @@ class MapSquareTypeProvider @Inject constructor(
         collision: Int = 0,
         underlayId: Int = 0
     ): MapSquareTerrain = when (val opcode = readUShort()) {
-        0 -> MapSquareTerrain(height, overlayId, overlayPath, overlayRotation, collision, underlayId)
-        1 -> MapSquareTerrain(readUByte(), overlayId, overlayPath, overlayRotation, collision, underlayId)
+        0 -> MapSquareTerrain(collision)
+        1 -> {
+            discard(1) // Height
+            MapSquareTerrain(collision)
+        }
         else -> loadTerrain(
             height = height,
             overlayId = if (opcode in 2..49) readShort() else overlayId,
