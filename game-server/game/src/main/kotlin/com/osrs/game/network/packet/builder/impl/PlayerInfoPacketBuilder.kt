@@ -3,6 +3,7 @@ package com.osrs.game.network.packet.builder.impl
 import com.google.inject.Singleton
 import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
+import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.withinDistance
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.movement.Direction
@@ -31,7 +32,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         lowDefinitionUpdates: Array<ByteArray?>,
         players: PlayerList
     ) {
-        val highDefinitionBytes = syncHighDefinition(viewport, highDefinitionUpdates)
+        val highDefinitionBytes = syncHighDefinition(viewport, highDefinitionUpdates, players)
         val lowDefinitionBytes = syncLowDefinition(viewport, lowDefinitionUpdates, players)
         put(highDefinitionBytes)
         put(lowDefinitionBytes)
@@ -40,6 +41,7 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
     private tailrec fun ByteBuffer.syncHighDefinition(
         viewport: Viewport,
         updates: Array<ByteArray?>,
+        players: PlayerList,
         blocks: ByteArray = byteArrayOf(),
         nsn: Boolean = true,
         index: Int = 0,
@@ -50,25 +52,25 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
             bits.writeSkipCount(skip)
             withBitAccess(bits)
             if (!nsn) return blocks
-            return syncHighDefinition(viewport, updates, blocks, false)
+            return syncHighDefinition(viewport, updates, players, blocks, false)
         }
         val playerIndex = viewport.highDefinitions[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] != 0)) {
-            return syncHighDefinition(viewport, updates, blocks, nsn, index + 1, skip, bits)
+            return syncHighDefinition(viewport, updates, players, blocks, nsn, index + 1, skip, bits)
         }
         val other = viewport.players[playerIndex]
-        val removing = viewport.shouldRemove(other)
+        val removing = viewport.shouldRemove(other, players)
         val pendingUpdates = other?.let { updates[it.index] }
         val updating = pendingUpdates != null || other?.moveDirection != null
         val active = removing || updating
         if (other == null || !active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
-            return syncHighDefinition(viewport, updates, blocks, nsn, index + 1, skip + 1, bits)
+            return syncHighDefinition(viewport, updates, players, blocks, nsn, index + 1, skip + 1, bits)
         }
         val offset = bits.writeSkipCount(skip)
         bits.writeBit(true)
         val block = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, pendingUpdates)
-        return syncHighDefinition(viewport, updates, block?.let { blocks + it } ?: blocks, nsn, index + 1, offset, bits)
+        return syncHighDefinition(viewport, updates, players, block?.let { blocks + it } ?: blocks, nsn, index + 1, offset, bits)
     }
 
     private tailrec fun ByteBuffer.syncLowDefinition(
@@ -167,25 +169,18 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         return updates
     }
 
-    private fun BitAccess.validateLocationChanges(
-        viewport: Viewport,
-        other: Player,
-        index: Int
-    ) {
+    private fun BitAccess.validateLocationChanges(viewport: Viewport, other: Player, index: Int) {
         val currentPacked = viewport.locations[index]
         val packed = other.location.regionLocation
         val updating = packed != currentPacked
-        writeBits(1, if (updating) 1 else 0)
+        writeBit(updating)
         if (updating) {
             updateCoordinates(currentPacked, packed)
             viewport.locations[index] = packed
         }
     }
 
-    private fun BitAccess.updateCoordinates(
-        lastCoordinates: Int,
-        currentCoordinates: Int
-    ) {
+    private fun BitAccess.updateCoordinates(lastCoordinates: Int, currentCoordinates: Int) {
         val lastPlane = lastCoordinates shr 16
         val lastRegionX = lastCoordinates shr 8
         val lastRegionZ = lastCoordinates and 0xff
@@ -242,6 +237,20 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         return -1
     }
 
-    private fun Viewport.shouldAdd(other: Player?): Boolean = (other != null && other != player && other.location.withinDistance(player.location))
-    private fun Viewport.shouldRemove(other: Player?): Boolean = (other == null || !other.online || !other.location.withinDistance(player.location) || !player.world.players.contains(other))
+    private fun Viewport.shouldAdd(other: Player?): Boolean = when {
+        other == null -> false
+        other == player -> false
+        other.location == Location.None -> false
+        !other.location.withinDistance(player.location) -> false
+        else -> true
+    }
+
+    private fun Viewport.shouldRemove(other: Player?, players: PlayerList): Boolean = when {
+        other == null -> true
+        !other.online -> true
+        other.location == Location.None -> true
+        !other.location.withinDistance(player.location) -> true
+        !players.contains(other) -> true
+        else -> false
+    }
 }
