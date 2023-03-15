@@ -102,7 +102,7 @@ class MapSquareTypeProvider @Inject constructor(
         val level = (packed shr 12).let {
             if (entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2 == 2) it - 1 else it
         }
-        val adjusted = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
+        val adjusted = entry.pack(level, x, z)
 
         if (level >= 0) {
             entry.locations[adjusted] = when (val size = entry.locations[adjusted]?.size ?: 0) {
