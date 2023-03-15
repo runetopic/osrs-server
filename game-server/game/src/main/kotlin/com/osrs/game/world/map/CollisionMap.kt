@@ -49,15 +49,15 @@ class CollisionMap @Inject constructor(
     fun canTravel(location: Location, direction: Direction): Boolean =
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, 0)
 
-    fun applyCollision(type: MapSquareEntry) {
+    fun applyCollision(entry: MapSquareEntry) {
         for (level in 0 until 4) {
             for (x in 0 until 64) {
                 for (z in 0 until 64) {
-                    if ((type.terrain[type.pack(level, x, z)]!!.collision and 0x1) != 0x1) continue
-                    val actualLevel = if ((type.terrain[type.packLevel1(x, z)]!!.collision and 0x2) == 0x2) level - 1 else level
+                    if ((entry.terrain[entry.pack(level, x, z)]!!.collision and 0x1) != 0x1) continue
+                    val actualLevel = if ((entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2) == 0x2) level - 1 else level
                     if (actualLevel < 0) continue
-                    val baseX = type.regionX shl 6
-                    val baseZ = type.regionZ shl 6
+                    val baseX = entry.regionX shl 6
+                    val baseZ = entry.regionZ shl 6
                     val location = Location(x + baseX, z + baseZ, level)
                     addFloorCollision(location)
                     ZoneManager.createZone(location.zoneLocation)
@@ -68,10 +68,10 @@ class CollisionMap @Inject constructor(
         for (level in 0 until 4) {
             for (x in 0 until 64) {
                 for (z in 0 until 64) {
-                    val baseX = type.regionX shl 6
-                    val baseZ = type.regionZ shl 6
+                    val baseX = entry.regionX shl 6
+                    val baseZ = entry.regionZ shl 6
 
-                    type.locations[type.pack(level, x, z)]?.forEach {
+                    entry.locations[entry.pack(level, x, z)]?.forEach {
                         if (it == null) return@forEach
                         val location = Location(it.x + baseX, it.z + baseZ, it.level)
                         if (!locations.contains(it.id)) return@forEach
