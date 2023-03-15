@@ -30,22 +30,23 @@ class WorldSyncTask(
     }
 
     private fun Array<Controller<*>?>.processControllers() {
+        if (isEmpty()) return
         for (controller in this) {
             if (controller == null) continue
-
             controller.process(world)
         }
     }
 
     private fun PlayerList.writeAndFlush() {
+        if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-
             player.writeAndFlush()
         }
     }
 
     private fun PlayerList.processGroupedPackets() {
+        if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
             player.processGroupedPackets()
@@ -53,6 +54,7 @@ class WorldSyncTask(
     }
 
     private fun PlayerList.buildPendingUpdateBlocks() {
+        if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
             playerUpdateBlocks.buildPendingUpdates(player)
@@ -60,6 +62,7 @@ class WorldSyncTask(
     }
 
     private fun PlayerList.sendPlayerInfo() {
+        if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
             player.sendPlayerInfo(playerUpdateBlocks)
@@ -67,6 +70,7 @@ class WorldSyncTask(
     }
 
     private fun PlayerList.processPlayers() {
+        if (isEmpty()) return
         // DO NOT CHANGE THIS FROM SYNC players always process sync
         for (player in this) {
             if (player == null || !player.online) continue
@@ -75,11 +79,12 @@ class WorldSyncTask(
     }
 
     private fun PlayerList.writeZoneUpdates() {
+        if (isEmpty()) return
+
         ZoneManager.clear()
 
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-
             ZoneManager.appendObservedZone(player.zones)
         }
 
@@ -87,7 +92,6 @@ class WorldSyncTask(
 
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-
             for (zoneLocation in player.zones) {
                 val zone = ZoneManager.zones[zoneLocation] ?: continue
                 if (!zone.requiresSync()) continue
@@ -95,14 +99,18 @@ class WorldSyncTask(
             }
         }
 
-        for (zone in ZoneManager.zones) {
-            if (zone == null || !zone.requiresSync()) continue
-
-            zone.clear()
+        for (player in parallelStream()) {
+            if (player == null || !player.online) continue
+            for (zoneLocation in player.zones) {
+                val zone = ZoneManager.zones[zoneLocation] ?: continue
+                if (!zone.requiresSync()) continue
+                zone.clear()
+            }
         }
     }
 
     private fun PlayerList.resetPlayers() {
+        if (isEmpty()) return
         // DO NOT CHANGE THIS FROM SYNC players always process sync
         for (player in this) {
             if (player == null || !player.online) continue
