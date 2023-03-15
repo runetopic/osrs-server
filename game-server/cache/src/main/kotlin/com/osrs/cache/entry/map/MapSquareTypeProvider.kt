@@ -100,24 +100,21 @@ class MapSquareTypeProvider @Inject constructor(
         val x = packed shr 6 and 0x3F
         val z = packed and 0x3F
         val level = (packed shr 12).let {
+            // Check for bridges.
             if (entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2 == 2) it - 1 else it
         }
+        // New adjusted packed location after adjusting for bridge.
         val adjusted = entry.pack(level, x, z)
 
         if (level >= 0) {
-            entry.locations[adjusted] = when (val size = entry.locations[adjusted]?.size ?: 0) {
-                0 -> arrayOfNulls(1)
-                in 1 until 5 -> entry.locations[adjusted]!!.copyOf(size + 1)
-                else -> entry.locations[adjusted]
+            when (val size = entry.locations[adjusted]?.size ?: 0) {
+                0 -> entry.locations[adjusted] = Array(1) { MapSquareLocation(locId, x, z, level, shape, rotation) }
+                in 1 until 5 -> {
+                    entry.locations[adjusted] = entry.locations[adjusted]!!.copyOf(size + 1)
+                    entry.locations[adjusted]!![size] = MapSquareLocation(locId, x, z, level, shape, rotation)
+                }
+                else -> throw AssertionError("Size is too many. 5 capacity.")
             }
-            entry.locations[adjusted]!![entry.locations[adjusted]!!.indexOf(null)] = MapSquareLocation(
-                id = locId,
-                x = x,
-                z = z,
-                level = level,
-                shape = shape,
-                rotation = rotation
-            )
         }
         return loadLocationCollision(entry, locId, packed)
     }
