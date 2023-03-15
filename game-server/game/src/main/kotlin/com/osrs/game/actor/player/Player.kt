@@ -8,10 +8,10 @@ import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
+import com.osrs.game.actor.movement.MovementType
+import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.MovementSpeed
-import com.osrs.game.actor.render.type.MovementType
-import com.osrs.game.actor.render.type.MovementType.WALK
 import com.osrs.game.container.Inventory
 import com.osrs.game.hint.HintArrow.LOCATION
 import com.osrs.game.network.Session
@@ -58,6 +58,7 @@ class Player(
 
     override var location: Location = Location.None
     override var zone = world.zone(location)
+
     override var moveDirection: MoveDirection? = null
 
     var objs = ArrayList<FloorItem>()
@@ -225,6 +226,14 @@ class Player(
     fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
         this.appearance = renderer.update(appearance)
         return this.appearance
+    }
+
+    override fun totalHitpoints(): Int {
+        return 100
+    }
+
+    override fun currentHitpoints(): Int {
+        return 100
     }
 
     fun message(string: String) {

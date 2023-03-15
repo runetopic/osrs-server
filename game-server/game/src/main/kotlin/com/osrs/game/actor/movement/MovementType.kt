@@ -1,4 +1,4 @@
-package com.osrs.game.actor.render.type
+package com.osrs.game.actor.movement
 
 enum class MovementType(val id: Int) {
     CRAWL(0),
