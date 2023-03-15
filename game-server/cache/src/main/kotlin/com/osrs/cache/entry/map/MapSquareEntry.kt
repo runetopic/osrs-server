@@ -10,5 +10,4 @@ data class MapSquareEntry(
     val locations: Array<Array<MapSquareLocation?>?> = arrayOfNulls(Short.MAX_VALUE.toInt())
 ) : EntryType(id) {
     fun pack(level: Int, x: Int, z: Int): Int = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
-    fun packLevel1(x: Int, z: Int): Int = (x and 0x3F shl 6) or (z and 0x3F) or 0x1000
 }

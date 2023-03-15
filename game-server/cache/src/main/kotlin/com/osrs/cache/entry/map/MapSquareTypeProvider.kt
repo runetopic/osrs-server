@@ -101,7 +101,7 @@ class MapSquareTypeProvider @Inject constructor(
         val z = packed and 0x3F
         val level = (packed shr 12).let {
             // Check for bridges.
-            if (entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2 == 2) it - 1 else it
+            if (entry.terrain[entry.pack(1, x, z)]!!.collision and 0x2 == 2) it - 1 else it
         }
         // New adjusted packed location after adjusting for bridge.
         val adjusted = entry.pack(level, x, z)

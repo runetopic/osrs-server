@@ -54,7 +54,7 @@ class CollisionMap @Inject constructor(
             for (x in 0 until 64) {
                 for (z in 0 until 64) {
                     if ((entry.terrain[entry.pack(level, x, z)]!!.collision and 0x1) != 0x1) continue
-                    val actualLevel = if ((entry.terrain[entry.packLevel1(x, z)]!!.collision and 0x2) == 0x2) level - 1 else level
+                    val actualLevel = if ((entry.terrain[entry.pack(1, x, z)]!!.collision and 0x2) == 0x2) level - 1 else level
                     if (actualLevel < 0) continue
                     val baseX = entry.regionX shl 6
                     val baseZ = entry.regionZ shl 6
