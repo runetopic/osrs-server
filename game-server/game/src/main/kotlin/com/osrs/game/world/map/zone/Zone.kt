@@ -89,7 +89,7 @@ class Zone(
     }
 
     private fun Player.writeGlobalUpdates(xInScene: Int, zInScene: Int) {
-        ZoneManager.getGlobalZoneUpdates(location.zoneLocation.packedLocation).let { updates ->
+        ZoneManager.getGlobalZoneUpdates(this@Zone.location.packedLocation).let { updates ->
             session.write(
                 UpdateZonePartialEnclosedPacket(
                     xInScene,

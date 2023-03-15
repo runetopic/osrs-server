@@ -2,23 +2,12 @@ package com.osrs.cache.entry.map
 
 import com.osrs.cache.entry.EntryType
 
-class MapSquareEntry(
-    override val id: Int
+data class MapSquareEntry(
+    override val id: Int,
+    val regionX: Int = id shr 8,
+    val regionZ: Int = id and 0xFF,
+    val terrain: Array<MapSquareTerrain?> = arrayOfNulls(4 * 64 * 64),
+    val locations: Array<Array<MapSquareLocation?>?> = arrayOfNulls(4 * 64 * 64)
 ) : EntryType(id) {
-    val regionX get() = id shr 8
-    val regionZ get() = id and 0xFF
-    val terrain: Array<Array<Array<MapSquareTerrain?>>> = Array(LEVELS) { Array(MAP_SIZE) { arrayOfNulls(MAP_SIZE) } }
-    val locations: Array<Array<Array<Array<MapSquareLocation?>>>> = Array(LEVELS) {
-        Array(MAP_SIZE) {
-            Array(MAP_SIZE) { arrayOfNulls(5) }
-        }
-    }
-
-    companion object {
-        const val LEVELS = 4
-        const val MAP_SIZE = 64
-
-        const val BLOCKED_TILE_BIT = 0x1
-        const val BRIDGE_TILE_BIT = 0x2
-    }
+    fun pack(level: Int, x: Int, z: Int): Int = (x and 0x3F shl 6) or (z and 0x3F) or (level shl 12)
 }

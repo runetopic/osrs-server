@@ -24,6 +24,7 @@ class PlayerUpdateBlocks(
         if (player.renderer.hasHighDefinitionUpdate()) {
             this.highDefinitionUpdates[player.index] = player.renderer.highDefinitionRenderBlocks.buildHighDefinitionUpdates(player)
         }
+        // Low definitions are always built here for persisted blocks from previous game cycles. i.e Appearance.
         this.lowDefinitionUpdates[player.index] = player.renderer.lowDefinitionRenderBlocks.buildLowDefinitionUpdates()
     }
 
