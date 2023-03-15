@@ -36,24 +36,23 @@ class MapSquareTypeProvider @Inject constructor(
         }
 
         val mapIndex = cache.index(MAP_INDEX)
-        val terrain = mapIndex.group("m${entry.regionX}_${entry.regionZ}")
-        val terrainData = terrain?.data?.decompress()?.buffer
 
-        for (level in 0 until 4) {
-            for (x in 0 until 64) {
-                for (z in 0 until 64) {
-                    entry.terrain[entry.pack(level, x, z)] = terrainData?.loadTerrain()
+        mapIndex.group("m${entry.regionX}_${entry.regionZ}")?.data?.let {
+            val data = it.decompress().buffer
+            for (level in 0 until 4) {
+                for (x in 0 until 64) {
+                    for (z in 0 until 64) {
+                        entry.terrain[entry.pack(level, x, z)] = data.loadTerrain()
+                    }
                 }
             }
         }
 
-        val locations = mapIndex.group("l${entry.regionX}_${entry.regionZ}")
-
-        if (locations?.data?.isNotEmpty() == true) {
+        mapIndex.group("l${entry.regionX}_${entry.regionZ}")?.data?.let {
             try {
-                locations.data.decompress(square.key).buffer.loadLocs(entry)
+                it.decompress(square.key).buffer.loadLocs(entry)
             } catch (exception: ZipException) {
-                logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. GroupId=${locations.id}, MapSquare=${square.id}." }
+                logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. MapSquare=${square.id}." }
             }
         }
         return entry
@@ -107,11 +106,12 @@ class MapSquareTypeProvider @Inject constructor(
         val adjusted = entry.pack(level, x, z)
 
         if (level >= 0) {
-            when (val size = entry.locations[adjusted]?.size ?: 0) {
-                0 -> entry.locations[adjusted] = Array(1) { MapSquareLocation(locId, x, z, level, shape, rotation) }
+            entry.locations[adjusted] = when (val size = entry.locations[adjusted]?.size ?: 0) {
+                0 -> Array(1) { MapSquareLocation(locId, x, z, level, shape, rotation) }
                 in 1 until 5 -> {
-                    entry.locations[adjusted] = entry.locations[adjusted]!!.copyOf(size + 1)
-                    entry.locations[adjusted]!![size] = MapSquareLocation(locId, x, z, level, shape, rotation)
+                    entry.locations[adjusted]!!.copyOf(size + 1).also {
+                        it[size] = MapSquareLocation(locId, x, z, level, shape, rotation)
+                    }
                 }
                 else -> throw AssertionError("Size is too many. 5 capacity.")
             }
