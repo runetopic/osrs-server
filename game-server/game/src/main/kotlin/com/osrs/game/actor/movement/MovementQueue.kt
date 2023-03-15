@@ -3,7 +3,6 @@ package com.osrs.game.actor.movement
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.render.type.MovementSpeed
-import com.osrs.game.actor.render.type.MovementType
 import org.rsmod.pathfinder.Route
 import org.rsmod.pathfinder.RouteCoordinates
 import java.util.*

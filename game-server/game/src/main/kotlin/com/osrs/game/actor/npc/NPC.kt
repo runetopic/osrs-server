@@ -19,4 +19,12 @@ class NPC : Actor() {
     override var zone: Zone
         get() = TODO("Not yet implemented")
         set(value) {}
+
+    override fun totalHitpoints(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun currentHitpoints(): Int {
+        TODO("Not yet implemented")
+    }
 }

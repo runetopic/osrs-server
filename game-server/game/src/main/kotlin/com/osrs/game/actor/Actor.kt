@@ -27,4 +27,7 @@ abstract class Actor {
         moveDirection = null
         lastLocation = location
     }
+
+    abstract fun totalHitpoints(): Int
+    abstract fun currentHitpoints(): Int
 }
