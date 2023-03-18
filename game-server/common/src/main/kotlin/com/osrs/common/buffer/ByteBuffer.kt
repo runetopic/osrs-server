@@ -139,7 +139,7 @@ fun ByteBuffer.writeShortLittleEndianAdd(value: Int) {
     put((value shr 8).toByte())
 }
 
-fun ByteBuffer.writeMedium(value: Int) {
+fun ByteBuffer.write24BitInt(value: Int) {
     put((value shr 16).toByte())
     putShort(value.toShort())
 }
