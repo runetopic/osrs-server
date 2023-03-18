@@ -17,8 +17,15 @@ class FaceActorBlockBuilder : RenderBlockBuilder<FaceActor>(
             is Player, is NPC -> render.actor.index
             else -> 0xFFFF
         }
+
+        val indicator = when (render.actor) {
+            is Player -> 1
+            is NPC -> 0
+            else -> 0xFF
+        }
+
         buffer.writeShortLittleEndian(index)
-        buffer.writeByte(if (render.actor is Player) 1 else 0)
+        buffer.writeByte(indicator)
     }
 
     override fun size(render: FaceActor): Int = 3
