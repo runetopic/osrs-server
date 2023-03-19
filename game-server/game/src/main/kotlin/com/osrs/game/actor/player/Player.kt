@@ -4,7 +4,7 @@ import com.osrs.common.item.FloorItem
 import com.osrs.common.skill.Skill
 import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.movement.MoveDirection
+import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
@@ -30,25 +30,27 @@ class Player(
     world: World,
     val session: Session
 ) : Actor(world) {
+    // Late initialized properties.
+    var interfaces: Interfaces? = null
+    var inventory: Inventory? = null
+
+    // Immutable properties.
     val username get() = account.userName
     val displayName get() = account.displayName
     val skills get() = account.skills
-
-    lateinit var interfaces: Interfaces
-    lateinit var inventory: Inventory
-
-    override var moveDirection: MoveDirection? = null
-
-    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
     val objs = ArrayList<FloorItem>()
-    var rights = 0
     val viewport = Viewport(this)
     val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
+
+    // Mutable properties.
+    var rights = 0
+    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
 
     fun initialize(
         interfaces: Interfaces,
         inventory: Inventory
     ) {
+        super.initialize()
         this.session.player = this
         this.location = account.location
         this.rights = account.rights
@@ -56,11 +58,12 @@ class Player(
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
+        this.movementQueue = MovementQueue(this)
     }
 
     override fun login() {
         session.writeLoginResponse()
+        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
         updateMap(true)
         refreshAppearance()
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))

@@ -16,25 +16,33 @@ import kotlin.math.min
 abstract class Actor(
     val world: World
 ) {
-    var online = false
-    var isRunning = true
-    var runEnergy: Float = 10_000f
-    abstract var moveDirection: MoveDirection?
+    // Late initialized properties.
+    var movementQueue: MovementQueue? = null
+
+    // Immutable properties.
     val renderer = ActorRenderer()
+    val zones = IntArray(7 * 7)
+
+    // Mutable properties.
+    var online = false
+    var index = 0
+    var isRunning = true
+    var runEnergy = 10_000f
+    var moveDirection = MoveDirection.None
     var location: Location = Location.None
     var lastLocation = Location.None
-    var index = 0
     var zone = world.zone(location)
     var lastLoadedLocation = Location.None
     var baseZoneLocation = Location.None.zoneLocation
-    var zones = IntArray(7 * 7)
-
-    val movementQueue = MovementQueue(this)
 
     abstract fun login()
     abstract fun logout()
     abstract fun totalHitpoints(): Int
     abstract fun currentHitpoints(): Int
+
+    fun initialize() {
+        movementQueue = MovementQueue(this)
+    }
 
     open fun updateMap(initialize: Boolean) {
         lastLoadedLocation = location.clone()
@@ -42,7 +50,7 @@ abstract class Actor(
     }
 
     fun syncProcess() {
-        movementQueue.process()
+        movementQueue?.process()
 
         if (shouldRebuildMap()) {
             updateMap(false)
@@ -57,8 +65,8 @@ abstract class Actor(
         if (resetRenderer) {
             renderer.clearUpdates()
         }
-        if (moveDirection != null) {
-            moveDirection = null
+        if (moveDirection != MoveDirection.None) {
+            moveDirection = MoveDirection.None
         }
         if (lastLocation != location) {
             lastLocation = location

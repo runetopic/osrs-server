@@ -8,6 +8,7 @@ import com.osrs.common.map.location.Location
 import com.osrs.common.map.location.withinDistance
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.movement.Direction
+import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.builder.PacketBuilder
@@ -56,7 +57,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         val other = viewport.players[playerIndex]
         val removing = viewport.shouldRemove(other, players)
         val pendingUpdates = other?.let { updateBlocks.highDefinitionUpdates[it.index] }
-        val updating = pendingUpdates != null || other?.moveDirection != null
+        val updating = pendingUpdates != null || other?.moveDirection != MoveDirection.None
         val active = removing || updating
         if (other == null || !active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
@@ -64,7 +65,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         }
         val offset = bits.writeSkipCount(skip)
         bits.writeBit(true)
-        val block = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, pendingUpdates)
+        val block = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, other.moveDirection != MoveDirection.None, pendingUpdates)
         return syncHighDefinition(viewport, players, block?.let { blocks + it } ?: blocks, nsn, index + 1, offset, bits)
     }
 
@@ -105,10 +106,10 @@ class PlayerInfoPacketBuilder @Inject constructor(
         other: Player,
         index: Int,
         removing: Boolean,
+        moving: Boolean,
         updates: ByteArray?
     ): ByteArray? {
         writeBit(if (removing) false else updates != null)
-        val moveDirection = other.moveDirection
         when {
             removing -> { // remove the player
                 // send a position update
@@ -117,10 +118,11 @@ class PlayerInfoPacketBuilder @Inject constructor(
                 validateLocationChanges(viewport, other, index)
                 viewport.players[index] = null
             }
-            moveDirection != null -> {
+            moving -> {
+                val moveDirection = other.moveDirection
                 var dx = Direction.DIRECTION_DELTA_X[moveDirection.walkDirection!!.opcode]
                 var dz = Direction.DIRECTION_DELTA_Z[moveDirection.walkDirection.opcode]
-                var running = other.moveDirection!!.runDirection != null
+                var running = other.moveDirection.runDirection != null
                 var direction = 0
 
                 if (running) {

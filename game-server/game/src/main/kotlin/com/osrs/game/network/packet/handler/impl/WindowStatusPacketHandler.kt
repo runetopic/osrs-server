@@ -12,8 +12,12 @@ class WindowStatusPacketHandler : PacketHandler<WindowStatusPacket>() {
     override fun handlePacket(packet: WindowStatusPacket, player: Player) {
         val layout = enumValues<InterfaceLayout>().find { it.id == packet.displayMode } ?: return
 
-        player.interfaces.layout = layout
-        player.interfaces.sendInterfaceLayout(layout)
-        GameInterfaces.forEach { player.interfaces += it }
+        player.interfaces?.let {
+            it.layout = layout
+            it.sendInterfaceLayout(layout)
+            GameInterfaces.forEach { userInterface ->
+                it += userInterface
+            }
+        }
     }
 }
