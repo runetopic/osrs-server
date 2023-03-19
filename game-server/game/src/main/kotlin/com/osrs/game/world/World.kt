@@ -31,7 +31,7 @@ data class World(
 
     private val loginRequests = ConcurrentHashMap<Player, Session>()
     private val logoutRequest = ConcurrentHashMap<Player, Session>()
-    private val npcRequests = ConcurrentHashMap<NPC, Boolean>()
+    private val npcRequests = HashMap<NPC, Boolean>()
 
     var isOnline = false
 
