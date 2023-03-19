@@ -21,12 +21,12 @@ class WorldSyncTask(
 
     override fun sync(tick: Int) {
         world.processLoginRequest()
-        world.processNpcRequests()
 
         val players = world.players
         val npcs = world.npcs
 
         players.processGroupedPackets()
+        world.processNpcRequests()
         controllers.processControllers()
         players.processPlayers()
         npcs.processNpcs()
