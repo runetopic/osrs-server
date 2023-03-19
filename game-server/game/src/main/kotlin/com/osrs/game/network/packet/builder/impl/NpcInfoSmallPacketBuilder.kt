@@ -30,8 +30,7 @@ class NpcInfoSmallPacketBuilder : PacketBuilder<NpcInfoPacket>(
         updates: Array<ByteArray?>,
         bits: BitAccess = BitAccess(this)
     ) {
-        val size = viewport.npcs.fold(0) { size, npc -> if (npc == null) size else size + 1 }
-        bits.writeBits(8, size)
+        bits.writeBits(8, viewport.npcs.size)
         bits.syncHighDefinition(viewport)
         bits.syncLowDefinition(viewport, updates)
         withBitAccess(bits)
@@ -41,8 +40,13 @@ class NpcInfoSmallPacketBuilder : PacketBuilder<NpcInfoPacket>(
         viewport: Viewport
     ) {
         for (npc in viewport.npcs) {
-            if (npc == null) continue
-            writeBit(false)
+            val updating = false
+            if (!updating) {
+                writeBit(false)
+                continue
+            }
+            writeBit(true)
+            // TODO
         }
     }
 

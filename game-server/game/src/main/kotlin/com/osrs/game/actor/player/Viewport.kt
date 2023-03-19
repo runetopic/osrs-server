@@ -14,7 +14,7 @@ class Viewport(
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
     val players = arrayOfNulls<Player?>(MAX_PLAYERS)
-    val npcs = ArrayList<NPC?>()
+    val npcs = ArrayList<NPC>()
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
