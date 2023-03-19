@@ -1,9 +1,9 @@
 package com.osrs.game.network.packet.builder.impl.render.player.appearance.kit
 
-enum class BodyPartColor(val id: Int) {
-    HAIR(0),
-    TORSO(1),
-    LEGS(2),
-    FEET(3),
-    SKIN(4)
+object BodyPartColor {
+    const val HAIR = 0
+    const val TORSO = 1
+    const val LEGS = 2
+    const val FEET = 3
+    const val SKIN = 4
 }
