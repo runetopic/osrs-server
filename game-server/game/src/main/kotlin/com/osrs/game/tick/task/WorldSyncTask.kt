@@ -3,6 +3,7 @@ package com.osrs.game.tick.task
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.processGroupedPackets
+import com.osrs.game.actor.player.sendNpcInfo
 import com.osrs.game.actor.player.sendPlayerInfo
 import com.osrs.game.actor.player.writeAndFlush
 import com.osrs.game.controller.Controller
@@ -93,7 +94,7 @@ class WorldSyncTask(
         if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-            // TODO
+            player.sendNpcInfo(npcUpdateBlocks)
         }
     }
 
