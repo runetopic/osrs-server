@@ -8,12 +8,14 @@ import com.osrs.game.world.World
 class NPC(
     val id: Int,
     world: World,
-    location: Location
-) : Actor(world, location) {
+    private val spawnLocation: Location
+) : Actor(world) {
     override var moveDirection: MoveDirection? = null
 
     override fun login() {
+        location = spawnLocation
         updateMap(true)
+        online = true
     }
 
     override fun logout() {

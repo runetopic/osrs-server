@@ -14,14 +14,14 @@ import kotlin.math.max
 import kotlin.math.min
 
 abstract class Actor(
-    val world: World,
-    var location: Location = Location.None
+    val world: World
 ) {
     var online = false
     var isRunning = true
     var runEnergy: Float = 10_000f
     abstract var moveDirection: MoveDirection?
     val renderer = ActorRenderer()
+    var location: Location = Location.None
     var lastLocation = Location.None
     var index = 0
     var zone = world.zone(location)
