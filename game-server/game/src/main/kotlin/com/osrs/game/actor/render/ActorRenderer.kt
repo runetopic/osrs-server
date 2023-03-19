@@ -8,7 +8,6 @@ class ActorRenderer(
     val lowDefinitionRenderBlocks: Array<LowDefinitionRenderBlock<*>?> = arrayOfNulls(13),
     val highDefinitionRenderBlocks: Array<HighDefinitionRenderBlock<*>?> = arrayOfNulls(13)
 ) {
-
     fun <T : RenderType> update(type: T): T {
         val block = type.toBlock()
         highDefinitionRenderBlocks[block.index] = HighDefinitionRenderBlock(type, block)

@@ -1,6 +1,7 @@
 package com.osrs.game.tick
 
 import com.github.michaelbull.logging.InlineLogger
+import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.tick.task.WorldSyncTask
 import com.osrs.game.world.World
@@ -8,13 +9,14 @@ import kotlin.system.measureTimeMillis
 
 class GameTick(
     private val world: World,
-    playerUpdateBlocks: PlayerUpdateBlocks
+    playerUpdateBlocks: PlayerUpdateBlocks,
+    npcUpdateBlocks: NPCUpdateBlocks
 ) : Runnable {
     private val logger = InlineLogger()
     private var tick = 0
 
     private val syncTask = setOf(
-        WorldSyncTask(world, playerUpdateBlocks)
+        WorldSyncTask(world, playerUpdateBlocks, npcUpdateBlocks)
     )
 
     override fun run() {

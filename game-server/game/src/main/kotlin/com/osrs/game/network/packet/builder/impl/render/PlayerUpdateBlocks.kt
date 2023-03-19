@@ -15,17 +15,17 @@ class PlayerUpdateBlocks(
     val highDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
     val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS)
 ) {
-    fun clear() {
-        lowDefinitionUpdates.fill(null)
-        highDefinitionUpdates.fill(null)
-    }
-
-    fun buildPendingUpdates(player: Player) {
+    fun buildPendingUpdatesBlocks(player: Player) {
         if (player.renderer.hasHighDefinitionUpdate()) {
             this.highDefinitionUpdates[player.index] = player.renderer.highDefinitionRenderBlocks.buildHighDefinitionUpdates(player)
         }
         // Low definitions are always built here for persisted blocks from previous game cycles. i.e Appearance.
         this.lowDefinitionUpdates[player.index] = player.renderer.lowDefinitionRenderBlocks.buildLowDefinitionUpdates()
+    }
+
+    fun clear() {
+        lowDefinitionUpdates.fill(null)
+        highDefinitionUpdates.fill(null)
     }
 
     private fun Array<HighDefinitionRenderBlock<*>?>.buildHighDefinitionUpdates(player: Player): ByteArray {

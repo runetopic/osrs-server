@@ -7,13 +7,15 @@ import com.osrs.game.actor.player.sendPlayerInfo
 import com.osrs.game.actor.player.writeAndFlush
 import com.osrs.game.controller.Controller
 import com.osrs.game.controller.ControllerManager.controllers
+import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.world.World
 import com.osrs.game.world.map.zone.ZoneManager
 
 class WorldSyncTask(
     val world: World,
-    private val playerUpdateBlocks: PlayerUpdateBlocks
+    private val playerUpdateBlocks: PlayerUpdateBlocks,
+    private val npcUpdateBlocks: NPCUpdateBlocks
 ) : SyncTask {
 
     override fun sync(tick: Int) {
@@ -28,8 +30,11 @@ class WorldSyncTask(
         players.processPlayers()
         npcs.processNpcs()
         players.buildPendingUpdateBlocks()
+        npcs.buildPendingUpdateBlocks()
         players.sendPlayerInfo()
+        players.sendNpcInfo()
         players.resetPlayers()
+        npcs.resetNpcs()
         players.writeZoneUpdates()
         players.writeAndFlush()
 
@@ -64,7 +69,15 @@ class WorldSyncTask(
         if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-            playerUpdateBlocks.buildPendingUpdates(player)
+            playerUpdateBlocks.buildPendingUpdatesBlocks(player)
+        }
+    }
+
+    private fun NPCList.buildPendingUpdateBlocks() {
+        if (isEmpty()) return
+        for (npc in parallelStream()) {
+            if (npc == null || !npc.online) continue
+            npcUpdateBlocks.buildPendingUpdateBlocks(npc)
         }
     }
 
@@ -73,6 +86,14 @@ class WorldSyncTask(
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
             player.sendPlayerInfo(playerUpdateBlocks)
+        }
+    }
+
+    private fun PlayerList.sendNpcInfo() {
+        if (isEmpty()) return
+        for (player in parallelStream()) {
+            if (player == null || !player.online) continue
+            // TODO
         }
     }
 
@@ -127,12 +148,21 @@ class WorldSyncTask(
 
     private fun PlayerList.resetPlayers() {
         if (isEmpty()) return
-        // DO NOT CHANGE THIS FROM SYNC players always process sync
+        // DO NOT CHANGE THIS FROM SYNC. players always reset sync
         for (player in this) {
             if (player == null || !player.online) continue
             player.syncReset()
         }
-
         playerUpdateBlocks.clear()
+    }
+
+    private fun NPCList.resetNpcs() {
+        if (isEmpty()) return
+        // DO NOT CHANGE THIS FROM SYNC. npcs always reset sync
+        for (npc in this) {
+            if (npc == null || !npc.online) continue
+            npc.syncReset()
+        }
+        npcUpdateBlocks.clear()
     }
 }
