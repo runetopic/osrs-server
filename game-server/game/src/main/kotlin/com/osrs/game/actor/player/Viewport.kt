@@ -2,6 +2,7 @@ package com.osrs.game.actor.player
 
 import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
+import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
 import java.nio.ByteBuffer
 
@@ -13,6 +14,7 @@ class Viewport(
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
     val players = arrayOfNulls<Player?>(MAX_PLAYERS)
+    val npcs = arrayOfNulls<NPC?>(250)
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
