@@ -25,8 +25,8 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 class Zone(
     val location: ZoneLocation
 ) {
-    private val players = HashSet<Player>()
-    private val npcs = HashSet<NPC>()
+    val players = HashSet<Player>()
+    val npcs = HashSet<NPC>()
 
     private val spawnedObjs = ArrayList<FloorItem>()
     private val removedObjs = ArrayList<FloorItem>()
