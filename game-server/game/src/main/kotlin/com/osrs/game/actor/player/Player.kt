@@ -124,7 +124,6 @@ class Player(
             )
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
-        updateZones()
     }
 
     private fun updateZones() {
