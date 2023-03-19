@@ -4,8 +4,6 @@ import com.osrs.common.skill.Skill
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
-import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.NpcInfoPacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
@@ -43,22 +41,19 @@ fun Player.updateStat(skill: Skill, level: Int, experience: Double) = write(Upda
 
 fun Player.updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy))
 
-fun Player.sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) {
+fun Player.sendPlayerInfo() {
     session.write(
         PlayerInfoPacket(
             viewport = viewport,
-            players = world.players,
-            highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
-            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
+            players = world.players
         )
     )
 }
 
-fun Player.sendNpcInfo(npcUpdateBlocks: NPCUpdateBlocks) {
+fun Player.sendNpcInfo() {
     session.write(
         NpcInfoPacket(
-            viewport = viewport,
-            highDefinitionUpdates = npcUpdateBlocks.highDefinitionUpdates
+            viewport = viewport
         )
     )
 }

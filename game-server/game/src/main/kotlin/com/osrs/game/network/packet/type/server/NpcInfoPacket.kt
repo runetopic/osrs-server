@@ -7,6 +7,5 @@ import com.osrs.game.network.packet.Packet
  * @author Jordan Abraham
  */
 data class NpcInfoPacket(
-    val viewport: Viewport,
-    val highDefinitionUpdates: Array<ByteArray?>
+    val viewport: Viewport
 ) : Packet

@@ -1,5 +1,6 @@
 package com.osrs.game.network.packet.builder.impl
 
+import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
@@ -8,6 +9,7 @@ import com.osrs.common.map.location.withinDistance
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.builder.PacketBuilder
+import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.type.server.NpcInfoPacket
 import com.osrs.game.world.map.zone.Zone
 import com.osrs.game.world.map.zone.ZoneManager
@@ -17,22 +19,23 @@ import java.nio.ByteBuffer
  * @author Jordan Abraham
  */
 @Singleton
-class NpcInfoSmallPacketBuilder : PacketBuilder<NpcInfoPacket>(
+class NpcInfoSmallPacketBuilder @Inject constructor(
+    private val updateBlocks: NPCUpdateBlocks
+) : PacketBuilder<NpcInfoPacket>(
     opcode = 53,
     size = -2
 ) {
     override fun build(packet: NpcInfoPacket, buffer: ByteBuffer) {
-        buffer.sync(packet.viewport, packet.highDefinitionUpdates)
+        buffer.sync(packet.viewport)
     }
 
     private fun ByteBuffer.sync(
         viewport: Viewport,
-        updates: Array<ByteArray?>,
         bits: BitAccess = BitAccess(this)
     ) {
         bits.writeBits(8, viewport.npcs.size)
         bits.syncHighDefinition(viewport)
-        bits.syncLowDefinition(viewport, updates)
+        bits.syncLowDefinition(viewport)
         withBitAccess(bits)
     }
 
@@ -51,8 +54,7 @@ class NpcInfoSmallPacketBuilder : PacketBuilder<NpcInfoPacket>(
     }
 
     private fun BitAccess.syncLowDefinition(
-        viewport: Viewport,
-        updates: Array<ByteArray?>
+        viewport: Viewport
     ) {
         val player = viewport.player
         val npcs = player.zones.map { ZoneManager[ZoneLocation(it)] }.map(Zone::npcs).flatten()

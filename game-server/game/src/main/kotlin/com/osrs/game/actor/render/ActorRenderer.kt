@@ -26,17 +26,13 @@ class ActorRenderer(
     fun hasHighDefinitionUpdate(): Boolean = highDefinitionRenderBlocks.any { it != null }
 
     fun clearUpdates() {
+        // Clear out the pending high definition blocks.
         highDefinitionRenderBlocks.fill(null)
-
-        for (lowDefBlock in lowDefinitionRenderBlocks) {
-            if (lowDefBlock == null) continue
-
-            val renderType = lowDefBlock.renderType
+        // Clear out the pending low definition blocks.
+        for (index in lowDefinitionRenderBlocks.indices) {
+            val renderType = lowDefinitionRenderBlocks[index]?.renderType ?: continue
             // Persist these render types.
             if (renderType is Appearance || renderType is MovementSpeed || renderType is FaceAngle) continue
-
-            val index = lowDefinitionRenderBlocks.indexOf(lowDefBlock)
-            if (index == -1) continue
             lowDefinitionRenderBlocks[index] = null
         }
     }

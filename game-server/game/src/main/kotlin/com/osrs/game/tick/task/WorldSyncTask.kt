@@ -85,8 +85,8 @@ class WorldSyncTask(
         if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
-            player.sendPlayerInfo(playerUpdateBlocks)
-            player.sendNpcInfo(npcUpdateBlocks)
+            player.sendPlayerInfo()
+            player.sendNpcInfo()
         }
     }
 
