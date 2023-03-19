@@ -16,6 +16,7 @@ import kotlin.math.min
 abstract class Actor(
     val world: World
 ) {
+    var online = false
     var isRunning = true
     var runEnergy: Float = 10_000f
     abstract var moveDirection: MoveDirection?
@@ -30,6 +31,8 @@ abstract class Actor(
 
     val movementQueue = MovementQueue(this)
 
+    abstract fun login()
+    abstract fun logout()
     abstract fun totalHitpoints(): Int
     abstract fun currentHitpoints(): Int
 
@@ -38,7 +41,7 @@ abstract class Actor(
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
     }
 
-    fun process() {
+    fun syncProcess() {
         movementQueue.process()
 
         if (shouldRebuildMap()) {
@@ -50,13 +53,13 @@ abstract class Actor(
         }
     }
 
-    fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
-
-    fun reset() {
+    fun syncReset() {
         renderer.clearUpdates()
         moveDirection = null
         lastLocation = location
     }
+
+    fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
 
     private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
         if (lastLoadedLocation == location) return false

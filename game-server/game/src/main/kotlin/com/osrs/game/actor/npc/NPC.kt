@@ -7,15 +7,18 @@ import com.osrs.game.world.World
 class NPC(
     world: World
 ) : Actor(world) {
-    override var moveDirection: MoveDirection?
-        get() = TODO("Not yet implemented")
-        set(value) {}
+    override var moveDirection: MoveDirection? = null
 
-    override fun totalHitpoints(): Int {
-        TODO("Not yet implemented")
+    override fun login() {
+        updateMap(true)
     }
 
-    override fun currentHitpoints(): Int {
-        TODO("Not yet implemented")
+    override fun logout() {
+        zone.leaveZone(this)
+        online = false
     }
+
+    override fun totalHitpoints(): Int = 100
+
+    override fun currentHitpoints(): Int = 100
 }

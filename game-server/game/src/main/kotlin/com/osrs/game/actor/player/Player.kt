@@ -41,7 +41,6 @@ class Player(
 
     var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
     val objs = ArrayList<FloorItem>()
-    var online = false
     var rights = 0
     val viewport = Viewport(this)
     val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
@@ -60,7 +59,7 @@ class Player(
         renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
     }
 
-    fun login() {
+    override fun login() {
         session.writeLoginResponse()
         updateMap(true)
         refreshAppearance()
@@ -89,9 +88,9 @@ class Player(
         online = true
     }
 
-    fun logout() {
-        online = false
+    override fun logout() {
         zone.leaveZone(this)
+        online = false
     }
 
     override fun totalHitpoints(): Int = 100

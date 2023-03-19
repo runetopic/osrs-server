@@ -1,5 +1,6 @@
 package com.osrs.game.tick.task
 
+import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.player.processGroupedPackets
 import com.osrs.game.actor.player.sendPlayerInfo
@@ -17,12 +18,15 @@ class WorldSyncTask(
 
     override fun sync(tick: Int) {
         world.processLoginRequest()
+        world.processNpcRequests()
 
         val players = world.players
+        val npcs = world.npcs
 
         players.processGroupedPackets()
         controllers.processControllers()
         players.processPlayers()
+        npcs.processNpcs()
         players.buildPendingUpdateBlocks()
         players.sendPlayerInfo()
         players.resetPlayers()
@@ -74,10 +78,19 @@ class WorldSyncTask(
 
     private fun PlayerList.processPlayers() {
         if (isEmpty()) return
-        // DO NOT CHANGE THIS FROM SYNC players always process sync
+        // DO NOT CHANGE THIS FROM SYNC. players always process sync
         for (player in this) {
             if (player == null || !player.online) continue
-            player.process()
+            player.syncProcess()
+        }
+    }
+
+    private fun NPCList.processNpcs() {
+        if (isEmpty()) return
+        // DO NOT CHANGE THIS FROM SYNC. npcs always process sync
+        for (npc in this) {
+            if (npc == null || !npc.online) continue
+            npc.syncProcess()
         }
     }
 
@@ -117,7 +130,7 @@ class WorldSyncTask(
         // DO NOT CHANGE THIS FROM SYNC players always process sync
         for (player in this) {
             if (player == null || !player.online) continue
-            player.reset()
+            player.syncReset()
         }
 
         playerUpdateBlocks.clear()
