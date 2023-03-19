@@ -4,14 +4,13 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
-import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.withinDistance
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.type.server.NpcInfoPacket
-import com.osrs.game.world.map.zone.ZoneManager
+import com.osrs.game.world.map.zone.ZoneManager.npcs
 import java.nio.ByteBuffer
 
 /**
@@ -57,7 +56,7 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
     ) {
         val player = viewport.player
         for (zone in player.zones) {
-            for (npc in ZoneManager[ZoneLocation(zone)].npcs) {
+            for (npc in zone.npcs) {
                 val adding = viewport.shouldAdd(npc)
                 if (!adding) continue
                 processLowDefinitionNpc(viewport, npc)
