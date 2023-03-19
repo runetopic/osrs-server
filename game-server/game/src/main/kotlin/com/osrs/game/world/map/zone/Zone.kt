@@ -57,11 +57,9 @@ class Zone(
     private fun Player.sendObjs() {
         for (obj in spawnedObjs) sendObjAddPacket(obj)
 
-        // Add this check, so it doesn't always create a filtered object from loop.
-        if (objs.isNotEmpty()) {
-            for (obj in objs.filter { it.location.zoneId == this@Zone.location.id }) {
-                sendObjAddPacket(obj)
-            }
+        for (obj in objs) {
+            if (obj.location.zoneId != this@Zone.location.id) continue
+            sendObjAddPacket(obj)
         }
     }
 
