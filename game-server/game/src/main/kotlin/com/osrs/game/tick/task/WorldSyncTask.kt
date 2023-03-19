@@ -29,8 +29,8 @@ class WorldSyncTask(
         controllers.processControllers()
         players.processPlayers()
         npcs.processNpcs()
-        players.buildPendingUpdateBlocks()
-        npcs.buildPendingUpdateBlocks()
+        players.buildPlayerUpdateBlocks()
+        npcs.buildNpcUpdateBlocks()
         players.sendPlayerInfo()
         players.sendNpcInfo()
         players.resetPlayers()
@@ -65,7 +65,7 @@ class WorldSyncTask(
         }
     }
 
-    private fun PlayerList.buildPendingUpdateBlocks() {
+    private fun PlayerList.buildPlayerUpdateBlocks() {
         if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
@@ -73,11 +73,11 @@ class WorldSyncTask(
         }
     }
 
-    private fun NPCList.buildPendingUpdateBlocks() {
+    private fun NPCList.buildNpcUpdateBlocks() {
         if (isEmpty()) return
         for (npc in parallelStream()) {
             if (npc == null || !npc.online) continue
-            npcUpdateBlocks.buildPendingUpdateBlocks(npc)
+            npcUpdateBlocks.buildPendingUpdatesBlocks(npc)
         }
     }
 
