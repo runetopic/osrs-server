@@ -134,25 +134,30 @@ class Player(
 
         val baseZoneX = baseZoneLocation.x
         val baseZoneZ = baseZoneLocation.z
+        // Zones on the x-axis.
         val rangeX = max(baseZoneX, location.zoneX - 3)..min(baseZoneX + 11, location.zoneX + 3)
+        // Zones on the z-axis.
         val rangeZ = max(baseZoneZ, location.zoneZ - 3)..min(baseZoneZ + 11, location.zoneZ + 3)
-        val existing = zones.toMutableSet()
-
-        zones.clear()
-
+        // Clone down the current zones used to check if we need to send updates to a new zone being added to this player.
+        val existing = zones.clone()
+        // Clear out our current zones.
+        zones.fill(0)
+        // Then refill our zones and send updates to the client for new zones.
         for (x in rangeX) {
             for (z in rangeZ) {
+                // The next available index in our zones.
+                val index = zones.indexOf(0)
+                if (index == -1) throw AssertionError("Zones does not have an available slot for zone at $x, $z which should not happen.")
                 val zoneLocation = ZoneLocation(x, z, location.level)
                 val zonePackedLocation = zoneLocation.packedLocation
 
-                zones += zonePackedLocation
+                zones[index] = zonePackedLocation
 
-                if (!existing.contains(zonePackedLocation)) {
-                    val location = ZoneLocation(zonePackedLocation)
-                    val xInScene = (location.x - baseZoneX) shl 3
-                    val yInScene = (location.z - baseZoneZ) shl 3
+                if (zonePackedLocation !in existing) {
+                    val xInScene = (zoneLocation.x - baseZoneX) shl 3
+                    val yInScene = (zoneLocation.z - baseZoneZ) shl 3
                     session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                    world.zone(location).writeInitialZoneUpdates(this)
+                    world.zone(zoneLocation).writeInitialZoneUpdates(this)
                 }
             }
         }

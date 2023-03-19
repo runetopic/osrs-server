@@ -32,7 +32,6 @@ class Zone(
     private val staticLocs = ArrayList<GameObject>()
 
     private val zoneUpdateRequest = ArrayList<ZoneUpdateRequest>()
-    private val zoneUpdates = ArrayList<Packet>()
 
     fun enterZone(actor: Actor) {
         if (actor is Player) {
@@ -56,10 +55,13 @@ class Zone(
     }
 
     private fun Player.sendObjs() {
-        for (obj in this@Zone.spawnedObjs) sendObjAddPacket(obj)
+        for (obj in spawnedObjs) sendObjAddPacket(obj)
 
-        for (obj in objs.filter { it.location.zoneId == this@Zone.location.id }) {
-            sendObjAddPacket(obj)
+        // Add this check, so it doesn't always create a filtered object from loop.
+        if (objs.isNotEmpty()) {
+            for (obj in objs.filter { it.location.zoneId == this@Zone.location.id }) {
+                sendObjAddPacket(obj)
+            }
         }
     }
 
@@ -82,7 +84,7 @@ class Zone(
                 sendObjRemovePacket(request.floorItem)
             }
 
-            if (request is ObjAddRequest && !objs.contains(request.floorItem)) {
+            if (request is ObjAddRequest && request.floorItem !in objs) {
                 sendObjAddPacket(request.floorItem)
             }
         }
@@ -147,14 +149,11 @@ class Zone(
 
     fun buildSharedUpdates(sharedUpdates: Sequence<ZoneUpdateRequest>): Sequence<Packet> = sequence {
         for (request in sharedUpdates) {
-            if (request is ObjRemoveRequest) {
-                yieldObjRemovePacket(request)
-            }
-            if (request is ProjectileRequest) {
-                yieldMapAnimProjPacket(request)
-            }
-            if (request is LocAddRequest) {
-                yieldLocAddPacket(request)
+            when (request) {
+                is ObjRemoveRequest -> yieldObjRemovePacket(request)
+                is ProjectileRequest -> yieldMapAnimProjPacket(request)
+                is LocAddRequest -> yieldLocAddPacket(request)
+                else -> throw AssertionError("Could not build update for request type of $request")
             }
         }
     }
@@ -219,7 +218,6 @@ class Zone(
     }
 
     fun clear() {
-        zoneUpdates.clear()
         zoneUpdateRequest.clear()
     }
 
