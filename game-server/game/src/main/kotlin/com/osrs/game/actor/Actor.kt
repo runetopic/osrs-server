@@ -53,10 +53,16 @@ abstract class Actor(
         }
     }
 
-    fun syncReset() {
-        renderer.clearUpdates()
-        moveDirection = null
-        lastLocation = location
+    fun syncReset(resetRenderer: Boolean) {
+        if (resetRenderer) {
+            renderer.clearUpdates()
+        }
+        if (moveDirection != null) {
+            moveDirection = null
+        }
+        if (lastLocation != location) {
+            lastLocation = location
+        }
     }
 
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)

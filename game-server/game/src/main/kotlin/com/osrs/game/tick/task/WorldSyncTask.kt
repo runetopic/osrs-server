@@ -151,7 +151,7 @@ class WorldSyncTask(
         // DO NOT CHANGE THIS FROM SYNC. players always reset sync
         for (player in this) {
             if (player == null || !player.online) continue
-            player.syncReset()
+            player.syncReset(playerUpdateBlocks.highDefinitionUpdates[player.index] != null)
         }
         playerUpdateBlocks.clear()
     }
@@ -161,7 +161,7 @@ class WorldSyncTask(
         // DO NOT CHANGE THIS FROM SYNC. npcs always reset sync
         for (npc in this) {
             if (npc == null || !npc.online) continue
-            npc.syncReset()
+            npc.syncReset(npcUpdateBlocks.highDefinitionUpdates[npc.index] != null)
         }
         npcUpdateBlocks.clear()
     }
