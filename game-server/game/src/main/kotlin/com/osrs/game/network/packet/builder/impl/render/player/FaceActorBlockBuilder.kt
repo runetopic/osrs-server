@@ -14,10 +14,10 @@ class FaceActorBlockBuilder : RenderBlockBuilder<FaceActor>(
 ) {
     override fun build(buffer: ByteBuffer, render: FaceActor) {
         val index = if (render.actor != null) {
-						render.actor.index
-				} else {
+            render.actor.index
+        } else {
             0xFFFF
-				}
+        }
 				
         val indicator = when (render.actor) {
             is Player -> 1
