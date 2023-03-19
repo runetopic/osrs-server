@@ -14,7 +14,7 @@ object ZoneManager {
 
     operator fun get(zoneLocation: ZoneLocation): Zone = zones[zoneLocation.packedLocation] ?: createZone(zoneLocation)
 
-    fun createZone(location: ZoneLocation): Zone = Zone(location).also {
+    private fun createZone(location: ZoneLocation): Zone = Zone(location).also {
         zones[location.packedLocation] = it
     }
 
