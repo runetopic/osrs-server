@@ -29,7 +29,7 @@ abstract class Actor(
     var isRunning = true
     var runEnergy = 10_000f
     var moveDirection = MoveDirection.None
-    var location: Location = Location.None
+    var location = Location.None
     var lastLocation = Location.None
     var zone = world.zone(location)
     var lastLoadedLocation = Location.None
