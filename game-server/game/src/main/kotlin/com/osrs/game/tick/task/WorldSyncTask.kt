@@ -32,8 +32,7 @@ class WorldSyncTask(
         players.processPlayers()
         players.buildPlayerUpdateBlocks()
         npcs.buildNpcUpdateBlocks()
-        players.sendPlayerInfo()
-        players.sendNpcInfo()
+        players.sendUpdateBlocks()
         players.resetPlayers()
         npcs.resetNpcs()
         players.writeZoneUpdates()
@@ -82,18 +81,11 @@ class WorldSyncTask(
         }
     }
 
-    private fun PlayerList.sendPlayerInfo() {
+    private fun PlayerList.sendUpdateBlocks() {
         if (isEmpty()) return
         for (player in parallelStream()) {
             if (player == null || !player.online) continue
             player.sendPlayerInfo(playerUpdateBlocks)
-        }
-    }
-
-    private fun PlayerList.sendNpcInfo() {
-        if (isEmpty()) return
-        for (player in parallelStream()) {
-            if (player == null || !player.online) continue
             player.sendNpcInfo(npcUpdateBlocks)
         }
     }
