@@ -35,7 +35,7 @@ class GameTick(
             val allocatedMemoryMB = (totalMemoryMB - freeMemoryMB)
             val freeMemory = (maxMemoryMB - allocatedMemoryMB)
             val usedPercentage = (allocatedMemoryMB / maxMemoryMB) * 100
-            logger.info { "Game Tick #$tick took $time ms. Players=${world.players.size} Memory=(Max: $maxMemoryMB MB Allocated: $allocatedMemoryMB MB Free: $freeMemory MB Used: $usedPercentage%)" }
+            logger.info { "Game Tick #$tick took $time ms. Players=${world.players.size} Npc=${world.npcs.size} Memory=(Max: $maxMemoryMB MB Allocated: $allocatedMemoryMB MB Free: $freeMemory MB Used: $usedPercentage%)" }
         } catch (exception: Exception) {
             logger.error(exception) { "Error occurred during game tick #$tick" }
         }
