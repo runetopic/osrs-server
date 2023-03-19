@@ -11,7 +11,6 @@ import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.type.server.NpcInfoPacket
-import com.osrs.game.world.map.zone.Zone
 import com.osrs.game.world.map.zone.ZoneManager
 import java.nio.ByteBuffer
 
@@ -57,11 +56,12 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         viewport: Viewport
     ) {
         val player = viewport.player
-        val npcs = player.zones.map { ZoneManager[ZoneLocation(it)] }.map(Zone::npcs).flatten()
-        for (npc in npcs) {
-            val adding = viewport.shouldAdd(npc)
-            if (!adding) continue
-            processLowDefinitionNpc(viewport, npc)
+        for (zone in player.zones) {
+            for (npc in ZoneManager[ZoneLocation(zone)].npcs) {
+                val adding = viewport.shouldAdd(npc)
+                if (!adding) continue
+                processLowDefinitionNpc(viewport, npc)
+            }
         }
     }
 
