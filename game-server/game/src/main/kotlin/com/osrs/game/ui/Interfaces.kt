@@ -5,6 +5,7 @@ import com.osrs.common.ui.InterfaceInfo
 import com.osrs.common.ui.InterfaceInfoMap
 import com.osrs.common.util.packInterface
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.player.write
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.ui.InterfaceLayout.RESIZABLE

@@ -22,8 +22,10 @@ object ZoneManager {
         return newZone
     }
 
-    fun appendObservedZone(zones: Set<Int>) {
-        observedZones += zones
+    fun appendObservedZone(zones: IntArray) {
+        for (zone in zones) {
+            observedZones += zone
+        }
     }
 
     fun buildSharedZoneUpdates() {

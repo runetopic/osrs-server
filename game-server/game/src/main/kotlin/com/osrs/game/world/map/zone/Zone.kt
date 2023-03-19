@@ -5,6 +5,7 @@ import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.distanceTo
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.player.write
 import com.osrs.game.controller.ControllerManager.addController
 import com.osrs.game.controller.impl.GroundItemController
 import com.osrs.game.network.packet.Packet
