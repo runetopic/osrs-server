@@ -10,8 +10,7 @@ class NPC(
     private val spawnLocation: Location
 ) : Actor(world) {
     override fun login() {
-        super.initialize()
-        location = spawnLocation
+        super.initialize(spawnLocation)
         updateMap(true)
         online = true
     }

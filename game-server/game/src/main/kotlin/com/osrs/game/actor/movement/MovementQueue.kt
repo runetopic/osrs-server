@@ -34,7 +34,7 @@ class MovementQueue(
 
             nextWalkStep = poll() ?: return run {
                 actor.renderer.update(MovementSpeed(type = MovementType.WALK, temporary = true))
-                moveTo(location, MoveDirection(walkDirection, null))
+                actor.moveTo(location, MoveDirection(walkDirection, null))
             }
 
             runDirection = Direction.to(location, nextWalkStep)
@@ -51,15 +51,7 @@ class MovementQueue(
             actor.renderer.update(MovementSpeed(MovementType.RUN, temporary = true))
         }
 
-        moveTo(location, MoveDirection(walkDirection, runDirection))
-    }
-
-    private fun moveTo(
-        location: Location,
-        direction: MoveDirection
-    ) {
-        actor.location = location
-        actor.moveDirection = direction
+        actor.moveTo(location, MoveDirection(walkDirection, runDirection))
     }
 
     private fun appendNextStep(location: Location) {

@@ -4,7 +4,6 @@ import com.osrs.common.item.FloorItem
 import com.osrs.common.skill.Skill
 import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
@@ -33,7 +32,9 @@ class Player(
 ) : Actor(world) {
     // Late initialized properties.
     var interfaces: Interfaces? = null
+        private set
     var inventory: Inventory? = null
+        private set
 
     // Immutable properties.
     val username get() = account.userName
@@ -51,15 +52,12 @@ class Player(
         interfaces: Interfaces,
         inventory: Inventory
     ) {
-        super.initialize()
+        super.initialize(account.location)
         this.session.player = this
-        this.location = account.location
         this.rights = account.rights
-        this.lastLocation = location
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        this.movementQueue = MovementQueue(this)
     }
 
     override fun login() {

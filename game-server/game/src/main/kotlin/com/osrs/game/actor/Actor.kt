@@ -18,6 +18,7 @@ abstract class Actor(
 ) {
     // Late initialized properties.
     var movementQueue: MovementQueue? = null
+        private set
 
     // Immutable properties.
     val renderer = ActorRenderer()
@@ -27,21 +28,31 @@ abstract class Actor(
     var online = false
     var index = 0
     var isRunning = true
+        private set
     var runEnergy = 10_000f
+        private set
     var moveDirection = MoveDirection.None
+        private set
     var location = Location.None
+        private set
     var lastLocation = Location.None
+        private set
     var zone = world.zone(location)
+        private set
     var lastLoadedLocation = Location.None
+        private set
     var baseZoneLocation = Location.None.zoneLocation
+        private set
 
     abstract fun login()
     abstract fun logout()
     abstract fun totalHitpoints(): Int
     abstract fun currentHitpoints(): Int
 
-    fun initialize() {
-        movementQueue = MovementQueue(this)
+    fun initialize(location: Location) {
+        this.location = location
+        this.lastLocation = location
+        this.movementQueue = MovementQueue(this)
     }
 
     open fun updateMap(initialize: Boolean) {
@@ -74,6 +85,11 @@ abstract class Actor(
     }
 
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
+
+    fun moveTo(location: Location, moveDirection: MoveDirection) {
+        this.location = location
+        this.moveDirection = moveDirection
+    }
 
     private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
         if (lastLoadedLocation == location) return false
