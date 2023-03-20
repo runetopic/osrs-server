@@ -60,7 +60,7 @@ class CollisionMap @Inject constructor(
                     val baseZ = entry.regionZ shl 6
                     val location = Location(x + baseX, z + baseZ, level)
                     addFloorCollision(location)
-                    ZoneManager.createZone(location.zoneLocation)
+                    ZoneManager[location.zoneLocation]
                 }
             }
         }
@@ -77,7 +77,7 @@ class CollisionMap @Inject constructor(
                         if (!locations.contains(it.id)) return@forEach
                         val gameObject = GameObject(it.id, location, it.shape, it.rotation)
                         addObjectCollision(gameObject)
-                        ZoneManager.createZone(location.zoneLocation).addStaticLoc(gameObject)
+                        ZoneManager[location.zoneLocation].addStaticLoc(gameObject)
                     }
                 }
             }

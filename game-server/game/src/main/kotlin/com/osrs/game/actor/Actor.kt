@@ -18,7 +18,7 @@ abstract class Actor {
     abstract var world: World
     abstract var zone: Zone
 
-    var zones = hashSetOf<Int>()
+    val zones = IntArray(7 * 7)
 
     fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
 

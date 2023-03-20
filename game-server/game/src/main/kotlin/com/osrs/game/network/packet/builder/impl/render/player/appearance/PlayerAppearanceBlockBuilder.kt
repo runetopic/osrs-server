@@ -7,22 +7,50 @@ import com.osrs.common.buffer.writeShort
 import com.osrs.common.buffer.writeStringCp1252NullTerminated
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.BodyPartColor
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.BodyPartCompanion
-import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.PlayerIdentityKit
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ArmsBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.BackBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.FeetBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.HairBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.HandsBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.HeadBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.JawBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.LegsBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.MainHandBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.NeckBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.OffHandBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.TorsoBuilder
 import java.nio.ByteBuffer
 
 class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
     index = 1,
     mask = 0x4
 ) {
+    private val builders = arrayOf(
+        HeadBuilder(),
+        BackBuilder(),
+        NeckBuilder(),
+        MainHandBuilder(),
+        TorsoBuilder(),
+        OffHandBuilder(),
+        ArmsBuilder(),
+        LegsBuilder(),
+        HairBuilder(),
+        HandsBuilder(),
+        FeetBuilder(),
+        JawBuilder()
+    )
+
     override fun build(buffer: ByteBuffer, render: Appearance) {
         val block = ByteBuffer.allocate(size(render) - 1).apply {
-            writeByte(render.gender.mask)
+            writeByte(render.gender.id)
             writeByte(render.skullIcon)
             writeByte(render.headIcon)
-            if (render.transform != -1) writeTransmog(render) else writeIdentityKit(render)
-            writeColors(render.bodyPartColors.entries)
+            if (render.transform != -1) {
+                writeTransmog(render)
+            } else {
+                writeIdentityKit(render)
+            }
+            writeColors(render.bodyPartColors)
             writeAnimations(render)
             writeStringCp1252NullTerminated(render.displayName)
             writeByte(126)
@@ -39,7 +67,7 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
     private fun ByteBuffer.writeAnimations(render: Appearance) = if (render.transform != -1) {
         // TODO NPC transmog
     } else {
-        intArrayOf(808, 823, 819, 820, 821, 822, 824).forEach { writeShort(it) }
+        render.renderSequences.forEach { writeShort(it) }
     }
 
     private fun ByteBuffer.writeTransmog(render: Appearance) {
@@ -47,20 +75,15 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
         writeShort(render.transform)
     }
 
-    private fun ByteBuffer.writeIdentityKit(render: Appearance) = enumValues<PlayerIdentityKit>()
-        .sortedBy { it.info.index }
-        .forEach {
-            it.info.build(
-                this,
-                BodyPartCompanion(
-                    render.gender,
-                    render.bodyParts.getOrDefault(it.bodyPart, 0)
-                )
-            )
-        }
+    private fun ByteBuffer.writeIdentityKit(render: Appearance) {
+        // If a builder is not of an appearance body part, we send 0 as default
+        // but this will be overwritten with their equipped item if applicable.
+        builders.forEach { it.build(this, render.gender, render.bodyParts.getOrNull(it.appearanceIndex) ?: 0) }
+    }
 
-    private fun ByteBuffer.writeColors(colours: Set<Map.Entry<BodyPartColor, Int>>) =
-        colours.sortedBy { it.key.id }.forEach { writeByte(it.value) }
+    private fun ByteBuffer.writeColors(colors: IntArray) {
+        colors.forEach { writeByte(it) }
+    }
 
     override fun size(render: Appearance): Int {
         val gender = 1
@@ -75,7 +98,7 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
             val hair = 2
             val hand = 2
             val head = 1
-            val jaw = if (render.gender == Appearance.Gender.MALE) 2 else 1
+            val jaw = if (render.isMale()) 2 else 1
             val leg = 2
             val neck = 1
             val shield = 1
