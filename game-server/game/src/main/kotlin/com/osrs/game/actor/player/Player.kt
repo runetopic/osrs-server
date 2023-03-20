@@ -11,6 +11,7 @@ import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
+import com.osrs.game.actor.render.type.Gender
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.container.Inventory
 import com.osrs.game.hint.HintArrow.LOCATION
@@ -46,7 +47,7 @@ class Player(
     val displayName get() = account.displayName
     val skills get() = account.skills
 
-    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
+    var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
 
     lateinit var interfaces: Interfaces
     lateinit var inventory: Inventory
@@ -124,7 +125,6 @@ class Player(
             )
         )
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
-        updateZones()
     }
 
     private fun updateZones() {
@@ -134,25 +134,30 @@ class Player(
 
         val baseZoneX = baseZoneLocation.x
         val baseZoneZ = baseZoneLocation.z
+        // Zones on the x-axis.
         val rangeX = max(baseZoneX, location.zoneX - 3)..min(baseZoneX + 11, location.zoneX + 3)
+        // Zones on the z-axis.
         val rangeZ = max(baseZoneZ, location.zoneZ - 3)..min(baseZoneZ + 11, location.zoneZ + 3)
-        val existing = zones.toMutableSet()
-
-        zones.clear()
-
+        // Clone down the current zones used to check if we need to send updates to a new zone being added to this player.
+        val existing = zones.clone()
+        // Clear out our current zones.
+        zones.fill(0)
+        // Then refill our zones and send updates to the client for new zones.
         for (x in rangeX) {
             for (z in rangeZ) {
+                // The next available index in our zones.
+                val index = zones.indexOf(0)
+                if (index == -1) throw AssertionError("Zones does not have an available slot for zone at $x, $z which should not happen.")
                 val zoneLocation = ZoneLocation(x, z, location.level)
                 val zonePackedLocation = zoneLocation.packedLocation
 
-                zones += zonePackedLocation
+                zones[index] = zonePackedLocation
 
-                if (!existing.contains(zonePackedLocation)) {
-                    val location = ZoneLocation(zonePackedLocation)
-                    val xInScene = (location.x - baseZoneX) shl 3
-                    val yInScene = (location.z - baseZoneZ) shl 3
+                if (zonePackedLocation !in existing) {
+                    val xInScene = (zoneLocation.x - baseZoneX) shl 3
+                    val yInScene = (zoneLocation.z - baseZoneZ) shl 3
                     session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                    world.zone(location).writeInitialZoneUpdates(this)
+                    world.zone(zoneLocation).writeInitialZoneUpdates(this)
                 }
             }
         }
