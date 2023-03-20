@@ -92,8 +92,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         }
         val other = players[playerIndex]
         val adding = viewport.shouldAdd(other)
-        val updating = other?.let { updateBlocks.lowDefinitionUpdates[it.index] } != null
-        val active = adding || updating
+        val active = adding && other?.let { updateBlocks.lowDefinitionUpdates[it.index] } != null
         if (other == null || !active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             return syncLowDefinition(viewport, players, nsn, index + 1, skip + 1, bits)
