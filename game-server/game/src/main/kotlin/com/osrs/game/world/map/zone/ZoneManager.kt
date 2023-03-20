@@ -18,12 +18,8 @@ object ZoneManager {
 
     operator fun get(zoneLocation: ZoneLocation): Zone = zones[zoneLocation.packedLocation] ?: createZone(zoneLocation)
 
-    fun createZone(location: ZoneLocation): Zone {
-        val currentZone = zones[location.packedLocation]
-        if (currentZone != null) return currentZone
-        val newZone = Zone(location)
-        zones[location.packedLocation] = newZone
-        return newZone
+    private fun createZone(location: ZoneLocation): Zone = Zone(location).also {
+        zones[location.packedLocation] = it
     }
 
     fun appendObservedZone(zones: IntArray) {

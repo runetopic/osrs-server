@@ -9,8 +9,8 @@ import com.osrs.common.buffer.readIntV1
 import com.osrs.common.buffer.readIntV2
 import com.osrs.common.buffer.readStringCp1252NullCircumfixed
 import com.osrs.common.buffer.readStringCp1252NullTerminated
+import com.osrs.common.buffer.readU24BitInt
 import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
 import com.osrs.database.service.AccountService
 import com.osrs.game.actor.player.Player
@@ -216,7 +216,7 @@ class LoginCodec @Inject constructor(
 
         logger.debug { "Unknown byte 9 $unknownByte9" }
 
-        val unknownMedium = xteaBuffer.readUMedium()
+        val unknownMedium = xteaBuffer.readU24BitInt()
 
         logger.debug { "Unknown medium $unknownMedium" }
 

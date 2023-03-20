@@ -2,8 +2,8 @@ package com.osrs.cache.entry
 
 import com.osrs.common.buffer.readInt
 import com.osrs.common.buffer.readStringCp1252NullTerminated
+import com.osrs.common.buffer.readU24BitInt
 import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUMedium
 import java.nio.ByteBuffer
 
 abstract class EntryTypeProvider<T : EntryType> {
@@ -28,7 +28,7 @@ abstract class EntryTypeProvider<T : EntryType> {
     protected fun ByteBuffer.readStringIntParameters(): Map<Int, Any> = buildMap {
         repeat(readUByte()) {
             val usingString = readUByte() == 1
-            put(readUMedium(), if (usingString) readStringCp1252NullTerminated() else readInt())
+            put(readU24BitInt(), if (usingString) readStringCp1252NullTerminated() else readInt())
         }
     }
 

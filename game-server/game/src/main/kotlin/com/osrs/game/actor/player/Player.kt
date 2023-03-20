@@ -8,6 +8,7 @@ import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
+import com.osrs.game.actor.render.type.Gender
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.container.Inventory
 import com.osrs.game.hint.HintArrow
@@ -44,7 +45,7 @@ class Player(
 
     // Mutable properties.
     var rights = 0
-    var appearance = Appearance(Appearance.Gender.MALE, -1, -1, -1, false, displayName)
+    var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
 
     fun initialize(
         interfaces: Interfaces,

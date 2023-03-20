@@ -1,6 +1,7 @@
 package com.osrs.game.actor.render
 
 import com.osrs.game.actor.render.type.Appearance
+import com.osrs.game.actor.render.type.FaceActor
 import com.osrs.game.actor.render.type.FaceAngle
 import com.osrs.game.actor.render.type.MovementSpeed
 
@@ -32,7 +33,7 @@ class ActorRenderer(
         for (index in lowDefinitionRenderBlocks.indices) {
             val renderType = lowDefinitionRenderBlocks[index]?.renderType ?: continue
             // Persist these render types.
-            if (renderType is Appearance || renderType is MovementSpeed || renderType is FaceAngle) continue
+            if (renderType is Appearance || renderType is MovementSpeed || renderType is FaceAngle || renderType is FaceActor) continue
             lowDefinitionRenderBlocks[index] = null
         }
     }

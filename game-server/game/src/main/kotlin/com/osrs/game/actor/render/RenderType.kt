@@ -2,6 +2,7 @@ package com.osrs.game.actor.render
 
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.ExactMove
+import com.osrs.game.actor.render.type.FaceActor
 import com.osrs.game.actor.render.type.FaceAngle
 import com.osrs.game.actor.render.type.HealthUpdate
 import com.osrs.game.actor.render.type.MovementSpeed
@@ -13,6 +14,7 @@ import com.osrs.game.actor.render.type.SpotAnimation
 import com.osrs.game.actor.render.type.UserNameOverride
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.ExactMoveBlockBuilder
+import com.osrs.game.network.packet.builder.impl.render.player.FaceActorBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.FaceAngleBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.HealthUpdateBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.MovementTypeBlockBuilder
@@ -42,6 +44,7 @@ interface RenderType {
         is Sequence -> Renders.sequenceBlockBuilder
         is HealthUpdate -> Renders.healthUpdateBlockBuilder
         is ExactMove -> Renders.exactMoveBlockBuilder
+        is FaceActor -> Renders.faceActorBlockBuilder
         else -> throw IllegalStateException("Unhandled player block in PlayerInfo. Block was $this")
     }
 }
@@ -59,4 +62,5 @@ private object Renders {
     val sequenceBlockBuilder = SequenceBlockBuilder()
     val healthUpdateBlockBuilder = HealthUpdateBlockBuilder()
     val exactMoveBlockBuilder = ExactMoveBlockBuilder()
+    val faceActorBlockBuilder = FaceActorBlockBuilder()
 }

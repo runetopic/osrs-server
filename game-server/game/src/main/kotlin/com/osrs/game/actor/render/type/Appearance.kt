@@ -3,7 +3,6 @@ package com.osrs.game.actor.render.type
 import com.osrs.game.actor.render.RenderType
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.BodyPart
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.BodyPartColor
-import java.util.*
 
 data class Appearance(
     val gender: Gender = Gender.MALE,
@@ -11,13 +10,11 @@ data class Appearance(
     val skullIcon: Int,
     val transform: Int,
     val hidden: Boolean,
-    val displayName: String
+    val displayName: String,
+    val bodyParts: IntArray = IntArray(7),
+    val bodyPartColors: IntArray = IntArray(5),
+    val renderSequences: IntArray = intArrayOf(808, 823, 819, 820, 821, 822, 824)
 ) : RenderType {
-    enum class Gender(val mask: Int) { MALE(0x0), FEMALE(0x1); }
-
-    val bodyParts = EnumMap<BodyPart, Int>(BodyPart::class.java)
-    val bodyPartColors = EnumMap<BodyPartColor, Int>(BodyPartColor::class.java)
-
     init {
         bodyParts[BodyPart.HEAD] = 0
         bodyParts[BodyPart.JAW] = 10
@@ -35,4 +32,9 @@ data class Appearance(
 
     fun isMale(): Boolean = gender == Gender.MALE
     fun isFemale(): Boolean = gender == Gender.FEMALE
+}
+
+enum class Gender(val id: Int) {
+    MALE(0),
+    FEMALE(1)
 }
