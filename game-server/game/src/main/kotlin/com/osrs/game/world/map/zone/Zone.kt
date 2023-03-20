@@ -4,7 +4,9 @@ import com.osrs.common.item.FloorItem
 import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.map.location.distanceTo
 import com.osrs.game.actor.Actor
+import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.player.write
 import com.osrs.game.controller.ControllerManager.addController
 import com.osrs.game.controller.impl.GroundItemController
 import com.osrs.game.network.packet.Packet
@@ -23,7 +25,8 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 class Zone(
     val location: ZoneLocation
 ) {
-    private val players = HashSet<Player>()
+    val players = HashSet<Player>()
+    val npcs = HashSet<NPC>()
 
     private val spawnedObjs = ArrayList<FloorItem>()
     private val removedObjs = ArrayList<FloorItem>()
@@ -36,12 +39,16 @@ class Zone(
     fun enterZone(actor: Actor) {
         if (actor is Player) {
             players.add(actor)
+        } else if (actor is NPC) {
+            npcs.add(actor)
         }
     }
 
     fun leaveZone(actor: Actor) {
         if (actor is Player) {
             players -= actor
+        } else if (actor is NPC) {
+            npcs -= actor
         }
     }
 

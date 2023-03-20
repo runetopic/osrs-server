@@ -2,12 +2,16 @@ package com.osrs.game.world.map.zone
 
 import com.osrs.common.map.location.ZoneLocation
 import com.osrs.game.network.packet.Packet
+import com.osrs.game.world.map.zone.ZoneManager.players
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjRemoveRequest
 import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjUpdateRequest
 
 object ZoneManager {
     val zones: Array<Zone?> = arrayOfNulls(2048 * 2048 * 4)
+
+    val Int.players get() = get(ZoneLocation(this)).players
+    val Int.npcs get() = get(ZoneLocation(this)).npcs
 
     private val observedZones = mutableSetOf<Int>()
     private val globalUpdates = mutableMapOf<Int, Sequence<Packet>>()

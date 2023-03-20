@@ -10,6 +10,7 @@ import com.osrs.game.network.packet.builder.impl.LocRemovePacketBuilder
 import com.osrs.game.network.packet.builder.impl.MapProjAnimPacketBuilder
 import com.osrs.game.network.packet.builder.impl.MessageGamePacketBuilder
 import com.osrs.game.network.packet.builder.impl.MidiSongPacketBuilder
+import com.osrs.game.network.packet.builder.impl.NpcInfoSmallPacketBuilder
 import com.osrs.game.network.packet.builder.impl.ObjAddPacketBuilder
 import com.osrs.game.network.packet.builder.impl.ObjRemovePacketBuilder
 import com.osrs.game.network.packet.builder.impl.PlayerInfoPacketBuilder
@@ -69,6 +70,7 @@ import com.osrs.game.network.packet.type.server.LocRemovePacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.MidiSongPacket
+import com.osrs.game.network.packet.type.server.NpcInfoPacket
 import com.osrs.game.network.packet.type.server.ObjAddPacket
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
 import com.osrs.game.network.packet.type.server.PlayerInfoPacket
@@ -114,6 +116,7 @@ object PacketModule : KotlinModule() {
         builders.addBinding(MapProjAnimPacket::class).to<MapProjAnimPacketBuilder>().asEagerSingleton()
         builders.addBinding(LocAddPacket::class).to<LocAddPacketBuilder>().asEagerSingleton()
         builders.addBinding(LocRemovePacket::class).to<LocRemovePacketBuilder>().asEagerSingleton()
+        builders.addBinding(NpcInfoPacket::class).to<NpcInfoSmallPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

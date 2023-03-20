@@ -1,94 +1,69 @@
 package com.osrs.game.actor.player
 
 import com.osrs.common.item.FloorItem
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.ZoneLocation
 import com.osrs.common.skill.Skill
 import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
-import com.osrs.game.actor.movement.MoveDirection
-import com.osrs.game.actor.movement.MovementQueue
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.Gender
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.container.Inventory
-import com.osrs.game.hint.HintArrow.LOCATION
+import com.osrs.game.hint.HintArrow
 import com.osrs.game.network.Session
-import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.MessageGamePacket
 import com.osrs.game.network.packet.type.server.MidiSongPacket
-import com.osrs.game.network.packet.type.server.PlayerInfoPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
-import com.osrs.game.network.packet.type.server.UpdateRunEnergyPacket
-import com.osrs.game.network.packet.type.server.UpdateStatPacket
-import com.osrs.game.network.packet.type.server.UpdateZoneFullFollowsPacket
 import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.Interfaces
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 class Player(
     val account: Account,
-    override var world: World,
-    var session: Session
-) : Actor() {
+    world: World,
+    val session: Session
+) : Actor(world) {
+    // Late initialized properties.
+    var interfaces: Interfaces? = null
+        private set
+    var inventory: Inventory? = null
+        private set
+
+    // Immutable properties.
     val username get() = account.userName
     val displayName get() = account.displayName
     val skills get() = account.skills
+    val objs = ArrayList<FloorItem>()
+    val viewport = Viewport(this)
+    val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
 
-    var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
-
-    lateinit var interfaces: Interfaces
-    lateinit var inventory: Inventory
-    var baseZoneLocation: ZoneLocation = Location.None.zoneLocation
-
-    var lastLoadedLocation: Location = Location.None
-
-    val movementQueue = MovementQueue(this)
-
-    override var location: Location = Location.None
-    override var zone = world.zone(location)
-
-    override var moveDirection: MoveDirection? = null
-
-    var objs = ArrayList<FloorItem>()
-
-    var online = false
-
+    // Mutable properties.
     var rights = 0
-
-    private val viewport = Viewport(this)
-
-    private val packetGroup = ConcurrentHashMap<Int, ArrayBlockingQueue<PacketGroup>>()
+    var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
 
     fun initialize(
         interfaces: Interfaces,
         inventory: Inventory
     ) {
+        super.initialize(account.location)
         this.session.player = this
-        this.location = account.location
         this.rights = account.rights
-        this.lastLocation = location
         this.interfaces = interfaces
         this.inventory = inventory
         this.objs += account.objs
-        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
     }
 
-    fun login() {
+    override fun login() {
         session.writeLoginResponse()
-        loadMapRegion(true)
+        renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
+        updateMap(true)
         refreshAppearance()
         session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
         updateStats()
@@ -99,7 +74,7 @@ class Player(
         session.write(SetPlayerOptionPacket("Trade", 2))
         session.write(
             HintArrowPacket(
-                type = LOCATION,
+                type = HintArrow.LOCATION,
                 targetX = location.x,
                 targetZ = location.z,
                 targetHeight = 0
@@ -115,8 +90,17 @@ class Player(
         online = true
     }
 
-    private fun loadMapRegion(initialize: Boolean) {
-        lastLoadedLocation = location.clone()
+    override fun logout() {
+        zone.leaveZone(this)
+        online = false
+    }
+
+    override fun totalHitpoints(): Int = 100
+
+    override fun currentHitpoints(): Int = 100
+
+    override fun updateMap(initialize: Boolean) {
+        super.updateMap(initialize)
         session.write(
             RebuildNormalPacket(
                 viewport,
@@ -124,88 +108,7 @@ class Player(
                 initialize
             )
         )
-        baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
     }
-
-    private fun updateZones() {
-        zone.leaveZone(this)
-        zone = world.zone(location)
-        zone.enterZone(this)
-
-        val baseZoneX = baseZoneLocation.x
-        val baseZoneZ = baseZoneLocation.z
-        // Zones on the x-axis.
-        val rangeX = max(baseZoneX, location.zoneX - 3)..min(baseZoneX + 11, location.zoneX + 3)
-        // Zones on the z-axis.
-        val rangeZ = max(baseZoneZ, location.zoneZ - 3)..min(baseZoneZ + 11, location.zoneZ + 3)
-        // Clone down the current zones used to check if we need to send updates to a new zone being added to this player.
-        val existing = zones.clone()
-        // Clear out our current zones.
-        zones.fill(0)
-        // Then refill our zones and send updates to the client for new zones.
-        for (x in rangeX) {
-            for (z in rangeZ) {
-                // The next available index in our zones.
-                val index = zones.indexOf(0)
-                if (index == -1) throw AssertionError("Zones does not have an available slot for zone at $x, $z which should not happen.")
-                val zoneLocation = ZoneLocation(x, z, location.level)
-                val zonePackedLocation = zoneLocation.packedLocation
-
-                zones[index] = zonePackedLocation
-
-                if (zonePackedLocation !in existing) {
-                    val xInScene = (zoneLocation.x - baseZoneX) shl 3
-                    val yInScene = (zoneLocation.z - baseZoneZ) shl 3
-                    session.write(UpdateZoneFullFollowsPacket(xInScene, yInScene))
-                    world.zone(zoneLocation).writeInitialZoneUpdates(this)
-                }
-            }
-        }
-    }
-
-    fun writeAndFlush() = session.invokeAndClearWritePool()
-
-    fun addToPacketGroup(group: PacketGroup) {
-        packetGroup
-            .computeIfAbsent(group.handler.groupId) { ArrayBlockingQueue<PacketGroup>(10) }
-            .offer(group)
-    }
-
-    fun process() {
-        movementQueue.process()
-
-        if (shouldRebuildMap()) loadMapRegion(false)
-
-        if (shouldUpdateZones()) {
-            updateZones()
-        }
-    }
-
-    fun processGroupedPackets() {
-        for (handler in packetGroup) {
-            val queue = handler.value
-
-            for (i in 0 until 10) {
-                val group = queue.poll() ?: break
-                group.handler.handlePacket(group.packet, this)
-            }
-
-            queue.clear()
-        }
-    }
-
-    private fun shouldRebuildMap(buildArea: Int = 104): Boolean {
-        if (lastLoadedLocation == location) return false
-
-        val lastZoneX = lastLoadedLocation.zoneX
-        val lastZoneZ = lastLoadedLocation.zoneZ
-        val zoneX = location.zoneX
-        val zoneZ = location.zoneZ
-        val limit = ((buildArea shr 3) / 2) - 1
-        return abs(lastZoneX - zoneX) >= limit || abs(lastZoneZ - zoneZ) >= limit
-    }
-
-    private fun shouldUpdateZones() = zone.location.id != location.zoneId
 
     private fun updateStats() {
         Skill.values().forEach {
@@ -213,44 +116,5 @@ class Player(
             val experience = skills.xp(it)
             updateStat(it, level, experience)
         }
-    }
-
-    fun updateStat(skill: Skill, level: Int, experience: Double) = write(UpdateStatPacket(skill.id, level, experience))
-
-    fun updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy))
-
-    fun sendPlayerInfo(playerUpdateBlocks: PlayerUpdateBlocks) = session.write(
-        PlayerInfoPacket(
-            viewport = viewport,
-            players = world.players,
-            highDefinitionUpdates = playerUpdateBlocks.highDefinitionUpdates,
-            lowDefinitionUpdates = playerUpdateBlocks.lowDefinitionUpdates
-        )
-    )
-
-    fun refreshAppearance(appearance: Appearance = this.appearance): Appearance {
-        this.appearance = renderer.update(appearance)
-        return this.appearance
-    }
-
-    override fun totalHitpoints(): Int {
-        return 100
-    }
-
-    override fun currentHitpoints(): Int {
-        return 100
-    }
-
-    fun message(string: String) {
-        session.write(MessageGamePacket(0, string, false))
-    }
-
-    fun logout() {
-        online = false
-        zone.leaveZone(this)
-    }
-
-    fun write(packet: Packet) {
-        session.write(packet)
     }
 }
