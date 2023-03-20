@@ -2,6 +2,7 @@ package com.osrs.game.actor.player
 
 import com.osrs.common.buffer.BitAccess
 import com.osrs.common.buffer.withBitAccess
+import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
 import java.nio.ByteBuffer
@@ -13,8 +14,10 @@ class Viewport(
     val locations = IntArray(MAX_PLAYERS)
     val highDefinitions = IntArray(MAX_PLAYERS)
     val lowDefinitions = IntArray(MAX_PLAYERS)
-    val players = arrayOfNulls<Player?>(MAX_PLAYERS)
+    val highDefinitionUpdates = ArrayList<Int>()
+    val lowDefinitionUpdates = ArrayList<Int>()
     val npcs = ArrayList<NPC>()
+
     var highDefinitionsCount = 0
     var lowDefinitionsCount = 0
     var forceViewDistance = false
@@ -25,7 +28,6 @@ class Viewport(
     fun init(buffer: ByteBuffer) {
         val bits = BitAccess(buffer)
         bits.writeBits(30, player.location.packed)
-        players[player.index] = player
         highDefinitions[highDefinitionsCount++] = player.index
         for (index in 1 until MAX_PLAYERS) {
             if (index == player.index) continue
@@ -37,7 +39,9 @@ class Viewport(
         buffer.withBitAccess(bits)
     }
 
-    fun reset() {
+    fun reset(players: PlayerList) {
+        highDefinitionUpdates.clear()
+        lowDefinitionUpdates.clear()
         highDefinitionsCount = 0
         lowDefinitionsCount = 0
         for (index in 1 until MAX_PLAYERS) {
@@ -67,35 +71,7 @@ class Viewport(
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Viewport
-
-        if (!nsnFlags.contentEquals(other.nsnFlags)) return false
-        if (!locations.contentEquals(other.locations)) return false
-        if (!highDefinitions.contentEquals(other.highDefinitions)) return false
-        if (!lowDefinitions.contentEquals(other.lowDefinitions)) return false
-        if (!players.contentEquals(other.players)) return false
-        if (highDefinitionsCount != other.highDefinitionsCount) return false
-        if (lowDefinitionsCount != other.lowDefinitionsCount) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = nsnFlags.contentHashCode()
-        result = 31 * result + locations.contentHashCode()
-        result = 31 * result + highDefinitions.contentHashCode()
-        result = 31 * result + lowDefinitions.contentHashCode()
-        result = 31 * result + players.contentHashCode()
-        result = 31 * result + highDefinitionsCount
-        result = 31 * result + lowDefinitionsCount
-        return result
-    }
-
-    companion object {
+    private companion object {
         const val RESIZE_CHECK_INTERVAL = 10
         const val PREFERRED_PLAYER_COUNT = 250
         const val PREFERRED_VIEW_DISTANCE = 15

@@ -28,77 +28,80 @@ class PlayerInfoPacketBuilder @Inject constructor(
         val players = packet.players
         val viewport = packet.viewport
         viewport.resize()
-        val highDefinitionBytes = buffer.syncHighDefinition(viewport, players)
-        val lowDefinitionBytes = buffer.syncLowDefinition(viewport, players)
-        buffer.put(highDefinitionBytes)
-        buffer.put(lowDefinitionBytes)
-        viewport.reset()
+        buffer.syncHighDefinition(viewport, players)
+        buffer.syncLowDefinition(viewport, players)
+        for (index in viewport.highDefinitionUpdates) {
+            buffer.put(updateBlocks.highDefinitionUpdates[index])
+        }
+        for (index in viewport.lowDefinitionUpdates) {
+            buffer.put(updateBlocks.lowDefinitionUpdates[index])
+        }
+        viewport.reset(players)
     }
 
     private tailrec fun ByteBuffer.syncHighDefinition(
         viewport: Viewport,
         players: PlayerList,
-        blocks: ByteArray = byteArrayOf(),
         nsn: Boolean = true,
         index: Int = 0,
         skip: Int = -1,
         bits: BitAccess = BitAccess(this)
-    ): ByteArray {
+    ) {
         if (index == viewport.highDefinitionsCount) {
             bits.writeSkipCount(skip)
             withBitAccess(bits)
-            if (!nsn) return blocks
-            return syncHighDefinition(viewport, players, blocks, false)
+            if (!nsn) return
+            return syncHighDefinition(viewport, players, false)
         }
         val playerIndex = viewport.highDefinitions[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] != 0)) {
-            return syncHighDefinition(viewport, players, blocks, nsn, index + 1, skip, bits)
+            return syncHighDefinition(viewport, players, nsn, index + 1, skip, bits)
         }
-        val other = viewport.players[playerIndex]
+        val other = players[playerIndex]
         val removing = viewport.shouldRemove(other, players)
-        val pendingUpdates = other?.let { updateBlocks.highDefinitionUpdates[it.index] }
-        val updating = pendingUpdates != null || other?.moveDirection != MoveDirection.None
-        val active = removing || updating
+        val moving = other?.moveDirection != MoveDirection.None
+        val updating = other?.let { updateBlocks.highDefinitionUpdates[it.index] } != null
+        val active = removing || updating || moving
         if (other == null || !active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
-            return syncHighDefinition(viewport, players, blocks, nsn, index + 1, skip + 1, bits)
+            return syncHighDefinition(viewport, players, nsn, index + 1, skip + 1, bits)
         }
         val offset = bits.writeSkipCount(skip)
         bits.writeBit(true)
-        val block = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, other.moveDirection != MoveDirection.None, pendingUpdates)
-        return syncHighDefinition(viewport, players, block?.let { blocks + it } ?: blocks, nsn, index + 1, offset, bits)
+        bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, moving, updating)
+        return syncHighDefinition(viewport, players, nsn, index + 1, offset, bits)
     }
 
     private tailrec fun ByteBuffer.syncLowDefinition(
         viewport: Viewport,
         players: PlayerList,
-        blocks: ByteArray = byteArrayOf(),
         nsn: Boolean = true,
         index: Int = 0,
         skip: Int = -1,
         bits: BitAccess = BitAccess(this)
-    ): ByteArray {
+    ) {
         if (index == viewport.lowDefinitionsCount) {
             bits.writeSkipCount(skip)
             withBitAccess(bits)
-            if (!nsn) return blocks
-            return syncLowDefinition(viewport, players, blocks, false)
+            if (!nsn) return
+            return syncLowDefinition(viewport, players, false)
         }
         val playerIndex = viewport.lowDefinitions[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] == 0)) {
-            return syncLowDefinition(viewport, players, blocks, nsn, index + 1, skip, bits)
+            return syncLowDefinition(viewport, players, nsn, index + 1, skip, bits)
         }
         val other = players[playerIndex]
-        val pendingUpdates = other?.let { updateBlocks.lowDefinitionUpdates[it.index] }
-        val adding = viewport.shouldAdd(other) && pendingUpdates != null
-        if (other == null || !adding) {
+        val adding = viewport.shouldAdd(other)
+        val updating = other?.let { updateBlocks.lowDefinitionUpdates[it.index] } != null
+        val active = adding || updating
+        if (other == null || !active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
-            return syncLowDefinition(viewport, players, blocks, nsn, index + 1, skip + 1, bits)
+            return syncLowDefinition(viewport, players, nsn, index + 1, skip + 1, bits)
         }
         val offset = bits.writeSkipCount(skip)
         bits.writeBit(true)
-        val block = bits.processLowDefinitionPlayer(viewport, other, playerIndex, pendingUpdates!!) // This is guaranteed to not be null.
-        return syncLowDefinition(viewport, players, blocks + block, nsn, index + 1, offset, bits)
+        bits.processLowDefinitionPlayer(viewport, other, playerIndex)
+        return syncLowDefinition(viewport, players, nsn, index + 1, offset, bits)
     }
 
     private fun BitAccess.processHighDefinitionPlayer(
@@ -107,16 +110,15 @@ class PlayerInfoPacketBuilder @Inject constructor(
         index: Int,
         removing: Boolean,
         moving: Boolean,
-        updates: ByteArray?
-    ): ByteArray? {
-        writeBit(if (removing) false else updates != null)
+        updating: Boolean
+    ) {
+        writeBit(if (removing) false else updating)
         when {
             removing -> { // remove the player
                 // send a position update
                 writeBits(2, 0)
                 viewport.locations[index] = other.location.regionLocation
                 validateLocationChanges(viewport, other, index)
-                viewport.players[index] = null
             }
             moving -> {
                 val moveDirection = other.moveDirection
@@ -140,29 +142,28 @@ class PlayerInfoPacketBuilder @Inject constructor(
                 writeBits(if (running) 4 else 3, direction) // Opcode for direction bit 3 for walking bit 4 for running.
                 viewport.locations[index] = other.location.regionLocation
             }
-            updates != null -> {
+            updating -> {
                 // send a block update
                 writeBits(2, 0)
             }
         }
-        return if (!removing && updates != null) updates else null
+        if (!removing && updating) {
+            viewport.highDefinitionUpdates += other.index
+        }
     }
 
     private fun BitAccess.processLowDefinitionPlayer(
         viewport: Viewport,
         other: Player,
-        index: Int,
-        updates: ByteArray
-    ): ByteArray {
-        // add an external player to start tracking
+        index: Int
+    ) {
         writeBits(2, 0)
         validateLocationChanges(viewport, other, index)
         writeBits(13, other.location.x)
         writeBits(13, other.location.z)
         writeBit(true)
-        viewport.players[other.index] = other
         viewport.nsnFlags[index] = viewport.nsnFlags[index] or 2
-        return updates
+        viewport.lowDefinitionUpdates += other.index
     }
 
     private fun BitAccess.validateLocationChanges(viewport: Viewport, other: Player, index: Int) {
