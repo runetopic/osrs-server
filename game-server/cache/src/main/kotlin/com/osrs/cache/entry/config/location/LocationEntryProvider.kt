@@ -11,8 +11,8 @@ import com.osrs.common.buffer.readByte
 import com.osrs.common.buffer.readInt
 import com.osrs.common.buffer.readShort
 import com.osrs.common.buffer.readStringCp1252NullTerminated
+import com.osrs.common.buffer.readU24BitInt
 import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUMedium
 import com.osrs.common.buffer.readUShort
 import java.nio.ByteBuffer
 
@@ -106,7 +106,7 @@ class LocationEntryProvider @Inject constructor(
             249 -> type.params = buildMap {
                 repeat(readUByte()) {
                     val usingString = readUByte() == 1
-                    put(readUMedium(), if (usingString) readStringCp1252NullTerminated() else readInt())
+                    put(readU24BitInt(), if (usingString) readStringCp1252NullTerminated() else readInt())
                 }
             }
             else -> throw IllegalArgumentException("Missing opcode $opcode.")
