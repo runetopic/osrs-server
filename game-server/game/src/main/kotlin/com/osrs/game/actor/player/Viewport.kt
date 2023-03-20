@@ -19,9 +19,13 @@ class Viewport(
     val npcs = ArrayList<NPC>()
 
     var highDefinitionsCount = 0
+        private set
     var lowDefinitionsCount = 0
+        private set
     var forceViewDistance = false
+        private set
     var viewDistance = PREFERRED_VIEW_DISTANCE
+        private set
 
     private var resizeTickCount = 0
 
