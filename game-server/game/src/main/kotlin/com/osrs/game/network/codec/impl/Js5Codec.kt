@@ -2,7 +2,7 @@ package com.osrs.game.network.codec.impl
 
 import com.google.inject.Inject
 import com.osrs.cache.Cache
-import com.osrs.common.buffer.readUMedium
+import com.osrs.common.buffer.readU24BitInt
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.JS5_ENCRYPTION_OPCODE
 import com.osrs.game.network.SessionRequestOpcode.JS5_HIGH_PRIORITY_OPCODE
@@ -25,7 +25,7 @@ class Js5Codec @Inject constructor(
             while (this.isActive) {
                 when (val opcode = readChannel.readByte().toInt()) {
                     JS5_HIGH_PRIORITY_OPCODE, JS5_LOW_PRIORITY_OPCODE -> {
-                        val uid = readChannel.readUMedium()
+                        val uid = readChannel.readU24BitInt()
                         val indexId = uid shr 16
                         val groupId = uid and 0xFFFF
                         val masterRequest = indexId == 0xFF && groupId == 0xFF

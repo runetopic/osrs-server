@@ -13,7 +13,7 @@ suspend fun ByteReadChannel.readUByteSubtract() = readUByte() - 128 and 0xff
 suspend fun ByteReadChannel.readUByteAdd() = readUByte() + 128 and 0xff
 suspend fun ByteReadChannel.readUByteNegate() = -readUByte() and 0xff
 suspend fun ByteReadChannel.readUShort() = readShort().toInt() and 0xffff
-suspend fun ByteReadChannel.readUMedium() = (readUByte() shl 16) or readUShort()
+suspend fun ByteReadChannel.readU24BitInt() = (readUByte() shl 16) or readUShort()
 
 suspend fun ByteReadChannel.readUShortLittleEndian() = readUByte() or (readUByte() shl 8)
 suspend fun ByteReadChannel.readUShortLittleEndianAdd() = readUByteAdd() or (readUByte() shl 8)

@@ -31,8 +31,7 @@ fun ByteBuffer.readUShortSubtract() = (readUByte() shl 8) or readUByteSubtract()
 fun ByteBuffer.readUShortLittleEndian() = readUByte() or (readUByte() shl 8)
 fun ByteBuffer.readUShortLittleEndianSubtract() = readUByteSubtract() or (readUByte() shl 8)
 fun ByteBuffer.readUShortLittleEndianAdd() = readUByteAdd() or (readUByte() shl 8)
-
-fun ByteBuffer.readUMedium() = (readUByte() shl 16) or readUShort()
+fun ByteBuffer.readU24BitInt() = (readUByte() shl 16) or readUShort()
 
 fun ByteBuffer.readInt() = int
 fun ByteBuffer.readIntLittleEndian() = readUShortLittleEndian() or (readUByte() shl 16) or (readUByte() shl 24)
@@ -139,7 +138,7 @@ fun ByteBuffer.writeShortLittleEndianAdd(value: Int) {
     put((value shr 8).toByte())
 }
 
-fun ByteBuffer.writeMedium(value: Int) {
+fun ByteBuffer.write24BitInt(value: Int) {
     put((value shr 16).toByte())
     putShort(value.toShort())
 }

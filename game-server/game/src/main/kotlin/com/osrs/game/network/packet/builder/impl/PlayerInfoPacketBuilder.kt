@@ -61,8 +61,13 @@ class PlayerInfoPacketBuilder : PacketBuilder<PlayerInfoPacket>(
         }
         val offset = bits.writeSkipCount(skip)
         bits.writeBit(true)
-        val block = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, pendingUpdates)
-        return syncHighDefinition(viewport, updates, players, block?.let { blocks + it } ?: blocks, nsn, index + 1, offset, bits)
+        val highDefinitionUpdate = bits.processHighDefinitionPlayer(viewport, other, playerIndex, removing, pendingUpdates)
+        val updateBlocks = if (highDefinitionUpdate != null) {
+            blocks + highDefinitionUpdate
+        } else {
+            blocks
+        }
+        return syncHighDefinition(viewport, updates, players, updateBlocks, nsn, index + 1, offset, bits)
     }
 
     private tailrec fun ByteBuffer.syncLowDefinition(
