@@ -1,9 +1,7 @@
 package com.osrs.game.network
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.common.buffer.writeByte
-import com.osrs.common.buffer.writeInt
-import com.osrs.common.buffer.writeShort
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec
@@ -38,7 +36,7 @@ class Session(
     private val readChannel = socket.openReadChannel()
     private val writeChannel = socket.openWriteChannel()
 
-    private val writePool = ByteBuffer.allocateDirect(40_000)
+    private val writePool = RSByteBuffer(ByteBuffer.allocateDirect(40_000))
 
     private lateinit var clientCipher: ISAAC
     private lateinit var serverCipher: ISAAC
@@ -115,7 +113,7 @@ class Session(
         writePool.writeByte(if (player.rights > 0) 1 else 0)
         writePool.writeShort(player.index)
         writePool.writeByte(0)
-        writePool.putLong(seed()) // Player UUID.
+        writePool.writeLong(seed()) // Player UUID.
         val end = writePool.position()
         writePool.position(start)
         writePool.writeByte(end - start)

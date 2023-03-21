@@ -1,20 +1,15 @@
 package com.osrs.game.network.packet.builder.impl.render.player
 
-import com.osrs.common.buffer.writeByte
-import com.osrs.common.buffer.writeByteNegate
-import com.osrs.common.buffer.writeByteSubtract
-import com.osrs.common.buffer.writeShortLittleEndian
-import com.osrs.common.buffer.writeShortLittleEndianAdd
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.map.location.Location
 import com.osrs.game.actor.render.type.ExactMove
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
-import java.nio.ByteBuffer
 
 class ExactMoveBlockBuilder : RenderBlockBuilder<ExactMove>(
     mask = 0x100,
     index = 10
 ) {
-    override fun build(buffer: ByteBuffer, render: ExactMove) {
+    override fun build(buffer: RSByteBuffer, render: ExactMove) {
         val distanceX1 = render.firstLocation.x - render.currentLocation.x
         val distanceZ1 = render.firstLocation.z - render.currentLocation.z
         val distanceX2 = if (render.secondLocation != Location.None) render.secondLocation.x - render.currentLocation.x else 0

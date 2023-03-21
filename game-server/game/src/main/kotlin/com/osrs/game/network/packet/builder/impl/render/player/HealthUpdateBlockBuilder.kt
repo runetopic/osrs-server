@@ -1,17 +1,14 @@
 package com.osrs.game.network.packet.builder.impl.render.player
 
-import com.osrs.common.buffer.writeByteAdd
-import com.osrs.common.buffer.writeByteSubtract
-import com.osrs.common.buffer.writeSmartByteShort
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.render.type.HealthUpdate
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
-import java.nio.ByteBuffer
 
 class HealthUpdateBlockBuilder : RenderBlockBuilder<HealthUpdate>(
     mask = 0x20,
     index = 9
 ) {
-    override fun build(buffer: ByteBuffer, render: HealthUpdate) {
+    override fun build(buffer: RSByteBuffer, render: HealthUpdate) {
         buffer.writeByteAdd(render.splats.size)
 
         for (splat in render.splats) {

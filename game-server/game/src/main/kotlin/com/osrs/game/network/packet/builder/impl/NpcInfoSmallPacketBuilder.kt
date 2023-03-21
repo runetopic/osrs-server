@@ -2,8 +2,7 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.BitAccess
-import com.osrs.common.buffer.withBitAccess
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.map.location.withinDistance
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Viewport
@@ -11,7 +10,6 @@ import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.type.server.NpcInfoPacket
 import com.osrs.game.world.map.zone.ZoneManager.npcs
-import java.nio.ByteBuffer
 
 /**
  * @author Jordan Abraham
@@ -23,35 +21,33 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
     opcode = 53,
     size = -2
 ) {
-    override fun build(packet: NpcInfoPacket, buffer: ByteBuffer) {
-        buffer.sync(packet.viewport)
+    override fun build(packet: NpcInfoPacket, buffer: RSByteBuffer) {
+        buffer.bitAccess { buffer.sync(packet.viewport) }
     }
 
-    private fun ByteBuffer.sync(
-        viewport: Viewport,
-        bits: BitAccess = BitAccess(this)
+    private fun RSByteBuffer.sync(
+        viewport: Viewport
     ) {
-        bits.writeBits(8, viewport.npcs.size)
-        bits.syncHighDefinition(viewport)
-        bits.syncLowDefinition(viewport)
-        withBitAccess(bits)
+        writeBits(8, viewport.npcs.size)
+        syncHighDefinition(viewport)
+        syncLowDefinition(viewport)
     }
 
-    private fun BitAccess.syncHighDefinition(
+    private fun RSByteBuffer.syncHighDefinition(
         viewport: Viewport
     ) {
         for (npc in viewport.npcs) {
             val updating = false
             if (!updating) {
-                writeBit(false)
+                writeBits(1, 0)
                 continue
             }
-            writeBit(true)
+            writeBits(1, 1)
             // TODO
         }
     }
 
-    private fun BitAccess.syncLowDefinition(
+    private fun RSByteBuffer.syncLowDefinition(
         viewport: Viewport
     ) {
         val player = viewport.player
@@ -64,7 +60,7 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         }
     }
 
-    private fun BitAccess.processLowDefinitionNpc(
+    private fun RSByteBuffer.processLowDefinitionNpc(
         viewport: Viewport,
         npc: NPC
     ) {
@@ -73,10 +69,10 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         writeBits(5, (npc.location.z - player.location.z).let { if (it < 15) it + 32 else it })
         writeBits(14, npc.id)
         writeBits(1, 0)
-        writeBit(false) // TODO updating
+        writeBits(1, 0) // TODO updating
         writeBits(3, 0) // TODO orientation
         writeBits(5, (npc.location.x - player.location.x).let { if (it < 15) it + 32 else it })
-        writeBit(false) // TODO handle teleporting
+        writeBits(1, 0) // TODO handle teleporting
         viewport.npcs += npc
     }
 

@@ -6,31 +6,25 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.OBJ_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.discard
-import com.osrs.common.buffer.readByte
-import com.osrs.common.buffer.readInt
-import com.osrs.common.buffer.readStringCp1252NullTerminated
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShort
-import java.nio.ByteBuffer
+import com.osrs.common.buffer.RSByteBuffer
 
 @Singleton
 class ObjEntryProvider @Inject constructor(
     val cache: Cache
-) : EntryTypeProvider<ObjEntryType>() {
+) : EntryTypeProvider<ObjEntry>() {
 
-    override fun loadTypeMap(): Map<Int, ObjEntryType> {
+    override fun loadTypeMap(): Map<Int, ObjEntry> {
         val objs = cache.index(CONFIG_INDEX)
             .group(OBJ_CONFIG)
             ?.files()
-            ?.map { ByteBuffer.wrap(it.data).loadEntryType(ObjEntryType(it.id)) }
-            ?.associateBy(ObjEntryType::id) ?: emptyMap()
+            ?.map { RSByteBuffer(it.data).loadEntryType(ObjEntry(it.id)) }
+            ?.associateBy(ObjEntry::id) ?: emptyMap()
 
         postLoadObjs(objs)
         return objs
     }
 
-    private tailrec fun ByteBuffer.loadEntryType(type: ObjEntryType): ObjEntryType {
+    private tailrec fun RSByteBuffer.loadEntryType(type: ObjEntry): ObjEntry {
         when (val opcode = readUByte()) {
             0 -> return type
             1 -> type.model = readUShort()
@@ -113,7 +107,7 @@ class ObjEntryProvider @Inject constructor(
         return loadEntryType(type)
     }
 
-    private fun postLoadObjs(objs: Map<Int, ObjEntryType>) {
+    private fun postLoadObjs(objs: Map<Int, ObjEntry>) {
         objs.values.forEach { type ->
             if (type.isStackable) type.weight = 0
 
@@ -143,7 +137,7 @@ class ObjEntryProvider @Inject constructor(
         }
     }
 
-    private fun ObjEntryType.toNote(noteTemplate: ObjEntryType, note: ObjEntryType) {
+    private fun ObjEntry.toNote(noteTemplate: ObjEntry, note: ObjEntry) {
         model = noteTemplate.model
         zoom2d = noteTemplate.zoom2d
         xan2d = noteTemplate.xan2d
@@ -159,7 +153,7 @@ class ObjEntryProvider @Inject constructor(
         isStackable = true
     }
 
-    private fun ObjEntryType.toUnnoted(noted: ObjEntryType, unnoted: ObjEntryType) {
+    private fun ObjEntry.toUnnoted(noted: ObjEntry, unnoted: ObjEntry) {
         model = noted.model
         zoom2d = noted.zoom2d
         xan2d = noted.xan2d
@@ -193,7 +187,7 @@ class ObjEntryProvider @Inject constructor(
         price = 0
     }
 
-    private fun ObjEntryType.toPlaceholder(placeholderTemplate: ObjEntryType, placeholder: ObjEntryType) {
+    private fun ObjEntry.toPlaceholder(placeholderTemplate: ObjEntry, placeholder: ObjEntry) {
         model = placeholderTemplate.model
         zoom2d = placeholderTemplate.zoom2d
         xan2d = placeholderTemplate.xan2d

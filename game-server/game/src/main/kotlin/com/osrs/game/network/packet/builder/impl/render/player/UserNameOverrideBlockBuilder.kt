@@ -1,15 +1,14 @@
 package com.osrs.game.network.packet.builder.impl.render.player
 
-import com.osrs.common.buffer.writeStringCp1252NullTerminated
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.render.type.UserNameOverride
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
-import java.nio.ByteBuffer
 
 class UserNameOverrideBlockBuilder : RenderBlockBuilder<UserNameOverride>(
     mask = 0x1000,
     index = 4
 ) {
-    override fun build(buffer: ByteBuffer, render: UserNameOverride) {
+    override fun build(buffer: RSByteBuffer, render: UserNameOverride) {
         buffer.writeStringCp1252NullTerminated(render.prefix)
         buffer.writeStringCp1252NullTerminated(render.infix)
         buffer.writeStringCp1252NullTerminated(render.suffix)

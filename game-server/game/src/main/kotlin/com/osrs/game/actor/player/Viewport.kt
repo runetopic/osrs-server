@@ -1,11 +1,9 @@
 package com.osrs.game.actor.player
 
-import com.osrs.common.buffer.BitAccess
-import com.osrs.common.buffer.withBitAccess
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
-import java.nio.ByteBuffer
 
 class Viewport(
     val player: Player
@@ -29,18 +27,18 @@ class Viewport(
 
     private var resizeTickCount = 0
 
-    fun init(buffer: ByteBuffer) {
-        val bits = BitAccess(buffer)
-        bits.writeBits(30, player.location.packed)
-        highDefinitions[highDefinitionsCount++] = player.index
-        for (index in 1 until MAX_PLAYERS) {
-            if (index == player.index) continue
-            val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
-            bits.writeBits(18, otherRegionCoordinates)
-            locations[index] = otherRegionCoordinates
-            lowDefinitions[lowDefinitionsCount++] = index
+    fun init(buffer: RSByteBuffer) {
+        buffer.bitAccess {
+            buffer.writeBits(30, player.location.packed)
+            highDefinitions[highDefinitionsCount++] = player.index
+            for (index in 1 until MAX_PLAYERS) {
+                if (index == player.index) continue
+                val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
+                buffer.writeBits(18, otherRegionCoordinates)
+                locations[index] = otherRegionCoordinates
+                lowDefinitions[lowDefinitionsCount++] = index
+            }
         }
-        buffer.withBitAccess(bits)
     }
 
     fun reset(players: PlayerList) {

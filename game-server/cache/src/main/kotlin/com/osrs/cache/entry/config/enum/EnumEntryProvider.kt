@@ -7,11 +7,7 @@ import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.ENUM_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.cache.entry.config.ScriptType
-import com.osrs.common.buffer.readInt
-import com.osrs.common.buffer.readStringCp1252NullTerminated
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShort
-import java.nio.ByteBuffer
+import com.osrs.common.buffer.RSByteBuffer
 
 @Singleton
 class EnumEntryProvider @Inject constructor(
@@ -21,10 +17,10 @@ class EnumEntryProvider @Inject constructor(
         .index(CONFIG_INDEX)
         .group(ENUM_CONFIG)
         ?.files()
-        ?.map { ByteBuffer.wrap(it.data).loadEntryType(EnumEntry(it.id)) }
+        ?.map { RSByteBuffer(it.data).loadEntryType(EnumEntry(it.id)) }
         ?.associateBy(EnumEntry::id) ?: emptyMap()
 
-    private tailrec fun ByteBuffer.loadEntryType(type: EnumEntry): EnumEntry {
+    private tailrec fun RSByteBuffer.loadEntryType(type: EnumEntry): EnumEntry {
         when (val opcode = readUByte()) {
             0 -> { return type }
             1 -> readUByte().toChar().apply {

@@ -6,16 +6,10 @@ import com.google.inject.Singleton
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.MAP_INDEX
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.discard
-import com.osrs.common.buffer.readIncrSmallSmart
-import com.osrs.common.buffer.readShort
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShort
-import com.osrs.common.buffer.readUShortSmart
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.map.MapSquare
 import com.osrs.common.map.MapSquares
 import com.runetopic.cache.extension.decompress
-import java.nio.ByteBuffer
 import java.util.zip.ZipException
 
 @Singleton
@@ -38,7 +32,7 @@ class MapSquareTypeProvider @Inject constructor(
         val mapIndex = cache.index(MAP_INDEX)
 
         mapIndex.group("m${entry.regionX}_${entry.regionZ}")?.data?.let {
-            val data = it.decompress().buffer
+            val data = RSByteBuffer(it.decompress().buffer)
             for (level in 0 until 4) {
                 for (x in 0 until 64) {
                     for (z in 0 until 64) {
@@ -50,7 +44,7 @@ class MapSquareTypeProvider @Inject constructor(
 
         mapIndex.group("l${entry.regionX}_${entry.regionZ}")?.data?.let {
             try {
-                it.decompress(square.key).buffer.loadLocs(entry)
+                RSByteBuffer(it.decompress(square.key).buffer).loadLocs(entry)
             } catch (exception: ZipException) {
                 logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. MapSquare=${square.id}." }
             }
@@ -58,7 +52,7 @@ class MapSquareTypeProvider @Inject constructor(
         return entry
     }
 
-    private tailrec fun ByteBuffer.loadTerrain(
+    private tailrec fun RSByteBuffer.loadTerrain(
         height: Int = 0,
         overlayId: Int = 0,
         overlayPath: Int = 0,
@@ -81,14 +75,14 @@ class MapSquareTypeProvider @Inject constructor(
         )
     }
 
-    private tailrec fun ByteBuffer.loadLocs(entry: MapSquareEntry, locId: Int = -1) {
+    private tailrec fun RSByteBuffer.loadLocs(entry: MapSquareEntry, locId: Int = -1) {
         val offset = readIncrSmallSmart()
         if (offset == 0) return
         loadLocationCollision(entry, locId + offset, 0)
         return loadLocs(entry, locId + offset)
     }
 
-    private tailrec fun ByteBuffer.loadLocationCollision(entry: MapSquareEntry, locId: Int, packedLocation: Int) {
+    private tailrec fun RSByteBuffer.loadLocationCollision(entry: MapSquareEntry, locId: Int, packedLocation: Int) {
         val offset = readUShortSmart()
         if (offset == 0) return
         val attributes = readUByte()

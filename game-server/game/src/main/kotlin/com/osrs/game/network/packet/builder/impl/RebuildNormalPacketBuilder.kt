@@ -2,14 +2,10 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeInt
-import com.osrs.common.buffer.writeShort
-import com.osrs.common.buffer.writeShortLittleEndian
-import com.osrs.common.buffer.writeShortLittleEndianAdd
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.map.MapSquares
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
-import java.nio.ByteBuffer
 
 @Singleton
 class RebuildNormalPacketBuilder @Inject constructor(
@@ -18,7 +14,7 @@ class RebuildNormalPacketBuilder @Inject constructor(
     opcode = 0,
     size = -2
 ) {
-    override fun build(packet: RebuildNormalPacket, buffer: ByteBuffer) {
+    override fun build(packet: RebuildNormalPacket, buffer: RSByteBuffer) {
         if (packet.initialize) packet.viewport.init(buffer)
 
         val zoneX = packet.location.zoneX

@@ -6,9 +6,7 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.VARBIT_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShort
-import java.nio.ByteBuffer
+import com.osrs.common.buffer.RSByteBuffer
 
 @Singleton
 class VarBitEntryProvider @Inject constructor(
@@ -20,10 +18,10 @@ class VarBitEntryProvider @Inject constructor(
         .index(CONFIG_INDEX)
         .group(VARBIT_CONFIG)
         ?.files()
-        ?.map { ByteBuffer.wrap(it.data).loadEntryType(VarBitEntry(it.id)) }
+        ?.map { RSByteBuffer(it.data).loadEntryType(VarBitEntry(it.id)) }
         ?.associateBy(VarBitEntry::id) ?: emptyMap()
 
-    private tailrec fun ByteBuffer.loadEntryType(type: VarBitEntry): VarBitEntry {
+    private tailrec fun RSByteBuffer.loadEntryType(type: VarBitEntry): VarBitEntry {
         when (val opcode = readUByte()) {
             0 -> { return type }
             1 -> {

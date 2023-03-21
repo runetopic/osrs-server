@@ -1,10 +1,6 @@
 package com.osrs.game.network.packet.builder.impl.render.player.appearance
 
-import com.osrs.common.buffer.writeByte
-import com.osrs.common.buffer.writeByteAdd
-import com.osrs.common.buffer.writeReversedAdd
-import com.osrs.common.buffer.writeShort
-import com.osrs.common.buffer.writeStringCp1252NullTerminated
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ArmsBuilder
@@ -40,8 +36,8 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
         JawBuilder()
     )
 
-    override fun build(buffer: ByteBuffer, render: Appearance) {
-        val block = ByteBuffer.allocate(size(render) - 1).apply {
+    override fun build(buffer: RSByteBuffer, render: Appearance) {
+        val block = RSByteBuffer(ByteBuffer.allocate(size(render) - 1)).apply {
             writeByte(render.gender.id)
             writeByte(render.skullIcon)
             writeByte(render.headIcon)
@@ -64,24 +60,24 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
         buffer.writeReversedAdd(block.array())
     }
 
-    private fun ByteBuffer.writeAnimations(render: Appearance) = if (render.transform != -1) {
+    private fun RSByteBuffer.writeAnimations(render: Appearance) = if (render.transform != -1) {
         // TODO NPC transmog
     } else {
         render.renderSequences.forEach { writeShort(it) }
     }
 
-    private fun ByteBuffer.writeTransmog(render: Appearance) {
+    private fun RSByteBuffer.writeTransmog(render: Appearance) {
         writeShort(65535)
         writeShort(render.transform)
     }
 
-    private fun ByteBuffer.writeIdentityKit(render: Appearance) {
+    private fun RSByteBuffer.writeIdentityKit(render: Appearance) {
         // If a builder is not of an appearance body part, we send 0 as default
         // but this will be overwritten with their equipped item if applicable.
         builders.forEach { it.build(this, render.gender, render.bodyParts.getOrNull(it.appearanceIndex) ?: 0) }
     }
 
-    private fun ByteBuffer.writeColors(colors: IntArray) {
+    private fun RSByteBuffer.writeColors(colors: IntArray) {
         colors.forEach { writeByte(it) }
     }
 

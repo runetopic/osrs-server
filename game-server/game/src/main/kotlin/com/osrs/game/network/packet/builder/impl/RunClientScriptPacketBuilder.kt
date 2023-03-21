@@ -1,13 +1,11 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeInt
-import com.osrs.common.buffer.writeStringCp1252NullTerminated
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.item.Item
 import com.osrs.game.container.Container
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.ClientScriptPacket
-import java.nio.ByteBuffer
 
 @Singleton
 class RunClientScriptPacketBuilder : PacketBuilder<ClientScriptPacket>(
@@ -22,7 +20,7 @@ class RunClientScriptPacketBuilder : PacketBuilder<ClientScriptPacket>(
         else -> throw IllegalStateException("Run client script type was not found during parameter type mapping. The found type was ${it[count]}")
     }
 
-    override fun build(packet: ClientScriptPacket, buffer: ByteBuffer) {
+    override fun build(packet: ClientScriptPacket, buffer: RSByteBuffer) {
         packet.parameters.let { array ->
             val params = buildString {
                 (array.size - 1 downTo 0).forEach { count ->

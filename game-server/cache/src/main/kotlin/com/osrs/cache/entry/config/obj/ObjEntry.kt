@@ -5,7 +5,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ObjEntryType(
+data class ObjEntry(
     override val id: Int,
     var model: Int = 0,
     var name: String = "null",
