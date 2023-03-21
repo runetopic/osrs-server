@@ -87,12 +87,12 @@ class RSByteBuffer(
         return ((buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)) or ((buffer.get().toInt() and 0xFF) shl 16) or ((buffer.get().toInt() and 0xFF) shl 24)
     }
 
-    fun readIntV1(): Int {
+    fun readIntMiddleEndian(): Int {
         checkAccessingBytes()
         return (buffer.short.toInt() and 0xFFFF) or ((buffer.get().toInt() and 0xFF) shl 24) or ((buffer.get().toInt() and 0xFF) shl 16)
     }
 
-    fun readIntV2(): Int {
+    fun readIntLittleMiddleEndian(): Int {
         checkAccessingBytes()
         return ((buffer.get().toInt() and 0xFF) shl 16) or ((buffer.get().toInt() and 0xFF) shl 24) or ((buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8))
     }
@@ -219,14 +219,14 @@ class RSByteBuffer(
         buffer.put((value shr 24).toByte())
     }
 
-    fun writeIntV1(value: Int) {
+    fun writeIntMiddleEndian(value: Int) {
         checkAccessingBytes()
         buffer.putShort(value.toShort())
         buffer.put((value shr 24).toByte())
         buffer.put((value shr 16).toByte())
     }
 
-    fun writeIntV2(value: Int) {
+    fun writeIntLittleMiddleEndian(value: Int) {
         checkAccessingBytes()
         buffer.put((value shr 16).toByte())
         buffer.put((value shr 24).toByte())
