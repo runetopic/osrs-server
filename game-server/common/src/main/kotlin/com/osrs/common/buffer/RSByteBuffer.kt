@@ -24,17 +24,17 @@ class RSByteBuffer(
 
     fun readUByteSubtract(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) - 128) and 0xFF
+        return 128 - buffer.get().toInt() and 0xFF
     }
 
     fun readUByteAdd(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) + 128) and 0xFF
+        return buffer.get().toInt() + 128 and 0xFF
     }
 
     fun readUByteNegate(): Int {
         checkAccessingBytes()
-        return -(buffer.get().toInt() and 0xFF) and 0xFF
+        return -buffer.get().toInt() and 0xFF
     }
 
     fun readShort(): Int {
@@ -49,32 +49,22 @@ class RSByteBuffer(
 
     fun readUShortAdd(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) shl 8) or (((buffer.get().toInt() and 0xFF) + 128) and 0xFF)
-    }
-
-    fun readUShortSubtract(): Int {
-        checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) shl 8) or (((buffer.get().toInt() and 0xFF) - 128) and 0xFF)
+        return (buffer.get().toInt() and 0xFF shl 8) or (buffer.get().toInt() + 128 and 0xFF)
     }
 
     fun readUShortLittleEndian(): Int {
         checkAccessingBytes()
-        return (buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)
-    }
-
-    fun readUShortLittleEndianSubtract(): Int {
-        checkAccessingBytes()
-        return (((buffer.get().toInt() and 0xFF) - 128) and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)
+        return (buffer.get().toInt() and 0xFF) or (buffer.get().toInt() and 0xFF shl 8)
     }
 
     fun readUShortLittleEndianAdd(): Int {
         checkAccessingBytes()
-        return (((buffer.get().toInt() and 0xFF) + 128) and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)
+        return (buffer.get().toInt() + 128 and 0xFF) or (buffer.get().toInt() and 0xFF shl 8)
     }
 
     fun readU24BitInt(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) shl 16) or (buffer.short.toInt() and 0xFFFF)
+        return (buffer.get().toInt() and 0xFF shl 16) or (buffer.short.toInt() and 0xFFFF)
     }
 
     fun readInt(): Int {
@@ -84,17 +74,17 @@ class RSByteBuffer(
 
     fun readIntLittleEndian(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)) or ((buffer.get().toInt() and 0xFF) shl 16) or ((buffer.get().toInt() and 0xFF) shl 24)
+        return (buffer.get().toInt() and 0xFF) or (buffer.get().toInt() and 0xFF shl 8) or (buffer.get().toInt() and 0xFF shl 16) or (buffer.get().toInt() and 0xFF shl 24)
     }
 
     fun readIntMiddleEndian(): Int {
         checkAccessingBytes()
-        return (buffer.short.toInt() and 0xFFFF) or ((buffer.get().toInt() and 0xFF) shl 24) or ((buffer.get().toInt() and 0xFF) shl 16)
+        return (buffer.short.toInt() and 0xFFFF) or (buffer.get().toInt() and 0xFF shl 24) or (buffer.get().toInt() and 0xFF shl 16)
     }
 
     fun readIntLittleMiddleEndian(): Int {
         checkAccessingBytes()
-        return ((buffer.get().toInt() and 0xFF) shl 16) or ((buffer.get().toInt() and 0xFF) shl 24) or ((buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8))
+        return (buffer.get().toInt() and 0xFF shl 16) or (buffer.get().toInt() and 0xFF shl 24) or (buffer.get().toInt() and 0xFF) or (buffer.get().toInt() and 0xFF shl 8)
     }
 
     fun readLong(): Long {
@@ -102,46 +92,47 @@ class RSByteBuffer(
         return buffer.long
     }
 
+    fun readBytes(size: Int): ByteArray {
+        checkAccessingBytes()
+        return ByteArray(size) { buffer.get() }
+    }
+
+    fun readBytesAdd(size: Int): ByteArray {
+        checkAccessingBytes()
+        return ByteArray(size) { (buffer.get() + 128).toByte() }
+    }
+
+    fun readBytesReversed(size: Int): ByteArray {
+        checkAccessingBytes()
+        val bytes = ByteArray(size)
+        for (index in size - 1 downTo 0) {
+            bytes[index] = buffer.get()
+        }
+        return bytes
+    }
+
+    fun readBytesReversedAdd(size: Int): ByteArray {
+        checkAccessingBytes()
+        val bytes = ByteArray(size)
+        for (index in size - 1 downTo 0) {
+            bytes[index] = (buffer.get() + 128).toByte()
+        }
+        return bytes
+    }
+
     tailrec fun readIncrSmallSmart(increment: Int = readUShortSmart(), offset: Int = 0): Int {
         if (increment != Short.MAX_VALUE.toInt()) return offset + increment
         return readIncrSmallSmart(offset = offset + Short.MAX_VALUE)
     }
 
-    fun readShortSmart(): Int {
-        checkAccessingBytes()
-        val peek = buffer.get().toInt() and 0xFF
-        return if (peek < 128) peek - 64 else (peek shl 8 or (buffer.get().toInt() and 0xFF)) - 49152
-    }
-
     fun readUShortSmart(): Int {
         checkAccessingBytes()
-        val peek = buffer.get().toInt() and 0xFF
-        return if (peek < 128) peek else (peek shl 8 or (buffer.get().toInt() and 0xFF)) - 32768
-    }
-
-    fun readUIntSmart(): Int {
-        checkAccessingBytes()
-        val peek = buffer.get().toInt() and 0xFF
-        return if (peek < 0) {
-            ((peek shl 24) or ((buffer.get().toInt() and 0xFF) shl 16) or ((buffer.get().toInt() and 0xFF) shl 8) or (buffer.get().toInt() and 0xFF)) and Integer.MAX_VALUE
-        } else {
-            (peek shl 8 or (buffer.get().toInt() and 0xFF)).toShort().let { if (it == Short.MAX_VALUE) -1 else it }.toInt()
-        }
-    }
-
-    tailrec fun readVarInt(increment: Int = readByte(), offset: Int = 0): Int {
-        if (increment >= 0) return offset or increment
-        return readVarInt(offset = (offset or (increment and 127)) shl 7)
-    }
-
-    tailrec fun method7754(opcode: Int = readUByte(), offset: Int = 0, value: Int = 0): Int {
-        if (opcode <= Byte.MAX_VALUE) return value
-        return method7754(opcode, offset = offset + 7, value = value or ((opcode and 127) shl offset))
+        return if (unsignedPeek() < 128) buffer.get().toInt() and 0xFF else (buffer.short.toInt() and 0xFFFF) - 32768
     }
 
     fun readStringCp1252NullTerminated(): String {
         checkAccessingBytes()
-        return String(readUChars(lengthUntilDelimiter(0))).also {
+        return String(readUChars(untilZero())).also {
             discard(1)
         }
     }
@@ -152,11 +143,6 @@ class RSByteBuffer(
         return readStringCp1252NullTerminated()
     }
 
-    fun readUChars(n: Int): CharArray {
-        checkAccessingBytes()
-        return CharArray(n) { (buffer.get().toInt() and 0xFF).toChar() }
-    }
-
     fun writeByte(value: Int) {
         checkAccessingBytes()
         buffer.put(value.toByte())
@@ -164,17 +150,17 @@ class RSByteBuffer(
 
     fun writeByteSubtract(value: Int) {
         checkAccessingBytes()
-        buffer.put((128 - value.toByte()).toByte())
+        buffer.put((128 - value).toByte())
     }
 
     fun writeByteAdd(value: Int) {
         checkAccessingBytes()
-        buffer.put((value.toByte() + 128).toByte())
+        buffer.put((value + 128).toByte())
     }
 
     fun writeByteNegate(value: Int) {
         checkAccessingBytes()
-        buffer.put((-value.toByte()).toByte())
+        buffer.put((-value).toByte())
     }
 
     fun writeShort(value: Int) {
@@ -185,7 +171,7 @@ class RSByteBuffer(
     fun writeShortAdd(value: Int) {
         checkAccessingBytes()
         buffer.put((value shr 8).toByte())
-        buffer.put((value.toByte() + 128).toByte())
+        buffer.put((value + 128).toByte())
     }
 
     fun writeShortLittleEndian(value: Int) {
@@ -196,7 +182,7 @@ class RSByteBuffer(
 
     fun writeShortLittleEndianAdd(value: Int) {
         checkAccessingBytes()
-        buffer.put((value.toByte() + 128).toByte())
+        buffer.put((value + 128).toByte())
         buffer.put((value shr 8).toByte())
     }
 
@@ -284,6 +270,15 @@ class RSByteBuffer(
         writeByte(0)
     }
 
+    fun writeStringCp1252NullCircumfixed(value: String) {
+        checkAccessingBytes()
+        writeByte(0)
+        for (char in value) {
+            buffer.put(char.code.toByte())
+        }
+        writeByte(0)
+    }
+
     fun fill(amount: Int, value: Int) {
         checkAccessingBytes()
         for (index in 0 until amount) {
@@ -293,14 +288,6 @@ class RSByteBuffer(
 
     fun discard(amount: Int) {
         buffer.position(buffer.position() + amount)
-    }
-
-    fun lengthUntilDelimiter(delimiter: Int): Int {
-        var count = 0
-        while (buffer[buffer.position() + count].toInt() != delimiter) {
-            count++
-        }
-        return count
     }
 
     fun position(): Int = buffer.position()
@@ -316,6 +303,10 @@ class RSByteBuffer(
     }
 
     fun array(): ByteArray = buffer.array()
+
+    fun signedPeek(): Int = buffer[buffer.position()].toInt()
+
+    fun unsignedPeek(): Int = buffer[buffer.position()].toInt() and 0xFF
 
     fun bitAccess(block: () -> Unit) {
         checkAccessingBytes()
@@ -357,6 +348,13 @@ class RSByteBuffer(
             buffer.put(byteIndex, newByte.toByte())
         }
     }
+
+    private tailrec fun untilZero(length: Int = 0): Int {
+        if (buffer[buffer.position() + length].toInt() == 0) return length
+        return untilZero(length + 1)
+    }
+
+    private fun readUChars(n: Int): CharArray = CharArray(n) { (buffer.get().toInt() and 0xFF).toChar() }
 
     private fun checkAccessingBytes() {
         if (accessBitsIndex == -1) return
