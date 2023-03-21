@@ -62,5 +62,7 @@ allprojects {
         implementation("com.charleskorn.kaml:kaml:0.50.0")
         // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
         implementation("io.github.classgraph:classgraph:4.8.154")
+
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
     }
 }
