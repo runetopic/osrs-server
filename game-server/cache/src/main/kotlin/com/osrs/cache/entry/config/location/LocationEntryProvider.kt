@@ -6,15 +6,7 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.LOC_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.discard
-import com.osrs.common.buffer.readByte
-import com.osrs.common.buffer.readInt
-import com.osrs.common.buffer.readShort
-import com.osrs.common.buffer.readStringCp1252NullTerminated
-import com.osrs.common.buffer.readU24BitInt
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShort
-import java.nio.ByteBuffer
+import com.osrs.common.buffer.RSByteBuffer
 
 @Singleton
 class LocationEntryProvider @Inject constructor(
@@ -25,10 +17,10 @@ class LocationEntryProvider @Inject constructor(
         .index(CONFIG_INDEX)
         .group(LOC_CONFIG)
         ?.files()
-        ?.map { ByteBuffer.wrap(it.data).loadEntryType(LocationEntry(it.id)) }
+        ?.map { RSByteBuffer(it.data).loadEntryType(LocationEntry(it.id)) }
         ?.associateBy(LocationEntry::id) ?: emptyMap()
 
-    private tailrec fun ByteBuffer.loadEntryType(type: LocationEntry): LocationEntry {
+    private tailrec fun RSByteBuffer.loadEntryType(type: LocationEntry): LocationEntry {
         when (val opcode = readUByte()) {
             0 -> { return type }
             1 -> repeat(readUByte()) {

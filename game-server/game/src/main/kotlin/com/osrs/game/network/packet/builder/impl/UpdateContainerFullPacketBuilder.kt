@@ -1,13 +1,9 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.writeByte
-import com.osrs.common.buffer.writeInt
-import com.osrs.common.buffer.writeShort
-import com.osrs.common.buffer.writeShortAdd
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.UpdateContainerFullPacket
-import java.nio.ByteBuffer
 import kotlin.math.min
 
 @Singleton
@@ -15,7 +11,7 @@ class UpdateContainerFullPacketBuilder : PacketBuilder<UpdateContainerFullPacket
     opcode = 44,
     size = -2
 ) {
-    override fun build(packet: UpdateContainerFullPacket, buffer: ByteBuffer) {
+    override fun build(packet: UpdateContainerFullPacket, buffer: RSByteBuffer) {
         buffer.writeInt(packet.packedInterface)
         buffer.writeShort(packet.containerKey)
         buffer.writeShort(packet.items.size)

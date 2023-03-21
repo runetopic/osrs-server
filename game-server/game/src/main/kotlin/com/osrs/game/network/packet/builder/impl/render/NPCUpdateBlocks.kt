@@ -1,6 +1,7 @@
 package com.osrs.game.network.packet.builder.impl.render
 
 import com.google.inject.Singleton
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.world.World
@@ -27,7 +28,7 @@ class NPCUpdateBlocks(
         // TODO mask for a third byte if > 65535
         val mask = calculateMask(0x2)
         val size = calculateSize(mask)
-        return ByteBuffer.allocate(size).also {
+        return RSByteBuffer(ByteBuffer.allocate(size)).also {
             it.writeMask(mask)
             for (block in this) {
                 if (block == null) continue

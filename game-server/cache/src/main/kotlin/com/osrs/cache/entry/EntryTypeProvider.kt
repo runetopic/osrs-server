@@ -1,10 +1,6 @@
 package com.osrs.cache.entry
 
-import com.osrs.common.buffer.readInt
-import com.osrs.common.buffer.readStringCp1252NullTerminated
-import com.osrs.common.buffer.readU24BitInt
-import com.osrs.common.buffer.readUByte
-import java.nio.ByteBuffer
+import com.osrs.common.buffer.RSByteBuffer
 
 abstract class EntryTypeProvider<T : EntryType> {
     private var _data: Map<Int, T>? = null
@@ -25,7 +21,7 @@ abstract class EntryTypeProvider<T : EntryType> {
 
     abstract fun loadTypeMap(): Map<Int, T>
 
-    protected fun ByteBuffer.readStringIntParameters(): Map<Int, Any> = buildMap {
+    protected fun RSByteBuffer.readStringIntParameters(): Map<Int, Any> = buildMap {
         repeat(readUByte()) {
             val usingString = readUByte() == 1
             put(readU24BitInt(), if (usingString) readStringCp1252NullTerminated() else readInt())

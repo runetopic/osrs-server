@@ -1,6 +1,7 @@
 package com.osrs.game.network.packet.builder.impl.render
 
 import com.google.inject.Singleton
+import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.actor.render.LowDefinitionRenderBlock
@@ -28,7 +29,7 @@ class PlayerUpdateBlocks(
     private fun Array<HighDefinitionRenderBlock<*>?>.buildHighDefinitionUpdates(player: Player): ByteArray {
         val mask = calculateMask(0x40)
         val size = calculateSize(mask)
-        return ByteBuffer.allocate(size).also {
+        return RSByteBuffer(ByteBuffer.allocate(size)).also {
             it.writeMask(mask)
             for (block in this) {
                 if (block == null) continue
@@ -43,11 +44,11 @@ class PlayerUpdateBlocks(
     private fun Array<LowDefinitionRenderBlock<*>?>.buildLowDefinitionUpdates(): ByteArray {
         val mask = calculateMask(0x40)
         val size = calculateSize(mask)
-        return ByteBuffer.allocate(size).also {
+        return RSByteBuffer(ByteBuffer.allocate(size)).also {
             it.writeMask(mask)
             for (block in this) {
                 if (block == null) continue
-                it.put(block.bytes)
+                it.writeBytes(block.bytes)
             }
         }.array()
     }
