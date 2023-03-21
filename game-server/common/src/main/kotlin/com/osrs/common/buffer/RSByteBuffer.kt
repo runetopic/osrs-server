@@ -253,6 +253,13 @@ class RSByteBuffer(
         }
     }
 
+    fun writeBytesReversed(bytes: ByteArray) {
+        checkAccessingBytes()
+        for (index in bytes.size - 1 downTo 0) {
+            buffer.put(bytes[index])
+        }
+    }
+
     fun writeBytesReversedAdd(bytes: ByteArray) {
         checkAccessingBytes()
         for (index in bytes.size - 1 downTo 0) {
