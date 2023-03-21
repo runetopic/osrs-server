@@ -253,10 +253,10 @@ class RSByteBuffer(
         }
     }
 
-    fun writeReversedAdd(bytes: ByteArray) {
+    fun writeBytesReversedAdd(bytes: ByteArray) {
         checkAccessingBytes()
-        for (byte in bytes.reversedArray()) {
-            buffer.put((byte + 128).toByte())
+        for (index in bytes.size - 1 downTo 0) {
+            buffer.put((bytes[index] + 128).toByte())
         }
     }
 
@@ -271,8 +271,8 @@ class RSByteBuffer(
 
     fun writeStringCp1252NullTerminated(value: String) {
         checkAccessingBytes()
-        for (byte in value.toByteArray()) {
-            buffer.put(byte)
+        for (char in value) {
+            buffer.put(char.code.toByte())
         }
         writeByte(0)
     }

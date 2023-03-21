@@ -57,7 +57,7 @@ class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
             writeByte(0)
         }
         buffer.writeByteAdd(block.position())
-        buffer.writeReversedAdd(block.array())
+        buffer.writeBytesReversedAdd(block.array())
     }
 
     private fun RSByteBuffer.writeAnimations(render: Appearance) = if (render.transform != -1) {
