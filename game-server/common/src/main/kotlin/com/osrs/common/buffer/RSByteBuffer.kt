@@ -1,6 +1,7 @@
 package com.osrs.common.buffer
 
 import java.nio.ByteBuffer
+import kotlin.math.min
 
 /**
  * @author Jordan Abraham
@@ -318,35 +319,26 @@ class RSByteBuffer(
 
     fun writeBits(count: Int, value: Int) {
         checkAccessingBits()
+        writeBits(value, count, accessBitsIndex shr 3, accessBitsIndex % 8)
+        accessBitsIndex += count
+    }
 
-        var remainingBits = count
-        var byteIndex = accessBitsIndex shr 3
-        var bitIndex = 8 - (accessBitsIndex and 7)
-        accessBitsIndex += remainingBits
-
-        while (remainingBits > bitIndex) {
-            val max = (1 shl bitIndex) - 1
-            val bitsToWrite = (value ushr (remainingBits - bitIndex)) and max
-            val currentByte = buffer.get(byteIndex).toInt()
-            val newByte = currentByte and max.inv() or bitsToWrite
-            buffer.put(byteIndex++, newByte.toByte())
-            remainingBits -= bitIndex
-            bitIndex = 8
-        }
-
-        val currentByte = buffer.get(byteIndex).toInt()
-        val remainingBitsMask = (1 shl remainingBits) - 1
-        if (remainingBits == bitIndex) {
-            val newByte = currentByte and remainingBitsMask.inv() or (value and remainingBitsMask)
-            buffer.put(byteIndex, newByte.toByte())
-        } else {
-            val maskShift = bitIndex - remainingBits
-            val mask = remainingBitsMask shl maskShift
-            val clearedByte = currentByte and mask.inv()
-            val bitsToWrite = value and remainingBitsMask shl maskShift
-            val newByte = clearedByte or bitsToWrite
-            buffer.put(byteIndex, newByte.toByte())
-        }
+    private tailrec fun writeBits(value: Int, remainingBits: Int, byteIndex: Int, bitIndex: Int) {
+        if (remainingBits == 0) return
+        val bitOffset = 8 - bitIndex
+        // The maximum number of bits that can be written to the current byte.
+        val bitsToWrite = min(remainingBits, bitOffset)
+        val max = (1 shl bitsToWrite) - 1
+        // The relevant bits from the value.
+        val byteValue = (value ushr (remainingBits - bitsToWrite)) and max
+        // The relevant bits in the current byte.
+        val mask = max shl (bitOffset - bitsToWrite)
+        // The current byte from the buffer.
+        val currentValue = buffer.get(byteIndex).toInt()
+        // The current byte with the new bits.
+        val newValue = currentValue and mask.inv() or (byteValue shl (bitOffset - bitsToWrite))
+        buffer.put(byteIndex, newValue.toByte())
+        return writeBits(value, remainingBits - bitsToWrite, byteIndex + 1, 0)
     }
 
     private tailrec fun untilZero(length: Int = 0): Int {
