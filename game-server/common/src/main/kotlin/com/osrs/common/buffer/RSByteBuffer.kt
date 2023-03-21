@@ -102,9 +102,9 @@ class RSByteBuffer(
         return buffer.long
     }
 
-    tailrec fun readIncrSmallSmart(ensure: Unit = checkAccessingBytes(), increment: Int = readUShortSmart(), offset: Int = 0): Int {
+    tailrec fun readIncrSmallSmart(increment: Int = readUShortSmart(), offset: Int = 0): Int {
         if (increment != Short.MAX_VALUE.toInt()) return offset + increment
-        return readIncrSmallSmart(ensure = ensure, offset = offset + Short.MAX_VALUE)
+        return readIncrSmallSmart(offset = offset + Short.MAX_VALUE)
     }
 
     fun readShortSmart(): Int {
