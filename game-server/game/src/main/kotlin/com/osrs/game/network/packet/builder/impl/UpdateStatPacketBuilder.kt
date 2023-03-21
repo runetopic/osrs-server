@@ -13,6 +13,6 @@ class UpdateStatPacketBuilder : PacketBuilder<UpdateStatPacket>(
     override fun build(packet: UpdateStatPacket, buffer: RSByteBuffer) {
         buffer.writeByteSubtract(packet.level)
         buffer.writeByteSubtract(packet.id)
-        buffer.writeIntV2(packet.xp.toInt())
+        buffer.writeIntLittleMiddleEndian(packet.xp.toInt())
     }
 }

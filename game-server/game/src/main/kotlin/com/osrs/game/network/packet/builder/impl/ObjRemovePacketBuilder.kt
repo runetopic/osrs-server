@@ -13,6 +13,6 @@ class ObjRemovePacketBuilder : PacketBuilder<ObjRemovePacket>(
     override fun build(packet: ObjRemovePacket, buffer: RSByteBuffer) {
         buffer.writeByteAdd(packet.packedOffset)
         buffer.writeShortLittleEndian(packet.id)
-        buffer.writeIntV1(packet.quantity)
+        buffer.writeIntMiddleEndian(packet.quantity)
     }
 }

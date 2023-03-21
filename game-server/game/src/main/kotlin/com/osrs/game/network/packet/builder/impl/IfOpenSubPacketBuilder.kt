@@ -13,6 +13,6 @@ class IfOpenSubPacketBuilder : PacketBuilder<IfOpenSubPacket>(
     override fun build(packet: IfOpenSubPacket, buffer: RSByteBuffer) {
         buffer.writeShortLittleEndian(packet.interfaceId)
         buffer.writeByteAdd(if (!packet.isModal) 1 else 0)
-        buffer.writeIntV2(packet.toInterface)
+        buffer.writeIntLittleMiddleEndian(packet.toInterface)
     }
 }
