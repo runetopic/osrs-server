@@ -309,12 +309,22 @@ class RSByteBuffer(
 
     fun unsignedPeek(): Int = buffer[buffer.position()].toInt() and 0xFF
 
-    fun bitAccess(block: () -> Unit) {
+    fun accessBits() {
         checkAccessingBytes()
         accessBitsIndex = buffer.position() * 8
-        block.invoke()
+    }
+
+    fun rewindBits() {
+        checkAccessingBits()
+        buffer.position((accessBitsIndex + 7) / 8)
+        accessBitsIndex = buffer.position() * 8
+    }
+
+    fun accessBytes() {
+        checkAccessingBits()
         buffer.position((accessBitsIndex + 7) / 8)
         accessBitsIndex = -1
+        checkAccessingBytes()
     }
 
     fun writeBits(count: Int, value: Int) {

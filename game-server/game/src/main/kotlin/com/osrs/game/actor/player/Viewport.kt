@@ -28,17 +28,17 @@ class Viewport(
     private var resizeTickCount = 0
 
     fun init(buffer: RSByteBuffer) {
-        buffer.bitAccess {
-            buffer.writeBits(30, player.location.packed)
-            highDefinitions[highDefinitionsCount++] = player.index
-            for (index in 1 until MAX_PLAYERS) {
-                if (index == player.index) continue
-                val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
-                buffer.writeBits(18, otherRegionCoordinates)
-                locations[index] = otherRegionCoordinates
-                lowDefinitions[lowDefinitionsCount++] = index
-            }
+        buffer.accessBits()
+        buffer.writeBits(30, player.location.packed)
+        highDefinitions[highDefinitionsCount++] = player.index
+        for (index in 1 until MAX_PLAYERS) {
+            if (index == player.index) continue
+            val otherRegionCoordinates = player.world.players[index]?.location?.regionLocation ?: 0
+            buffer.writeBits(18, otherRegionCoordinates)
+            locations[index] = otherRegionCoordinates
+            lowDefinitions[lowDefinitionsCount++] = index
         }
+        buffer.accessBytes()
     }
 
     fun reset(players: PlayerList) {

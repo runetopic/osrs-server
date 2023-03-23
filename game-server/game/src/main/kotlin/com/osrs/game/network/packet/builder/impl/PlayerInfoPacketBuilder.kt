@@ -26,8 +26,10 @@ class PlayerInfoPacketBuilder @Inject constructor(
         val players = packet.players
         val viewport = packet.viewport
         viewport.resize()
-        buffer.bitAccess { buffer.syncHighDefinition(viewport, players) }
-        buffer.bitAccess { buffer.syncLowDefinition(viewport, players) }
+        buffer.accessBits()
+        buffer.syncHighDefinition(viewport, players)
+        buffer.syncLowDefinition(viewport, players)
+        buffer.accessBytes()
         for (index in viewport.highDefinitionUpdates) {
             updateBlocks.highDefinitionUpdates[index]?.let { buffer.writeBytes(it) }
         }
@@ -46,6 +48,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
     ) {
         if (index == viewport.highDefinitionsCount) {
             writeSkipCount(skip)
+            rewindBits()
             if (!nsn) return
             return syncHighDefinition(viewport, players, false)
         }
@@ -77,6 +80,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
     ) {
         if (index == viewport.lowDefinitionsCount) {
             writeSkipCount(skip)
+            rewindBits()
             if (!nsn) return
             return syncLowDefinition(viewport, players, false)
         }

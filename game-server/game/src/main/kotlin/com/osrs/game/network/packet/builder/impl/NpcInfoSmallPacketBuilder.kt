@@ -22,7 +22,9 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
     size = -2
 ) {
     override fun build(packet: NpcInfoPacket, buffer: RSByteBuffer) {
-        buffer.bitAccess { buffer.sync(packet.viewport) }
+        buffer.accessBits()
+        buffer.sync(packet.viewport)
+        buffer.accessBytes()
     }
 
     private fun RSByteBuffer.sync(
