@@ -324,7 +324,6 @@ class RSByteBuffer(
         checkAccessingBits()
         buffer.position((accessBitsIndex + 7) / 8)
         accessBitsIndex = -1
-        checkAccessingBytes()
     }
 
     fun writeBits(count: Int, value: Int) {
