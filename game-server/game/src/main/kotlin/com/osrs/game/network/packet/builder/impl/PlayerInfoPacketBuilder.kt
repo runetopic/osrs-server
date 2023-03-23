@@ -57,11 +57,15 @@ class PlayerInfoPacketBuilder @Inject constructor(
             return syncHighDefinition(viewport, players, nsn, index + 1, skip)
         }
         val other = players[playerIndex]
+        if (other == null) {
+            viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
+            return syncHighDefinition(viewport, players, nsn, index + 1, skip + 1)
+        }
         val removing = viewport.shouldRemove(other, players)
-        val moving = other?.moveDirection != MoveDirection.None
-        val updating = other?.let { updateBlocks.highDefinitionUpdates[it.index] } != null
+        val moving = other.moveDirection != MoveDirection.None
+        val updating = updateBlocks.highDefinitionUpdates[other.index] != null
         val active = removing || updating || moving
-        if (other == null || !active) {
+        if (!active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             return syncHighDefinition(viewport, players, nsn, index + 1, skip + 1)
         }
@@ -89,9 +93,19 @@ class PlayerInfoPacketBuilder @Inject constructor(
             return syncLowDefinition(viewport, players, nsn, index + 1, skip)
         }
         val other = players[playerIndex]
+        if (other == null) {
+            viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
+            return syncLowDefinition(viewport, players, nsn, index + 1, skip + 1)
+        }
         val adding = viewport.shouldAdd(other)
-        val active = adding && other?.let { updateBlocks.lowDefinitionUpdates[it.index] } != null
-        if (other == null || !active) {
+        // We aren't necessarily checking if they are updating (meaning they have update blocks).
+        // Players always have low definition update blocks, but we are just double-checking
+        // that the blocks do exist (which they should) so this is for compiler reasons.
+        // Low definition sync is only checking for if this player needs to be added, and we send
+        // their update blocks when we add this player from low->high viewport.
+        val updating = updateBlocks.lowDefinitionUpdates[other.index] != null
+        val active = adding && updating
+        if (!active) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             return syncLowDefinition(viewport, players, nsn, index + 1, skip + 1)
         }
