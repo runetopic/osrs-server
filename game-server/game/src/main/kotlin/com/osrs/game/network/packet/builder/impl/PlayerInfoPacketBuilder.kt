@@ -262,7 +262,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         !other.online -> true
         other.location == Location.None -> true
         !other.location.withinDistance(player.location) -> true
-        !players.contains(other) -> true
+        other !in players -> true
         else -> false
     }
 }
