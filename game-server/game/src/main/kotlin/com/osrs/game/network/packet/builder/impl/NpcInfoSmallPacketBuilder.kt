@@ -30,8 +30,11 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
     private fun RSByteBuffer.sync(
         viewport: Viewport
     ) {
-        writeBits(8, viewport.npcs.size)
-        syncHighDefinition(viewport)
+        val size = viewport.npcs.count { it != null }
+        writeBits(8, size)
+        if (size != 0) {
+            syncHighDefinition(viewport)
+        }
         syncLowDefinition(viewport)
     }
 
@@ -39,6 +42,9 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         viewport: Viewport
     ) {
         for (npc in viewport.npcs) {
+            if (npc == null) {
+                continue
+            }
             val updating = false
             if (!updating) {
                 writeBits(1, 0)
@@ -75,12 +81,13 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         writeBits(3, 0) // TODO orientation
         writeBits(5, (npc.location.x - player.location.x).let { if (it < 15) it + 32 else it })
         writeBits(1, 0) // TODO handle teleporting
-        viewport.npcs += npc
+        viewport.npcs[viewport.npcs.indexOf(null)] = npc
     }
 
     private fun Viewport.shouldAdd(npc: NPC): Boolean = when {
         npc in npcs -> false
         !npc.location.withinDistance(player.location) -> false
+        npcs.all { it != null } -> false
         else -> true
     }
 }
