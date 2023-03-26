@@ -36,7 +36,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         for (index in viewport.lowDefinitionUpdates) {
             updateBlocks.lowDefinitionUpdates[index]?.let { buffer.writeBytes(it) }
         }
-        viewport.reset(players)
+        viewport.reset()
     }
 
     private tailrec fun RSByteBuffer.syncHighDefinition(
@@ -56,7 +56,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] != 0)) {
             return syncHighDefinition(viewport, players, nsn, index + 1, skip)
         }
-        val other = players[playerIndex]
+        val other = viewport.players[playerIndex]
         if (other == null) {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             return syncHighDefinition(viewport, players, nsn, index + 1, skip + 1)
@@ -130,6 +130,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
                 writeBits(2, 0)
                 viewport.locations[index] = other.location.regionLocation
                 validateLocationChanges(viewport, other, index)
+                viewport.players[index] = null
             }
             moving -> {
                 val moveDirection = other.moveDirection
@@ -173,6 +174,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         writeBits(13, other.location.x)
         writeBits(13, other.location.z)
         writeBits(1, 1)
+        viewport.players[other.index] = other
         viewport.nsnFlags[index] = viewport.nsnFlags[index] or 2
         viewport.lowDefinitionUpdates += other.index
     }
@@ -208,18 +210,8 @@ class PlayerInfoPacketBuilder @Inject constructor(
         if (lastRegionX == currentRegionX && lastRegionZ == currentRegionZ) {
             writeBits(2, 1)
             writeBits(2, deltaPlane)
-        } else if (abs(currentRegionX - lastRegionX) <= 1 && abs(currentRegionZ - lastRegionZ) <= 1) {
-            // TODO Extract this directional stuff out.
-            val opcode = when {
-                deltaX == -1 && deltaZ == -1 -> 0
-                deltaX == 1 && deltaZ == -1 -> 2
-                deltaX == -1 && deltaZ == 1 -> 5
-                deltaX == 1 && deltaZ == 1 -> 7
-                deltaZ == -1 -> 1
-                deltaX == -1 -> 3
-                deltaX == 1 -> 4
-                else -> 6
-            }
+        } else if (abs(deltaX) <= 1 && abs(deltaZ) <= 1) {
+            val opcode = Direction.getDirection(deltaX, deltaZ).opcode
             writeBits(2, 2)
             writeBits(5, (deltaPlane shl 3) + (opcode and 0x7))
         } else {

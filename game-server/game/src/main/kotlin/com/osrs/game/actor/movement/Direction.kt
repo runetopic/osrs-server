@@ -41,7 +41,7 @@ enum class Direction(val opcode: Int) {
             return getDirection(deltaX, deltaZ)
         }
 
-        private fun getDirection(dx: Int, dz: Int): Direction {
+        fun getDirection(dx: Int, dz: Int): Direction {
             when (dz) {
                 1 -> when (dx) {
                     1 -> return NORTH_EAST

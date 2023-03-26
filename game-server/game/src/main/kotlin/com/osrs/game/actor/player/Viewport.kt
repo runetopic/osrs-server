@@ -1,7 +1,6 @@
 package com.osrs.game.actor.player
 
 import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
 
@@ -14,7 +13,8 @@ class Viewport(
     val lowDefinitions = IntArray(MAX_PLAYERS)
     val highDefinitionUpdates = ArrayList<Int>()
     val lowDefinitionUpdates = ArrayList<Int>()
-    val npcs = ArrayList<NPC>()
+    val players = arrayOfNulls<Player?>(MAX_PLAYERS)
+    val npcs = arrayOfNulls<NPC?>(250)
 
     var highDefinitionsCount = 0
         private set
@@ -30,6 +30,7 @@ class Viewport(
     fun init(buffer: RSByteBuffer) {
         buffer.accessBits()
         buffer.writeBits(30, player.location.packed)
+        players[player.index] = player
         highDefinitions[highDefinitionsCount++] = player.index
         for (index in 1 until MAX_PLAYERS) {
             if (index == player.index) continue
@@ -41,7 +42,7 @@ class Viewport(
         buffer.accessBytes()
     }
 
-    fun reset(players: PlayerList) {
+    fun reset() {
         highDefinitionUpdates.clear()
         lowDefinitionUpdates.clear()
         highDefinitionsCount = 0
