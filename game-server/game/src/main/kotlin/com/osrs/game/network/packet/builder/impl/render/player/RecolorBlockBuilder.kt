@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class RecolorBlockBuilder : RenderBlockBuilder<Recolor>(
     mask = 0x400,
-    index = 0
+    index = 0,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: Recolor) {
         buffer.writeShortLittleEndian(render.delay)

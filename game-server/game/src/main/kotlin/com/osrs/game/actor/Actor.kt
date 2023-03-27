@@ -72,9 +72,9 @@ abstract class Actor(
         }
     }
 
-    fun syncReset(resetRenderer: Boolean) {
-        if (resetRenderer) {
-            renderer.clearUpdates()
+    fun syncReset() {
+        if (renderer.hasRenderBlockUpdate()) {
+            renderer.clearRenderBlocks()
         }
         if (moveDirection != MoveDirection.None) {
             moveDirection = MoveDirection.None

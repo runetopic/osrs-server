@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class SequenceBlockBuilder : RenderBlockBuilder<Sequence>(
     mask = 0x2,
-    index = 8
+    index = 8,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: Sequence) {
         buffer.writeShortLittleEndianAdd(render.id)

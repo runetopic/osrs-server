@@ -3,8 +3,7 @@ package com.osrs.game.network.packet.builder.impl.render
 import com.google.inject.Singleton
 import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
-import com.osrs.game.actor.render.HighDefinitionRenderBlock
-import com.osrs.game.actor.render.LowDefinitionRenderBlock
+import com.osrs.game.actor.render.RenderBlock
 import com.osrs.game.world.World
 import java.nio.ByteBuffer
 
@@ -12,44 +11,51 @@ import java.nio.ByteBuffer
 class PlayerUpdateBlocks(
     val highDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS),
     val lowDefinitionUpdates: Array<ByteArray?> = arrayOfNulls<ByteArray?>(World.MAX_PLAYERS)
-) : UpdateBlocks<Player>() {
+) : UpdateBlocks<Player> {
     override fun buildPendingUpdatesBlocks(actor: Player) {
-        if (actor.renderer.hasHighDefinitionUpdate()) {
-            highDefinitionUpdates[actor.index] = actor.renderer.highDefinitionRenderBlocks.buildHighDefinitionUpdates(actor)
+        val renderer = actor.renderer
+        if (!renderer.hasRenderBlockUpdate()) return
+
+        val highDefBlocks = renderer.highDefinitionRenderBlocks
+        val highDefinitionMask = highDefBlocks.calculateHighDefinitionMask(0x40)
+        val highDefinitionSize = highDefBlocks.calculateHighDefinitionSize(highDefinitionMask)
+        val highDefinitionBuffer = RSByteBuffer(ByteBuffer.allocate(highDefinitionSize)).also {
+            it.writeMask(highDefinitionMask)
         }
-        // Low definitions are always built here for persisted blocks from previous game cycles. i.e Appearance.
-        lowDefinitionUpdates[actor.index] = actor.renderer.lowDefinitionRenderBlocks.buildLowDefinitionUpdates()
+
+        var buildLowDefBlocks = false
+        for (block in highDefBlocks) {
+            if (block == null) continue
+            val renderType = block.renderType
+            val builder = block.builder
+            builder.build(highDefinitionBuffer, renderType)
+            if (builder.persisted) {
+                renderer.lowDefinitionRenderBlocks[builder.index] = RenderBlock(renderType, builder)
+                if (!buildLowDefBlocks) {
+                    buildLowDefBlocks = true
+                }
+            }
+        }
+
+        highDefinitionUpdates[actor.index] = highDefinitionBuffer.array()
+
+        if (!buildLowDefBlocks) return
+        val lowDefBlocks = renderer.lowDefinitionRenderBlocks
+        val lowDefinitionMask = lowDefBlocks.calculateLowDefinitionMask(0x40)
+        val lowDefinitionSize = lowDefBlocks.calculateLowDefinitionSize(lowDefinitionMask)
+        val lowDefinitionBuffer = RSByteBuffer(ByteBuffer.allocate(lowDefinitionSize)).also {
+            it.writeMask(lowDefinitionMask)
+        }
+
+        for (block in lowDefBlocks) {
+            if (block == null) continue
+            block.builder.build(lowDefinitionBuffer, block.renderType)
+        }
+
+        lowDefinitionUpdates[actor.index] = lowDefinitionBuffer.array()
     }
 
     override fun clear() {
-        lowDefinitionUpdates.fill(null)
         highDefinitionUpdates.fill(null)
-    }
-
-    private fun Array<HighDefinitionRenderBlock<*>?>.buildHighDefinitionUpdates(player: Player): ByteArray {
-        val mask = calculateMask(0x40)
-        val size = calculateSize(mask)
-        return RSByteBuffer(ByteBuffer.allocate(size)).also {
-            it.writeMask(mask)
-            for (block in this) {
-                if (block == null) continue
-                val start = it.position()
-                block.builder.build(it, block.renderType)
-                val end = it.position()
-                player.renderer.setLowDefinitionRenderingBlock(block, it.array().sliceArray(start until end))
-            }
-        }.array()
-    }
-
-    private fun Array<LowDefinitionRenderBlock<*>?>.buildLowDefinitionUpdates(): ByteArray {
-        val mask = calculateMask(0x40)
-        val size = calculateSize(mask)
-        return RSByteBuffer(ByteBuffer.allocate(size)).also {
-            it.writeMask(mask)
-            for (block in this) {
-                if (block == null) continue
-                it.writeBytes(block.bytes)
-            }
-        }.array()
     }
 }

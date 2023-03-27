@@ -42,20 +42,11 @@ fun Player.updateStat(skill: Skill, level: Int, experience: Double) = write(Upda
 fun Player.updateRunEnergy(energy: Int) = write(UpdateRunEnergyPacket(energy))
 
 fun Player.sendPlayerInfo() {
-    session.write(
-        PlayerInfoPacket(
-            viewport = viewport,
-            players = world.players
-        )
-    )
+    write(PlayerInfoPacket(viewport, world.players))
 }
 
 fun Player.sendNpcInfo() {
-    session.write(
-        NpcInfoPacket(
-            viewport = viewport
-        )
-    )
+    write(NpcInfoPacket(viewport))
 }
 
 fun Player.refreshAppearance(appearance: Appearance = this.appearance): Appearance {

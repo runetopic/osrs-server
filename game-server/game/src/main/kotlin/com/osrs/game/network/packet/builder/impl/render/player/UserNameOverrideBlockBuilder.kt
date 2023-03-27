@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class UserNameOverrideBlockBuilder : RenderBlockBuilder<UserNameOverride>(
     mask = 0x1000,
-    index = 4
+    index = 4,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: UserNameOverride) {
         buffer.writeStringCp1252NullTerminated(render.prefix)

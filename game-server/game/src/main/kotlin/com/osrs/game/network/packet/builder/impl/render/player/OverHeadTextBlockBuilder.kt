@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class OverHeadTextBlockBuilder : RenderBlockBuilder<OverHeadText>(
     mask = 0x1,
-    index = 7
+    index = 7,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: OverHeadText) {
         buffer.writeStringCp1252NullTerminated(render.text)

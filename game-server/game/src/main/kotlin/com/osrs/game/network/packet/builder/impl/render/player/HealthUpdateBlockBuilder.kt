@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class HealthUpdateBlockBuilder : RenderBlockBuilder<HealthUpdate>(
     mask = 0x20,
-    index = 9
+    index = 9,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: HealthUpdate) {
         buffer.writeByteAdd(render.splats.size)

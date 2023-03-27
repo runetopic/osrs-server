@@ -7,7 +7,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class ExactMoveBlockBuilder : RenderBlockBuilder<ExactMove>(
     mask = 0x100,
-    index = 10
+    index = 10,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: ExactMove) {
         val distanceX1 = render.firstLocation.x - render.currentLocation.x

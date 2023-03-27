@@ -9,7 +9,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
  */
 class PublicChatBlockBuilder : RenderBlockBuilder<PublicChat>(
     index = 2,
-    mask = 0x8
+    mask = 0x8,
+    persisted = false
 ) {
     override fun build(buffer: RSByteBuffer, render: PublicChat) {
         buffer.writeShortLittleEndian(render.color shl 8 or render.effect)

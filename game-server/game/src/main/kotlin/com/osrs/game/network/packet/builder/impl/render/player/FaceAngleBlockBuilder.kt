@@ -6,7 +6,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class FaceAngleBlockBuilder : RenderBlockBuilder<FaceAngle>(
     mask = 0x80,
-    index = 5
+    index = 5,
+    persisted = true
 ) {
     override fun build(buffer: RSByteBuffer, render: FaceAngle) {
         buffer.writeShort(render.angle)

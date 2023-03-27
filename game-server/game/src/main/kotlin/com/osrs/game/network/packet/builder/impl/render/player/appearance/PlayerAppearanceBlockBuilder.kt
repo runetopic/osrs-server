@@ -19,7 +19,8 @@ import java.nio.ByteBuffer
 
 class PlayerAppearanceBlockBuilder : RenderBlockBuilder<Appearance>(
     index = 1,
-    mask = 0x4
+    mask = 0x4,
+    persisted = true
 ) {
     private val builders = arrayOf(
         HeadBuilder(),

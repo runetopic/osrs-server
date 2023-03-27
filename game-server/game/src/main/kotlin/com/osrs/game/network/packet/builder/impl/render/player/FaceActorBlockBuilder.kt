@@ -8,7 +8,8 @@ import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 
 class FaceActorBlockBuilder : RenderBlockBuilder<FaceActor>(
     mask = 0x10,
-    index = 12
+    index = 12,
+    persisted = true
 ) {
     override fun build(buffer: RSByteBuffer, render: FaceActor) {
         val indicator = when (render.actor) {
