@@ -12,7 +12,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ObjAddRequest
 class MassAddItemTest : CommandListener(
     name = "mass_drop_item"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         // Looping 8x8 is too much for the write channel byte pool.
         player.zones.forEach {
             repeat(7) { x ->

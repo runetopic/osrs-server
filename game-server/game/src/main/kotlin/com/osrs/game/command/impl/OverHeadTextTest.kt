@@ -9,7 +9,7 @@ import com.osrs.game.command.CommandListener
 class OverHeadTextTest : CommandListener(
     name = "overhead_text"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         player.renderer.update(
             OverHeadText(
                 text = "Testing"

@@ -13,6 +13,7 @@ import com.osrs.game.world.map.zone.ZoneManager.npcs
 
 /**
  * @author Jordan Abraham
+ * @author Tyler Telis
  */
 @Singleton
 class NpcInfoSmallPacketBuilder @Inject constructor(
@@ -30,42 +31,54 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
     private fun RSByteBuffer.sync(
         viewport: Viewport
     ) {
-        val size = viewport.npcs.count { it != null }
+        val size = viewport.npcs.size
         writeBits(8, size)
-        if (size != 0) {
-            syncHighDefinition(viewport)
-        }
+        syncHighDefinition(viewport)
         syncLowDefinition(viewport)
     }
 
     private fun RSByteBuffer.syncHighDefinition(
         viewport: Viewport
     ) {
-        for (npc in viewport.npcs) {
-            if (npc == null) {
-                continue
+        val iterator = viewport.npcs.iterator()
+
+        while (iterator.hasNext()) {
+            val npc = iterator.next()
+            val hasBlockUpdate = false
+            val shouldRemove = !npc.location.withinDistance(viewport.player.location)
+            val hasUpdate = shouldRemove || hasBlockUpdate
+
+            writeBits(1, if (hasUpdate) 1 else 0)
+
+            if (shouldRemove) {
+                writeBits(2, 3)
+                iterator.remove()
             }
-            val updating = false
-            if (!updating) {
-                writeBits(1, 0)
-                continue
-            }
-            writeBits(1, 1)
-            // TODO
         }
     }
 
-    private fun RSByteBuffer.syncLowDefinition(
-        viewport: Viewport
+    private tailrec fun RSByteBuffer.syncLowDefinition(
+        viewport: Viewport,
+        zoneIndex: Int = 0,
+        npcIndex: Int = 0
     ) {
         val player = viewport.player
-        for (zone in player.zones) {
-            for (npc in zone.npcs) {
-                val adding = viewport.shouldAdd(npc)
-                if (!adding) continue
-                processLowDefinitionNpc(viewport, npc)
-            }
-        }
+
+        if (zoneIndex >= player.zones.size) return
+
+        val zone = player.zones[zoneIndex]
+
+        if (npcIndex >= zone.npcs.size) return syncLowDefinition(viewport, zoneIndex + 1, 0)
+
+        val npc = zone.npcs.elementAt(npcIndex)
+
+        val adding = viewport.shouldAdd(npc)
+
+        if (!adding) return syncLowDefinition(viewport, zoneIndex, npcIndex + 1)
+
+        processLowDefinitionNpc(viewport, npc)
+
+        return syncLowDefinition(viewport, zoneIndex, npcIndex + 1)
     }
 
     private fun RSByteBuffer.processLowDefinitionNpc(
@@ -81,13 +94,8 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         writeBits(3, 0) // TODO orientation
         writeBits(5, (npc.location.x - player.location.x).let { if (it < 15) it + 32 else it })
         writeBits(1, 0) // TODO handle teleporting
-        viewport.npcs[viewport.npcs.indexOf(null)] = npc
+        viewport.npcs += npc
     }
 
-    private fun Viewport.shouldAdd(npc: NPC): Boolean = when {
-        npc in npcs -> false
-        !npc.location.withinDistance(player.location) -> false
-        npcs.all { it != null } -> false
-        else -> true
-    }
+    private fun Viewport.shouldAdd(npc: NPC): Boolean = npc !in npcs && npc.location.withinDistance(player.location)
 }

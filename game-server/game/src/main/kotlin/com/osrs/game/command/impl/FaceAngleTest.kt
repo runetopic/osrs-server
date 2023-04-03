@@ -9,7 +9,7 @@ import com.osrs.game.command.CommandListener
 class FaceAngleTest : CommandListener(
     name = "face_angle"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         player.renderer.update(
             FaceAngle(
                 angle = 512

@@ -12,7 +12,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 class ProjectileTest : CommandListener(
     name = "proj"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         val zone = player.zone
 
         player.message("Zone coords ${zone.location}")

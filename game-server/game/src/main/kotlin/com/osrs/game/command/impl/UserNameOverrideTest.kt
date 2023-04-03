@@ -9,7 +9,7 @@ import com.osrs.game.command.CommandListener
 class UserNameOverrideTest : CommandListener(
     name = "username_override"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         player.renderer.update(
             UserNameOverride(
                 prefix = "Testing",
