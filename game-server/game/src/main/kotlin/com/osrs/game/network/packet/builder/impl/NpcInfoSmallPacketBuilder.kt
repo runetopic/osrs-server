@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.common.buffer.RSByteBuffer
 import com.osrs.common.map.location.withinDistance
+import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.builder.PacketBuilder
@@ -44,15 +45,28 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
 
         while (iterator.hasNext()) {
             val npc = iterator.next()
-            val hasBlockUpdate = false
+
             val shouldRemove = !npc.location.withinDistance(viewport.player.location)
-            val hasUpdate = shouldRemove || hasBlockUpdate
+
+            if (shouldRemove) {
+                writeBits(1, 1)
+                writeBits(2, 3)
+                iterator.remove()
+                continue
+            }
+
+            val hasBlockUpdate = false
+
+            val isMoving = npc.moveDirection != MoveDirection.None
+
+            val hasUpdate = hasBlockUpdate || isMoving
 
             writeBits(1, if (hasUpdate) 1 else 0)
 
-            if (shouldRemove) {
-                writeBits(2, 3)
-                iterator.remove()
+            if (isMoving) {
+                writeBits(2, 1)
+                writeBits(3, npc.moveDirection.walkDirection?.npcOpcode ?: 0)
+                writeBits(1, if (hasBlockUpdate) 1 else 0)
             }
         }
     }

@@ -98,6 +98,14 @@ class Player(
     override fun totalHitpoints(): Int = 100
 
     override fun currentHitpoints(): Int = 100
+    override fun processMovement() {
+        movementQueue.process(this)
+
+        if (lastLocation != location) {
+            world.collisionMap.removePlayerCollision(lastLocation)
+            world.collisionMap.addActorCollision(location)
+        }
+    }
 
     override fun updateMap(initialize: Boolean) {
         super.updateMap(initialize)

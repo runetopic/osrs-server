@@ -10,7 +10,7 @@ class NPC(
     private val spawnLocation: Location
 ) : Actor(world) {
     override fun login() {
-        super.initialize(spawnLocation)
+        this.initialize(spawnLocation)
         updateMap(true)
         online = true
     }
@@ -23,4 +23,16 @@ class NPC(
     override fun totalHitpoints(): Int = 100
 
     override fun currentHitpoints(): Int = 100
+    override fun processMovement() {
+        if (shouldWander()) wander()
+
+        movementQueue.process(this)
+
+        if (lastLocation != location) {
+            world.collisionMap.removePlayerCollision(lastLocation)
+            world.collisionMap.addActorCollision(location)
+        }
+    }
+
+    private fun shouldWander(): Boolean = !movementQueue.hasWalkSteps() && (0..7).random() == 0
 }

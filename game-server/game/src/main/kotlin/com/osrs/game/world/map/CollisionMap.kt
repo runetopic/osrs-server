@@ -10,6 +10,7 @@ import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator
 import org.rsmod.pathfinder.ZoneFlags
+import org.rsmod.pathfinder.flag.CollisionFlag.BLOCK_NPCS
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR_DECORATION
 import org.rsmod.pathfinder.flag.CollisionFlag.OBJECT
@@ -46,8 +47,8 @@ class CollisionMap @Inject constructor(
     private val zoneFlags: ZoneFlags,
     private val stepValidator: StepValidator
 ) {
-    fun canTravel(location: Location, direction: Direction): Boolean =
-        stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, 0)
+    fun canTravel(location: Location, direction: Direction, isNPC: Boolean): Boolean =
+        stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, if (isNPC) BLOCK_NPCS else 0)
 
     fun applyCollision(entry: MapSquareEntry) {
         for (level in 0 until 4) {
@@ -82,6 +83,14 @@ class CollisionMap @Inject constructor(
                 }
             }
         }
+    }
+
+    fun addActorCollision(location: Location) {
+        addCollisionFlag(location, BLOCK_NPCS, true)
+    }
+
+    fun removePlayerCollision(location: Location) {
+        addCollisionFlag(location, BLOCK_NPCS, false)
     }
 
     fun collisionFlag(location: Location) = zoneFlags[location.x, location.z, location.level]
