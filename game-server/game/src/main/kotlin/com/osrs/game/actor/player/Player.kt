@@ -102,7 +102,7 @@ class Player(
         movementQueue.process(this)
 
         if (lastLocation != location) {
-            world.collisionMap.removePlayerCollision(lastLocation)
+            world.collisionMap.removeActorCollision(lastLocation)
             world.collisionMap.addActorCollision(location)
         }
     }

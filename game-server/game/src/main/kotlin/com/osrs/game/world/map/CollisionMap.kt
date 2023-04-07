@@ -89,7 +89,7 @@ class CollisionMap @Inject constructor(
         addCollisionFlag(location, BLOCK_NPCS, true)
     }
 
-    fun removePlayerCollision(location: Location) {
+    fun removeActorCollision(location: Location) {
         addCollisionFlag(location, BLOCK_NPCS, false)
     }
 
