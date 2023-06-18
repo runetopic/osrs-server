@@ -1,16 +1,19 @@
 package com.osrs.game.actor.npc
 
-import org.rsmod.pathfinder.RouteCoordinates
-import java.lang.Math.random
-import kotlin.math.roundToInt
+import com.osrs.common.map.location.Location
+import com.osrs.common.map.location.asRouteCoordinates
+import com.osrs.common.map.location.randomize
 
-fun NPC.walkTo(routeCoordinates: RouteCoordinates) {
+fun NPC.walkTo(location: Location) {
+    val routeCoordinates = location.asRouteCoordinates()
+    println("NPC is requesting to move: $routeCoordinates")
     movementQueue.appendRoute(routeCoordinates)
 }
 
-fun NPC.wander(radius: Int = 5) {
-    val xOffset = (-radius + random() * 10.0).roundToInt()
-    val zOffset = (random() * 10.0 - radius).roundToInt()
-    val location = RouteCoordinates(location.x + xOffset, location.z + zOffset)
-    walkTo(location)
+fun NPC.wander(radius: Int): Location {
+    if ((0..7).random() != 0) return spawnLocation
+
+    val offset = spawnLocation.randomize(radius)
+    walkTo(offset)
+    return offset
 }

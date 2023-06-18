@@ -7,11 +7,10 @@ import com.osrs.game.world.World
 class NPC(
     val id: Int,
     world: World,
-    private val spawnLocation: Location
+    val spawnLocation: Location
 ) : Actor(world) {
     override fun login() {
         this.initialize(spawnLocation)
-        updateMap(true)
         online = true
     }
 
@@ -23,16 +22,9 @@ class NPC(
     override fun totalHitpoints(): Int = 100
 
     override fun currentHitpoints(): Int = 100
+
     override fun processMovement() {
-        if (shouldWander()) wander()
-
+        if (id == 3216) wander(1)
         movementQueue.process(this)
-
-        if (lastLocation != location) {
-            world.collisionMap.removeActorCollision(lastLocation)
-            world.collisionMap.addActorCollision(location)
-        }
     }
-
-    private fun shouldWander(): Boolean = !movementQueue.hasWalkSteps() && (0..7).random() == 0
 }

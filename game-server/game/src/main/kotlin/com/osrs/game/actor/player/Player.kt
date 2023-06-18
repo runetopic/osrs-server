@@ -118,11 +118,9 @@ class Player(
         )
     }
 
-    private fun updateStats() {
-        Skill.values().forEach {
-            val level = skills.level(it)
-            val experience = skills.xp(it)
-            updateStat(it, level, experience)
-        }
+    private fun updateStats() = enumValues<Skill>().forEach { skill ->
+        val level = skills.level(skill)
+        val experience = skills.xp(skill)
+        updateStat(skill, level, experience)
     }
 }

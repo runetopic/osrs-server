@@ -32,26 +32,26 @@ allprojects {
 
     dependencies {
         // Kotlin standard-lib
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.2.0-SNAPSHOT")
         implementation("com.runetopic.cache:cache:2.0.0-SNAPSHOT")
         // Pathfinder
         implementation("com.github.blurite:pathfinder:2.4.2")
         // Logger
-        implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.4")
+        implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
         implementation("org.slf4j:slf4j-simple:2.0.5")
         // Ktor
         // https://mvnrepository.com/artifact/io.ktor/ktor-server-core
-        runtimeOnly("io.ktor:ktor-server-core:2.2.3")
+        runtimeOnly("io.ktor:ktor-server-core:2.3.1")
         // https://mvnrepository.com/artifact/io.ktor/ktor-server-netty
-        implementation("io.ktor:ktor-server-netty:2.2.3")
+        implementation("io.ktor:ktor-server-netty:2.3.1")
         // Kotlin-guice
         implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
         // Kotlin-guice assisted inject https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
         implementation("com.google.inject.extensions:guice-assistedinject:5.1.0")
         // Serialization: https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
         implementation("org.litote.kmongo:kmongo-id-serialization:4.8.0")
         implementation("org.litote.kmongo:kmongo-serialization:4.8.0")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
@@ -59,10 +59,9 @@ allprojects {
         // Bcrypt
         implementation("org.mindrot:jbcrypt:0.4")
         // Kaml - Yaml parser.
-        implementation("com.charleskorn.kaml:kaml:0.50.0")
+        implementation("com.charleskorn.kaml:kaml:0.54.0")
         // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
-        implementation("io.github.classgraph:classgraph:4.8.154")
-
+        implementation("io.github.classgraph:classgraph:4.8.157")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
     }
 }

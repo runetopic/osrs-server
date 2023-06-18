@@ -2,8 +2,8 @@ rootProject.name = "osrs-server"
 
 pluginManagement {
     plugins {
-        kotlin("jvm") version "1.8.0"
-        kotlin("plugin.serialization") version "1.8.0"
+        kotlin("jvm") version "1.8.22"
+        kotlin("plugin.serialization") version "1.8.22"
     }
 }
 
@@ -11,8 +11,11 @@ include(
     listOf(
         "application",
         "http-server",
-        "database",
-        "game-server:common",
+        "domain",
+        "repository",
+        "service",
+        "serializer",
+        "game-server:api",
         "game-server:cache",
         "game-server:game"
     )

@@ -3,7 +3,7 @@ package com.osrs.game.actor.movement
 import com.osrs.common.map.location.Location
 
 enum class Direction(val opcode: Int, val npcOpcode: Int) {
-    NONE(opcode = -1, npcOpcode = -1),
+    NONE(opcode = -1, npcOpcode = 0),
 
     NORTH_WEST(opcode = 5, npcOpcode = 0),
 
@@ -140,6 +140,30 @@ enum class Direction(val opcode: Int, val npcOpcode: Int) {
                 return 14
             }
             return if (dx == 2 && dz == 2) 15 else -1
+        }
+
+        operator fun get(dx: Int, dy: Int): Direction {
+            return when (dx) {
+                -1 -> when (dy) {
+                    -1 -> NORTH_WEST
+                    0 -> WEST
+                    1 -> SOUTH_WEST
+                    else -> NONE
+                }
+                0 -> when (dy) {
+                    -1 -> NORTH
+                    0 -> NONE
+                    1 -> SOUTH
+                    else -> NONE
+                }
+                1 -> when (dy) {
+                    -1 -> NORTH_EAST
+                    0 -> EAST
+                    1 -> SOUTH_EAST
+                    else -> NONE
+                }
+                else -> NONE
+            }
         }
     }
 }

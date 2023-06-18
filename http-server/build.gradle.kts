@@ -4,5 +4,6 @@ plugins {
 
 dependencies {
     implementation(project(":game-server:game"))
-    implementation(project(":database"))
+    implementation(project(":domain"))
+    implementation(project(mapOf("path" to ":service")))
 }

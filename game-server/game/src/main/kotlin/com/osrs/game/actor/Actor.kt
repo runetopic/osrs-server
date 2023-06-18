@@ -30,7 +30,6 @@ abstract class Actor(
     var runEnergy = 10_000f
         private set
     var moveDirection = MoveDirection.None
-        private set
     var location = Location.None
         private set
     var lastLocation = Location.None
@@ -46,10 +45,10 @@ abstract class Actor(
     abstract fun logout()
     abstract fun totalHitpoints(): Int
     abstract fun currentHitpoints(): Int
-
     abstract fun processMovement()
 
     fun initialize(location: Location) {
+        world.collisionMap.addActorCollision(location)
         this.location = location
         this.lastLocation = location
     }
@@ -82,11 +81,12 @@ abstract class Actor(
             lastLocation = location
         }
     }
-
     fun canTravel(location: Location, direction: Direction): Boolean = world.collisionMap.canTravel(location, direction, this is NPC)
 
-    fun moveTo(location: Location, moveDirection: MoveDirection) {
-        this.location = location
+    fun moveTo(newLocation: Location, moveDirection: MoveDirection) {
+        world.collisionMap.removeActorCollision(location)
+        this.location = newLocation
+        world.collisionMap.addActorCollision(newLocation)
         this.moveDirection = moveDirection
     }
 

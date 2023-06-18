@@ -33,8 +33,8 @@ class WorldSyncTask(
         players.buildPlayerUpdateBlocks()
         npcs.buildNpcUpdateBlocks()
         players.sendUpdateBlocks()
-        players.resetPlayers()
         npcs.resetNpcs()
+        players.resetPlayers()
         players.writeZoneUpdates()
         players.writeAndFlush()
 

@@ -4,10 +4,11 @@ import com.google.inject.name.Names
 import com.osrs.cache.CacheModule
 import com.osrs.common.map.MapSquares
 import com.osrs.common.map.NPCSpawns
-import com.osrs.database.DatabaseModule
 import com.osrs.game.GameModule
 import com.osrs.game.network.NetworkModule
 import com.osrs.http.HttpModule
+import com.osrs.repository.RepositoryModule
+import com.osrs.service.ServiceModule
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationEnvironment
@@ -22,7 +23,8 @@ class ApplicationModule(
         bind<MapSquares>().asEagerSingleton()
         bind<NPCSpawns>().asEagerSingleton()
         install(CacheModule)
-        install(DatabaseModule)
+        install(RepositoryModule)
+        install(ServiceModule)
         install(HttpModule)
         install(GameModule)
         install(NetworkModule)

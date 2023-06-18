@@ -3,9 +3,9 @@ package com.osrs.game.world.service
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.database.dto.UpdateAccountRequest
-import com.osrs.database.service.AccountService
 import com.osrs.game.actor.player.Player
 import com.osrs.game.world.World
+import com.osrs.service.account.AccountService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
