@@ -46,8 +46,6 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         while (iterator.hasNext()) {
             val npc = iterator.next()
 
-            if (npc.id != 3216) continue
-
             val shouldRemove = !npc.location.withinDistance(viewport.player.location)
 
             if (shouldRemove) {
@@ -64,14 +62,6 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
             val hasUpdate = hasBlockUpdate || isMoving
 
             writeBits(1, if (hasUpdate) 1 else 0)
-
-            if (npc.id == 3216 && isMoving) {
-                println("npc id: ${npc.id}")
-                println("npc location: ${npc.location}")
-                println("Walk direction ${npc.moveDirection.walkDirection}")
-                println("${npc.movementQueue.toList()} ${npc.movementQueue.routeSteps}")
-                println("npc.moveDirection.walkDirection?.npcOpcode ?: 0: ${npc.moveDirection.walkDirection?.npcOpcode ?: 0}")
-            }
 
             if (isMoving) {
                 writeBits(2, 1)
