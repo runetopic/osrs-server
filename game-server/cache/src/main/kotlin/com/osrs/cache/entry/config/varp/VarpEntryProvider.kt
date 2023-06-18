@@ -6,7 +6,7 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.VARP_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 
 @Singleton
 class VarpEntryProvider @Inject constructor(

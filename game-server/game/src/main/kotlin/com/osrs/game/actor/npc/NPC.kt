@@ -1,17 +1,16 @@
 package com.osrs.game.actor.npc
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.world.World
 
 class NPC(
     val id: Int,
     world: World,
-    private val spawnLocation: Location
+    val spawnLocation: Location
 ) : Actor(world) {
     override fun login() {
-        super.initialize(spawnLocation)
-        updateMap(true)
+        this.initialize(spawnLocation)
         online = true
     }
 
@@ -23,4 +22,9 @@ class NPC(
     override fun totalHitpoints(): Int = 100
 
     override fun currentHitpoints(): Int = 100
+
+    override fun processMovement() {
+        if (id == 3216) wander(1)
+        movementQueue.process(this)
+    }
 }

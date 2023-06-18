@@ -1,8 +1,8 @@
 package com.osrs.game.network.packet.handler.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.util.childId
-import com.osrs.common.util.interfaceId
+import com.osrs.api.util.childId
+import com.osrs.api.util.interfaceId
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.type.client.IfButtonPacket

@@ -1,7 +1,7 @@
 package com.osrs.game.container
 
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
-import com.osrs.common.item.Item
+import com.osrs.api.item.Item
 
 abstract class Container(
     val id: Int,

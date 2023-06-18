@@ -8,16 +8,16 @@ object CommandModule : KotlinModule() {
     override fun configure() {
         val commands = loadCommands()
         val commandListeners = KotlinMultibinder.newSetBinder<CommandListener>(kotlinBinder)
-        commands.forEach { commandListeners.addBinding().toInstance(it) }
+
+        commands.forEach {
+            commandListeners.addBinding().to(it)
+        }
     }
 
-    private fun loadCommands(): List<CommandListener> {
+    private fun loadCommands(): List<Class<CommandListener>> {
         return ClassGraph().enableClassInfo().scan().use { result ->
             result.allClasses.filter { it.extendsSuperclass(CommandListener::class.java) }
-                .map {
-                    val commandClass = it.loadClass().getConstructor().newInstance() as CommandListener
-                    commandClass
-                }
+                .map { it.loadClass() as Class<CommandListener> }
         }
     }
 }

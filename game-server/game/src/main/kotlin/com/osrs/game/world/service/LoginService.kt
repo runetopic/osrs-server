@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.entry.config.enum.EnumEntryProvider
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
-import com.osrs.common.ui.InterfaceInfoMap
+import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.game.actor.player.Player
 import com.osrs.game.container.Inventory
 import com.osrs.game.ui.Interfaces

@@ -1,7 +1,7 @@
 package com.osrs.game.network.packet.builder.impl.render
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.world.World

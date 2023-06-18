@@ -1,6 +1,6 @@
 package com.osrs.game.actor.render.type
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.render.RenderType
 
 data class ExactMove(

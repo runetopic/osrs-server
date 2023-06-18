@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.type.server
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.player.Viewport
 import com.osrs.game.network.packet.Packet
 

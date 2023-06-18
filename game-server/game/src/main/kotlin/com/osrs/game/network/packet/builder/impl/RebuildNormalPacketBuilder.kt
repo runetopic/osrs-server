@@ -2,8 +2,8 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.map.MapSquares
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.map.MapSquares
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
 

@@ -10,7 +10,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.LocAddRequest
 class AddLocTest : CommandListener(
     name = "spawn_loc"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         val zone = player.zone
         val loc = GameObject(1124, player.location, 22, 0)
         player.world.collisionMap.addObjectCollision(loc)

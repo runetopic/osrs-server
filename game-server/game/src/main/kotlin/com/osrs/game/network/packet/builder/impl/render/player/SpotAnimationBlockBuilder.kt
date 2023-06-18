@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.builder.impl.render.player
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.render.type.SpotAnimation
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 

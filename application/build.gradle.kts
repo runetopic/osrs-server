@@ -3,9 +3,11 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":game-server:cache"))
-    implementation(project(":game-server:common"))
-    implementation(project(":database"))
-    implementation(project(":game-server:game"))
+    implementation(project(":domain"))
+    implementation(project(":repository"))
+    implementation(project(":service"))
     implementation(project(":http-server"))
+    implementation(project(":game-server:cache"))
+    implementation(project(":game-server:api"))
+    implementation(project(":game-server:game"))
 }

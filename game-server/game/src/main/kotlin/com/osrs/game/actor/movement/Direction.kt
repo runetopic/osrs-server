@@ -1,26 +1,25 @@
 package com.osrs.game.actor.movement
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 
-enum class Direction(val opcode: Int) {
-    NONE(opcode = -1),
+enum class Direction(val opcode: Int, val npcOpcode: Int) {
+    NONE(opcode = -1, npcOpcode = 0),
 
-    NORTH_WEST(opcode = 5),
+    NORTH_WEST(opcode = 5, npcOpcode = 0),
 
-    NORTH(opcode = 6),
+    NORTH(opcode = 6, npcOpcode = 1),
 
-    NORTH_EAST(opcode = 7),
+    NORTH_EAST(opcode = 7, npcOpcode = 2),
 
-    WEST(opcode = 3),
+    WEST(opcode = 3, npcOpcode = 3),
 
-    EAST(opcode = 4),
+    EAST(opcode = 4, npcOpcode = 4),
 
-    SOUTH_WEST(opcode = 0),
+    SOUTH_WEST(opcode = 0, npcOpcode = 5),
 
-    SOUTH(opcode = 1),
+    SOUTH(opcode = 1, npcOpcode = 6),
 
-    SOUTH_EAST(opcode = 2)
-    ;
+    SOUTH_EAST(opcode = 2, npcOpcode = 7);
 
     fun getDeltaX(): Int = when (this) {
         SOUTH_EAST, NORTH_EAST, EAST -> 1
@@ -59,7 +58,7 @@ enum class Direction(val opcode: Int) {
                     -1 -> return WEST
                 }
             }
-            throw IllegalArgumentException("Unhandled direction delta [$dx, $dz]")
+            return NONE
         }
 
         val DIRECTION_DELTA_X = intArrayOf(-1, 0, 1, -1, 1, -1, 0, 1)
@@ -141,6 +140,30 @@ enum class Direction(val opcode: Int) {
                 return 14
             }
             return if (dx == 2 && dz == 2) 15 else -1
+        }
+
+        operator fun get(dx: Int, dy: Int): Direction {
+            return when (dx) {
+                -1 -> when (dy) {
+                    -1 -> NORTH_WEST
+                    0 -> WEST
+                    1 -> SOUTH_WEST
+                    else -> NONE
+                }
+                0 -> when (dy) {
+                    -1 -> NORTH
+                    0 -> NONE
+                    1 -> SOUTH
+                    else -> NONE
+                }
+                1 -> when (dy) {
+                    -1 -> NORTH_EAST
+                    0 -> EAST
+                    1 -> SOUTH_EAST
+                    else -> NONE
+                }
+                else -> NONE
+            }
         }
     }
 }

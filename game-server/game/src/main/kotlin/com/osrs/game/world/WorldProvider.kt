@@ -20,7 +20,7 @@ class WorldProvider @Inject constructor(
     private val stepValidator: StepValidator
 ) : Provider<World> {
 
-    override fun get(): World = World(
+    private val world = World(
         1,
         cache,
         loginService,
@@ -29,4 +29,6 @@ class WorldProvider @Inject constructor(
         collisionMap,
         stepValidator
     )
+
+    override fun get(): World = world
 }

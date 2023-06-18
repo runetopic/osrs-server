@@ -9,7 +9,7 @@ import com.osrs.game.command.CommandListener
 class AddNpcTest : CommandListener(
     name = "add_npc"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         val npc = NPC(1, player.world, player.location)
         player.world.requestAddNpc(npc)
     }

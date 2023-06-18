@@ -2,9 +2,9 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.withinDistance
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.withinDistance
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.actor.movement.MoveDirection
@@ -30,12 +30,14 @@ class PlayerInfoPacketBuilder @Inject constructor(
         buffer.syncHighDefinition(viewport, players)
         buffer.syncLowDefinition(viewport, players)
         buffer.accessBytes()
-        for (index in viewport.highDefinitionUpdates) {
+
+        for (index in viewport.highDefinitionPlayers) {
             updateBlocks.highDefinitionUpdates[index]?.let { buffer.writeBytes(it) }
         }
-        for (index in viewport.lowDefinitionUpdates) {
+        for (index in viewport.lowDefinitionPlayers) {
             updateBlocks.lowDefinitionUpdates[index]?.let { buffer.writeBytes(it) }
         }
+
         viewport.reset()
     }
 
@@ -52,7 +54,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
             if (!nsn) return
             return syncHighDefinition(viewport, players, false)
         }
-        val playerIndex = viewport.highDefinitions[index]
+        val playerIndex = viewport.highDefinitionPlayerIndices[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] != 0)) {
             return syncHighDefinition(viewport, players, nsn, index + 1, skip)
         }
@@ -88,12 +90,11 @@ class PlayerInfoPacketBuilder @Inject constructor(
             if (!nsn) return
             return syncLowDefinition(viewport, players, false)
         }
-        val playerIndex = viewport.lowDefinitions[index]
+        val playerIndex = viewport.lowDefinitionPlayerIndices[index]
         if (nsn == (0x1 and viewport.nsnFlags[playerIndex] == 0)) {
             return syncLowDefinition(viewport, players, nsn, index + 1, skip)
         }
-        val other = players[playerIndex]
-        if (other == null) {
+        val other = players[playerIndex] ?: run {
             viewport.nsnFlags[playerIndex] = viewport.nsnFlags[playerIndex] or 2
             return syncLowDefinition(viewport, players, nsn, index + 1, skip + 1)
         }
@@ -160,7 +161,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
             }
         }
         if (!removing && updating) {
-            viewport.highDefinitionUpdates += other.index
+            viewport.highDefinitionPlayers += other.index
         }
     }
 
@@ -176,7 +177,7 @@ class PlayerInfoPacketBuilder @Inject constructor(
         writeBits(1, 1)
         viewport.players[other.index] = other
         viewport.nsnFlags[index] = viewport.nsnFlags[index] or 2
-        viewport.lowDefinitionUpdates += other.index
+        viewport.lowDefinitionPlayers += other.index
     }
 
     private fun RSByteBuffer.validateLocationChanges(

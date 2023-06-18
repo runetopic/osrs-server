@@ -1,8 +1,8 @@
 package com.osrs.game.world.map.zone
 
-import com.osrs.common.item.FloorItem
-import com.osrs.common.map.location.ZoneLocation
-import com.osrs.common.map.location.distanceTo
+import com.osrs.api.item.FloorItem
+import com.osrs.api.map.location.ZoneLocation
+import com.osrs.api.map.location.distanceTo
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player

@@ -1,6 +1,6 @@
 package com.osrs.game.controller.impl
 
-import com.osrs.common.item.FloorItem
+import com.osrs.api.item.FloorItem
 import com.osrs.game.controller.Controller
 import com.osrs.game.controller.ControllerManager.removeController
 import com.osrs.game.world.World

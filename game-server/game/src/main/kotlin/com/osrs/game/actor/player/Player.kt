@@ -1,7 +1,7 @@
 package com.osrs.game.actor.player
 
-import com.osrs.common.item.FloorItem
-import com.osrs.common.skill.Skill
+import com.osrs.api.item.FloorItem
+import com.osrs.api.skill.Skill
 import com.osrs.database.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MovementType
@@ -98,6 +98,14 @@ class Player(
     override fun totalHitpoints(): Int = 100
 
     override fun currentHitpoints(): Int = 100
+    override fun processMovement() {
+        movementQueue.process(this)
+
+        if (lastLocation != location) {
+            world.collisionMap.removeActorCollision(lastLocation)
+            world.collisionMap.addActorCollision(location)
+        }
+    }
 
     override fun updateMap(initialize: Boolean) {
         super.updateMap(initialize)
@@ -110,11 +118,9 @@ class Player(
         )
     }
 
-    private fun updateStats() {
-        Skill.values().forEach {
-            val level = skills.level(it)
-            val experience = skills.xp(it)
-            updateStat(it, level, experience)
-        }
+    private fun updateStats() = enumValues<Skill>().forEach { skill ->
+        val level = skills.level(skill)
+        val experience = skills.xp(skill)
+        updateStat(skill, level, experience)
     }
 }

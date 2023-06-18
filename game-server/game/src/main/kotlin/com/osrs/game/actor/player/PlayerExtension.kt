@@ -1,6 +1,6 @@
 package com.osrs.game.actor.player
 
-import com.osrs.common.skill.Skill
+import com.osrs.api.skill.Skill
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.network.packet.Packet
 import com.osrs.game.network.packet.PacketGroup

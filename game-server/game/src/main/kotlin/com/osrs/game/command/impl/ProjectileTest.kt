@@ -1,7 +1,7 @@
 package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.map.location.transform
+import com.osrs.api.map.location.transform
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.message
 import com.osrs.game.command.CommandListener
@@ -12,7 +12,7 @@ import com.osrs.game.world.map.zone.ZoneUpdateRequest.ProjectileRequest
 class ProjectileTest : CommandListener(
     name = "proj"
 ) {
-    override fun execute(command: String, player: Player) {
+    override fun execute(player: Player, command: String, arguments: List<String>) {
         val zone = player.zone
 
         player.message("Zone coords ${zone.location}")

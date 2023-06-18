@@ -1,6 +1,6 @@
 package com.osrs.cache.entry
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 
 abstract class EntryTypeProvider<T : EntryType> {
     private var _data: Map<Int, T>? = null

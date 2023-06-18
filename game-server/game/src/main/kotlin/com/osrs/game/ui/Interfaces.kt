@@ -1,9 +1,9 @@
 package com.osrs.game.ui
 
 import com.osrs.cache.entry.config.enum.EnumEntryProvider
-import com.osrs.common.ui.InterfaceInfo
-import com.osrs.common.ui.InterfaceInfoMap
-import com.osrs.common.util.packInterface
+import com.osrs.api.ui.InterfaceInfo
+import com.osrs.api.ui.InterfaceInfoMap
+import com.osrs.api.util.packInterface
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.write
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket

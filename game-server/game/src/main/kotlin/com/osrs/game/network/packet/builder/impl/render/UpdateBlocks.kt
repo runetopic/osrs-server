@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.builder.impl.render
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.render.HighDefinitionRenderBlock
 import com.osrs.game.actor.render.LowDefinitionRenderBlock

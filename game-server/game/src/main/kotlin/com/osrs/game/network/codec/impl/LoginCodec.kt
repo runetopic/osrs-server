@@ -3,8 +3,7 @@ package com.osrs.game.network.codec.impl
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.Cache
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.database.service.AccountService
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE
@@ -15,6 +14,7 @@ import com.osrs.game.network.SessionResponseOpcode.INVALID_USERNAME_PASSWORD_OPC
 import com.osrs.game.network.SessionResponseOpcode.LOGIN_SUCCESS_OPCODE
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.world.World
+import com.osrs.service.account.AccountService
 import com.runetopic.cryptography.fromXTEA
 import com.runetopic.cryptography.toISAAC
 import io.ktor.server.application.ApplicationEnvironment

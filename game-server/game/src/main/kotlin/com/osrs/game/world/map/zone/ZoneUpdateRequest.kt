@@ -1,7 +1,7 @@
 package com.osrs.game.world.map.zone
 
-import com.osrs.common.item.FloorItem
-import com.osrs.common.map.location.Location
+import com.osrs.api.item.FloorItem
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.projectile.Projectile
 import com.osrs.game.world.map.GameObject

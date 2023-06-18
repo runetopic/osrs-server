@@ -1,10 +1,11 @@
 package com.osrs.game.actor
 
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.ZoneLocation
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.ZoneLocation
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue
+import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.render.ActorRenderer
 import com.osrs.game.network.packet.type.server.UpdateZoneFullFollowsPacket
@@ -16,23 +17,19 @@ import kotlin.math.min
 abstract class Actor(
     val world: World
 ) {
-    // Late initialized properties.
-    var movementQueue: MovementQueue? = null
-        private set
-
     // Immutable properties.
     val renderer = ActorRenderer()
+    val movementQueue: MovementQueue = MovementQueue()
     val zones = IntArray(7 * 7)
 
     // Mutable properties.
     var online = false
     var index = 0
-    var isRunning = true
+    var isRunning = false
         private set
     var runEnergy = 10_000f
         private set
     var moveDirection = MoveDirection.None
-        private set
     var location = Location.None
         private set
     var lastLocation = Location.None
@@ -48,11 +45,12 @@ abstract class Actor(
     abstract fun logout()
     abstract fun totalHitpoints(): Int
     abstract fun currentHitpoints(): Int
+    abstract fun processMovement()
 
     fun initialize(location: Location) {
+        world.collisionMap.addActorCollision(location)
         this.location = location
         this.lastLocation = location
-        this.movementQueue = MovementQueue(this)
     }
 
     open fun updateMap(initialize: Boolean) {
@@ -60,8 +58,8 @@ abstract class Actor(
         baseZoneLocation = ZoneLocation(x = location.zoneX - 6, z = location.zoneZ - 6)
     }
 
-    fun syncProcess() {
-        movementQueue?.process()
+    fun process() {
+        processMovement()
 
         if (shouldRebuildMap()) {
             updateMap(false)
@@ -72,7 +70,7 @@ abstract class Actor(
         }
     }
 
-    fun syncReset(resetRenderer: Boolean) {
+    fun reset(resetRenderer: Boolean) {
         if (resetRenderer) {
             renderer.clearUpdates()
         }
@@ -83,11 +81,12 @@ abstract class Actor(
             lastLocation = location
         }
     }
+    fun canTravel(location: Location, direction: Direction): Boolean = world.collisionMap.canTravel(location, direction, this is NPC)
 
-    fun canTravel(location: Location, direction: Direction) = world.collisionMap.canTravel(location, direction)
-
-    fun moveTo(location: Location, moveDirection: MoveDirection) {
-        this.location = location
+    fun moveTo(newLocation: Location, moveDirection: MoveDirection) {
+        world.collisionMap.removeActorCollision(location)
+        this.location = newLocation
+        world.collisionMap.addActorCollision(newLocation)
         this.moveDirection = moveDirection
     }
 
