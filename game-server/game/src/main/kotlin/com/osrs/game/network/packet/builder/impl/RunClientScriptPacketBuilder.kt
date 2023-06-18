@@ -1,8 +1,8 @@
 package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.item.Item
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.item.Item
 import com.osrs.game.container.Container
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.ClientScriptPacket

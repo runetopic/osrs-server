@@ -1,8 +1,8 @@
 package com.osrs.game.actor.npc
 
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.asRouteCoordinates
-import com.osrs.common.map.location.randomize
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.asRouteCoordinates
+import com.osrs.api.map.location.randomize
 
 fun NPC.walkTo(location: Location) {
     val routeCoordinates = location.asRouteCoordinates()

@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.builder
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.network.packet.Packet
 
 abstract class PacketBuilder<out T : Packet>(

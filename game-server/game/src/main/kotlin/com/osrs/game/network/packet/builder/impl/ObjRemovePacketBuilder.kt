@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.builder.impl
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.network.packet.builder.PacketBuilder
 import com.osrs.game.network.packet.type.server.ObjRemovePacket
 import javax.inject.Singleton

@@ -3,7 +3,7 @@ package com.osrs.game.network.codec.impl
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.osrs.cache.Cache
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.LOGIN_NORMAL_OPCODE

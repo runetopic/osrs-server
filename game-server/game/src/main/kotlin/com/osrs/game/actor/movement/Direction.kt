@@ -1,6 +1,6 @@
 package com.osrs.game.actor.movement
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 
 enum class Direction(val opcode: Int, val npcOpcode: Int) {
     NONE(opcode = -1, npcOpcode = 0),

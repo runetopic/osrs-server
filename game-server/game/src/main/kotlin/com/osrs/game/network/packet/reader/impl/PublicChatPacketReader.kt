@@ -1,8 +1,8 @@
 package com.osrs.game.network.packet.reader.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUShortSmart
+import com.osrs.api.buffer.readUByte
+import com.osrs.api.buffer.readUShortSmart
 import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.type.client.PublicChatPacket
 import io.ktor.utils.io.ByteReadChannel

@@ -1,8 +1,8 @@
 package com.osrs.game
 
 import com.google.inject.Inject
-import com.osrs.common.map.NPCSpawns
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.NPCSpawns
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World
 import com.osrs.game.world.service.PlayerSerializationService

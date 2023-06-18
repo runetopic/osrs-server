@@ -1,11 +1,11 @@
 package com.osrs.database.entity
 
-import com.osrs.common.item.FloorItem
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.LocationSerializer
-import com.osrs.common.skill.Skills
-import com.osrs.serializer.InstantSerializer
-import com.osrs.serializer.SkillsSerializer
+import com.osrs.api.item.FloorItem
+import com.osrs.api.map.location.Location
+import com.osrs.api.serializer.InstantSerializer
+import com.osrs.api.serializer.LocationSerializer
+import com.osrs.api.serializer.SkillsSerializer
+import com.osrs.api.skill.Skills
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id

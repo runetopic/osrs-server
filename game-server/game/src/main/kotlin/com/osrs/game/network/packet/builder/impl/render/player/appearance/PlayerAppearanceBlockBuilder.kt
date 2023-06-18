@@ -1,6 +1,6 @@
 package com.osrs.game.network.packet.builder.impl.render.player.appearance
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.network.packet.builder.impl.render.RenderBlockBuilder
 import com.osrs.game.network.packet.builder.impl.render.player.appearance.kit.info.ArmsBuilder

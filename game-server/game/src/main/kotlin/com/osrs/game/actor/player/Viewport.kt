@@ -1,6 +1,6 @@
 package com.osrs.game.actor.player
 
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.world.World.Companion.MAX_PLAYERS
 

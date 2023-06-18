@@ -14,7 +14,6 @@ include(
         "domain",
         "repository",
         "service",
-        "serializer",
         "game-server:api",
         "game-server:cache",
         "game-server:game"

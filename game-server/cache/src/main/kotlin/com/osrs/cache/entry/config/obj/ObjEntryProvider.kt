@@ -6,7 +6,7 @@ import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.OBJ_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 
 @Singleton
 class ObjEntryProvider @Inject constructor(

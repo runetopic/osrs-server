@@ -2,9 +2,9 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.withinDistance
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.withinDistance
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.actor.movement.MoveDirection

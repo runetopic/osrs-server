@@ -1,7 +1,7 @@
 package com.osrs.game.command.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.map.location.transform
+import com.osrs.api.map.location.transform
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.message
 import com.osrs.game.command.CommandListener

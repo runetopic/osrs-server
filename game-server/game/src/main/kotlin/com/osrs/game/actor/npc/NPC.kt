@@ -1,6 +1,6 @@
 package com.osrs.game.actor.npc
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.game.actor.Actor
 import com.osrs.game.world.World
 

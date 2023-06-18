@@ -6,9 +6,9 @@ import com.google.inject.Singleton
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.MAP_INDEX
 import com.osrs.cache.entry.EntryTypeProvider
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.map.MapSquare
-import com.osrs.common.map.MapSquares
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.map.MapSquare
+import com.osrs.api.map.MapSquares
 import com.runetopic.cache.extension.decompress
 import java.util.zip.ZipException
 

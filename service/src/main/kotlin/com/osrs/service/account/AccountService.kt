@@ -2,7 +2,7 @@ package com.osrs.service.account
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.database.dto.CreateAccountRequest
 import com.osrs.database.dto.UpdateAccountRequest
 import com.osrs.database.entity.Account

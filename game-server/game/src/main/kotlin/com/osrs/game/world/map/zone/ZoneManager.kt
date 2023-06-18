@@ -1,6 +1,6 @@
 package com.osrs.game.world.map.zone
 
-import com.osrs.common.map.location.ZoneLocation
+import com.osrs.api.map.location.ZoneLocation
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.Packet

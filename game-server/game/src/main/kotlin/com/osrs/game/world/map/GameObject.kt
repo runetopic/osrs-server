@@ -1,6 +1,6 @@
 package com.osrs.game.world.map
 
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 
 @JvmInline
 value class GameObject(

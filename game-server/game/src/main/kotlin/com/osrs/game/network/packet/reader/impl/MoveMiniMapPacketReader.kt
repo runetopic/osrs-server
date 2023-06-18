@@ -1,9 +1,9 @@
 package com.osrs.game.network.packet.reader.impl
 
 import com.google.inject.Singleton
-import com.osrs.common.buffer.readUByte
-import com.osrs.common.buffer.readUByteSubtract
-import com.osrs.common.buffer.readUShort
+import com.osrs.api.buffer.readUByte
+import com.osrs.api.buffer.readUByteSubtract
+import com.osrs.api.buffer.readUShort
 import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.type.client.MoveMiniMapPacket
 import io.ktor.utils.io.ByteReadChannel

@@ -2,8 +2,8 @@ package com.osrs.game.network.codec.impl
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
-import com.osrs.common.buffer.readPacketOpcode
-import com.osrs.common.buffer.readPacketSize
+import com.osrs.api.buffer.readPacketOpcode
+import com.osrs.api.buffer.readPacketSize
 import com.osrs.game.actor.player.addToPacketGroup
 import com.osrs.game.network.Session
 import com.osrs.game.network.codec.CodecChannelHandler

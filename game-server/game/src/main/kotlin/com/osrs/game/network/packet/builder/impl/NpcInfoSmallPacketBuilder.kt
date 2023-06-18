@@ -2,8 +2,8 @@ package com.osrs.game.network.packet.builder.impl
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.common.buffer.RSByteBuffer
-import com.osrs.common.map.location.withinDistance
+import com.osrs.api.buffer.RSByteBuffer
+import com.osrs.api.map.location.withinDistance
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.npc.NPC
 import com.osrs.game.actor.player.Viewport

@@ -4,8 +4,8 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.cache.entry.config.location.LocationEntryProvider
 import com.osrs.cache.entry.map.MapSquareEntry
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.transform
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.transform
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator

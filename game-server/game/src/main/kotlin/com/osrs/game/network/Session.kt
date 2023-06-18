@@ -1,7 +1,7 @@
 package com.osrs.game.network
 
 import com.github.michaelbull.logging.InlineLogger
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.codec.CodecChannelHandler
 import com.osrs.game.network.codec.impl.GameCodec

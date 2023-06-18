@@ -1,6 +1,6 @@
 package com.osrs.game
 
-import com.osrs.common.ui.InterfaceInfoMap
+import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
 import com.osrs.game.tick.GameTick

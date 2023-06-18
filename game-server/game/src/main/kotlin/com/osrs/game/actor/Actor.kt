@@ -1,7 +1,7 @@
 package com.osrs.game.actor
 
-import com.osrs.common.map.location.Location
-import com.osrs.common.map.location.ZoneLocation
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.ZoneLocation
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.actor.movement.MoveDirection
 import com.osrs.game.actor.movement.MovementQueue

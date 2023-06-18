@@ -3,7 +3,7 @@ package com.osrs.repository.account
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.mongodb.client.MongoClient
-import com.osrs.common.map.location.Location
+import com.osrs.api.map.location.Location
 import com.osrs.database.dto.UpdateAccountRequest
 import com.osrs.database.entity.Account
 import org.litote.kmongo.ensureUniqueIndex

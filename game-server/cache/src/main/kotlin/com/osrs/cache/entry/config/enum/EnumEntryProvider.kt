@@ -7,7 +7,7 @@ import com.osrs.cache.CacheModule.CONFIG_INDEX
 import com.osrs.cache.CacheModule.ENUM_CONFIG
 import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.cache.entry.config.ScriptType
-import com.osrs.common.buffer.RSByteBuffer
+import com.osrs.api.buffer.RSByteBuffer
 
 @Singleton
 class EnumEntryProvider @Inject constructor(

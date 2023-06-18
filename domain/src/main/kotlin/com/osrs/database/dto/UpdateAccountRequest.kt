@@ -1,8 +1,8 @@
 package com.osrs.database.dto
 
-import com.osrs.common.item.FloorItem
-import com.osrs.common.map.location.Location
-import com.osrs.common.skill.Skills
+import com.osrs.api.item.FloorItem
+import com.osrs.api.map.location.Location
+import com.osrs.api.skill.Skills
 
 data class UpdateAccountRequest(
     val userName: String,
