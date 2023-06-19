@@ -1,9 +1,9 @@
 package com.osrs.game.world
 
-import com.osrs.cache.Cache
-import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.ZoneLocation
+import com.osrs.cache.Cache
+import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
