@@ -23,11 +23,7 @@ class AccountDiskRepository @Inject constructor(
     environment: ApplicationEnvironment,
     private val json: Json
 ) : AccountRepository {
-<<<<<<< HEAD:repository/src/main/kotlin/com/osrs/repository/account/AccountDiskRepository.kt
-    private val playerSaveDirectory = "./application/players/"
-=======
-    private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./application/data/players/"
->>>>>>> af9ba4d13b573c0ef331120b746d09ecb601c0d1:database/src/main/kotlin/com/osrs/database/repository/AccountDiskRepository.kt
+    private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./application/players/"
 
     private val logger = InlineLogger()
 

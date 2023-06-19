@@ -61,10 +61,6 @@ fun Location.asRouteCoordinates(): RouteCoordinates = RouteCoordinates(x, z)
 fun Location.randomize(radius: Int): Location {
     val xOffset = (-radius..radius).random()
     val zOffset = (-radius..radius).random()
-<<<<<<< HEAD:game-server/api/src/main/kotlin/com/osrs/api/map/location/Location.kt
-=======
-    println("xOffset: $xOffset, zOffset: $zOffset")
->>>>>>> af9ba4d13b573c0ef331120b746d09ecb601c0d1:game-server/common/src/main/kotlin/com/osrs/common/map/location/Location.kt
     return Location(x + xOffset, z + zOffset, level)
 }
 

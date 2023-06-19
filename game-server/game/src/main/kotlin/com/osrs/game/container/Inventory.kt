@@ -1,10 +1,6 @@
 package com.osrs.game.container
 
 import com.osrs.cache.entry.config.obj.ObjEntryProvider
-<<<<<<< HEAD
-=======
-import com.osrs.api.item.Item
->>>>>>> af9ba4d13b573c0ef331120b746d09ecb601c0d1
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.type.server.UpdateContainerFullPacket
 
