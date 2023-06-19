@@ -4,6 +4,11 @@ import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.ZoneLocation
 import com.osrs.cache.Cache
 import com.osrs.cache.entry.map.MapSquareTypeProvider
+<<<<<<< HEAD
+=======
+import com.osrs.api.map.location.Location
+import com.osrs.api.map.location.ZoneLocation
+>>>>>>> af9ba4d13b573c0ef331120b746d09ecb601c0d1
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
