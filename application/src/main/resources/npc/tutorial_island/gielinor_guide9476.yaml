@@ -1,0 +1,8 @@
+name: gielinor_guide
+id: 9476
+examine: Your introduction to the world of Gielinor.
+location:
+  x: 1686
+  z: 6115
+  level: 0
+wander: 3

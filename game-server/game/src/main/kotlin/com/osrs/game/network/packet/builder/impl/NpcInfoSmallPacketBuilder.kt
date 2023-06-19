@@ -99,9 +99,6 @@ class NpcInfoSmallPacketBuilder @Inject constructor(
         viewport: Viewport,
         npc: NPC
     ) {
-        if (npc.id != 3216) {
-            return
-        }
         val player = viewport.player
         writeBits(15, npc.index)
         writeBits(5, (npc.location.z - player.location.z).let { if (it < 15) it + 32 else it })

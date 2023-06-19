@@ -74,7 +74,8 @@ class Player(
         session.write(SetPlayerOptionPacket("Trade", 2))
         session.write(
             HintArrowPacket(
-                type = HintArrow.LOCATION,
+                type = HintArrow.NPC,
+                targetIndex = world.npcs.find { it?.config?.name == "gielinor_guide" }?.index ?: -1,
                 targetX = location.x,
                 targetZ = location.z,
                 targetHeight = 0

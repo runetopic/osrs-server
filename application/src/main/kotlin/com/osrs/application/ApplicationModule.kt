@@ -1,9 +1,9 @@
 package com.osrs.application
 
 import com.google.inject.name.Names
-import com.osrs.cache.CacheModule
 import com.osrs.api.map.MapSquares
-import com.osrs.api.map.NPCSpawns
+import com.osrs.api.map.NPCConfigList
+import com.osrs.cache.CacheModule
 import com.osrs.game.GameModule
 import com.osrs.game.network.NetworkModule
 import com.osrs.http.HttpModule
@@ -21,7 +21,7 @@ class ApplicationModule(
         bind<Application>().toProvider<ApplicationProvider>().asEagerSingleton()
         bind<ApplicationEnvironment>().toProvider<ApplicationEnvironmentProvider>().asEagerSingleton()
         bind<MapSquares>().asEagerSingleton()
-        bind<NPCSpawns>().asEagerSingleton()
+        bind<NPCConfigList>().asEagerSingleton()
         install(CacheModule)
         install(RepositoryModule)
         install(ServiceModule)

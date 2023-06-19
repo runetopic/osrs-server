@@ -1,4 +1,4 @@
-package com.osrs.api.map
+package com.osrs.api.resource
 
 import kotlinx.serialization.Serializable
 

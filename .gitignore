@@ -13,7 +13,7 @@ gamepack.jar
 /game-server/cache/build/
 interface_editor_*.jar
 xteas*.json
-application/data/players/*
+application/players/*
 /application/resources/players/
 interface_editor.log
 recent_paths.dat

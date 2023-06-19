@@ -33,7 +33,7 @@ value class Location(
     companion object {
 
         val None = Location(-1, -1, -1)
-        val Default = Location(3093, 3107, 0)
+        val Default = Location(1686, 6115, 0)
     }
 }
 
@@ -61,7 +61,6 @@ fun Location.asRouteCoordinates(): RouteCoordinates = RouteCoordinates(x, z)
 fun Location.randomize(radius: Int): Location {
     val xOffset = (-radius..radius).random()
     val zOffset = (-radius..radius).random()
-    println("xOffset: $xOffset, zOffset: $zOffset")
     return Location(x + xOffset, z + zOffset, level)
 }
 

@@ -23,7 +23,7 @@ class AccountDiskRepository @Inject constructor(
     environment: ApplicationEnvironment,
     private val json: Json
 ) : AccountRepository {
-    private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./application/data/players/"
+    private val playerSaveDirectory = "./application/players/"
 
     private val logger = InlineLogger()
 
