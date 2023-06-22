@@ -25,27 +25,28 @@ sealed class UserInterface(
     object UnknownOverlay : UserInterface("unknown_overlay")
     object ChatChannel : UserInterface("chat_channel")
     object AdvancedSettings : UserInterface("advanced_settings")
-    object SelectDisplayName : UserInterface("select_display_name")
+    object SetDisplayName : UserInterface("set_display_name")
+    object TutorialIslandProgress : UserInterface("tutorial_island_progress")
 
     companion object {
         val GameInterfaces = setOf(
-            AccountManagement,
-            Settings,
-            Inventory,
+//            AccountManagement,
+//            Settings,
+//            Inventory,
             MiniMap,
-            ChatBox,
-            Logout,
-            Emotes,
-            Magic,
-            MusicPlayer,
-            Skills,
-            WornEquipment,
-            Friends,
-            Prayer,
-            CombatOptions,
-            CharacterSummary,
-            UnknownOverlay,
-            ChatChannel
+            ChatBox
+//            Logout,
+//            Emotes,
+//            Magic,
+//            MusicPlayer,
+//            Skills,
+//            WornEquipment,
+//            Friends,
+//            Prayer,
+//            CombatOptions,
+//            CharacterSummary,
+//            UnknownOverlay,
+//            ChatChannel
         )
     }
 }

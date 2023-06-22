@@ -9,6 +9,6 @@ import com.osrs.game.ui.listener.InterfaceListener
 class InventoryInterfaceListener : InterfaceListener<Inventory> {
 
     override fun onOpen(player: Player, userInterface: Inventory) {
-        player.inventory?.refresh()
+        player.inventory.refresh()
     }
 }

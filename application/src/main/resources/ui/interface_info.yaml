@@ -53,11 +53,14 @@
   name: prayer
   resizableChildId: 80
 - id: 558
-  name: select_display_name
+  name: set_display_name
   resizableChildId: 16
 - id: 593
   name: combat_options
   resizableChildId: 75
+- id: 614
+  name: tutorial_island_progress
+  resizableChildId: 1
 - id: 629
   name: character_summary
   resizableChildId: 77

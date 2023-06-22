@@ -23,18 +23,19 @@ class RunClientScriptPacketBuilder : PacketBuilder<ClientScriptPacket>(
     override fun build(packet: ClientScriptPacket, buffer: RSByteBuffer) {
         packet.parameters.let { array ->
             val params = buildString {
-                (array.size - 1 downTo 0).forEach { count ->
+                array.indices.forEach { count ->
                     append(mapParameterType(array, count))
                 }
             }
             buffer.writeStringCp1252NullTerminated(params)
-            var index = 0
-            (array.size - 1 downTo 0).forEach { count ->
+            var index = array.size - 1
+
+            array.indices.forEach { count ->
                 when (params[count]) {
-                    's' -> buffer.writeStringCp1252NullTerminated(array[index++] as String) // String
-                    'o' -> buffer.writeInt((array[index++] as Item).id) // Item
-                    'i' -> buffer.writeInt(array[index++] as Int) // Int
-                    'v' -> buffer.writeInt((array[index++] as Container).id)
+                    's' -> buffer.writeStringCp1252NullTerminated(array[index--] as String) // String
+                    'o' -> buffer.writeInt((array[index--] as Item).id) // Item
+                    'i' -> buffer.writeInt(array[index--] as Int) // Int
+                    'v' -> buffer.writeInt((array[index--] as Container).id)
                     else -> throw IllegalStateException("Run client script type was not found during parameter type write. The found type was ${params[count]}")
                 }
             }

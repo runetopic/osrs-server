@@ -10,17 +10,12 @@ import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.Gender
 import com.osrs.game.actor.render.type.MovementSpeed
 import com.osrs.game.container.Inventory
-import com.osrs.game.hint.HintArrow
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.PacketGroup
-import com.osrs.game.network.packet.type.server.ClientScriptPacket
-import com.osrs.game.network.packet.type.server.HintArrowPacket
-import com.osrs.game.network.packet.type.server.MessageGamePacket
-import com.osrs.game.network.packet.type.server.MidiSongPacket
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
-import com.osrs.game.network.packet.type.server.SetPlayerOptionPacket
-import com.osrs.game.network.packet.type.server.VarpSmallPacket
 import com.osrs.game.ui.Interfaces
+import com.osrs.game.ui.UserInterface.SetDisplayName
+import com.osrs.game.ui.UserInterface.TutorialIslandProgress
 import com.osrs.game.world.World
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
@@ -31,9 +26,9 @@ class Player(
     val session: Session
 ) : Actor(world) {
     // Late initialized properties.
-    var interfaces: Interfaces? = null
+    lateinit var interfaces: Interfaces
         private set
-    var inventory: Inventory? = null
+    lateinit var inventory: Inventory
         private set
 
     // Immutable properties.
@@ -47,6 +42,8 @@ class Player(
     // Mutable properties.
     var rights = 0
     var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
+
+    private var hasCompletedTutorial = false
 
     fun initialize(
         interfaces: Interfaces,
@@ -65,29 +62,15 @@ class Player(
         renderer.update(if (isRunning) MovementSpeed(MovementType.RUN) else MovementSpeed(WALK))
         updateMap(true)
         refreshAppearance()
-        session.write(MessageGamePacket(0, "Welcome to Old School RuneScape.", false))
         updateStats()
         updateRunEnergy(runEnergy.toInt())
-        session.write(VarpSmallPacket(1737, -1)) // TODO temporary working on a vars system atm.
-        session.write(MidiSongPacket(62))
-        session.write(SetPlayerOptionPacket("Follow", 1))
-        session.write(SetPlayerOptionPacket("Trade", 2))
-        session.write(
-            HintArrowPacket(
-                type = HintArrow.NPC,
-                targetIndex = world.npcs.find { it?.config?.name == "gielinor_guide" }?.index ?: -1,
-                targetX = location.x,
-                targetZ = location.z,
-                targetHeight = 0
-            )
-        )
 
-        val scripts = arrayOf(
-            ClientScriptPacket(id = 5224, arrayOf(3)), // Combat level,
-            ClientScriptPacket(2498, arrayOf(0, 0, 0))
-        )
+        if (!hasCompletedTutorial) {
+            // TODO extract this all out into a system
+            interfaces += TutorialIslandProgress
+            interfaces += SetDisplayName
+        }
 
-        scripts.forEach(session::write)
         online = true
     }
 

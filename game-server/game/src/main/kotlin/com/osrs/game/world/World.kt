@@ -105,3 +105,9 @@ data class World(
         const val MAX_NPCS = 65535
     }
 }
+
+/**
+ * Finds an NPC based of the configured name in the system.
+ */
+fun World.findNPC(name: String) = npcs.find { it?.config?.name == name }
+fun World.findNPCIndex(name: String) = npcs.find { it?.config?.name == name }?.index ?: -1
