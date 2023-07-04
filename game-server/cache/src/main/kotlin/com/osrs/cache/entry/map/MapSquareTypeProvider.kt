@@ -3,12 +3,12 @@ package com.osrs.cache.entry.map
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.cache.Cache
-import com.osrs.cache.CacheModule.MAP_INDEX
-import com.osrs.cache.entry.EntryTypeProvider
 import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.api.map.MapSquare
 import com.osrs.api.map.MapSquares
+import com.osrs.cache.Cache
+import com.osrs.cache.CacheModule.MAP_INDEX
+import com.osrs.cache.entry.EntryTypeProvider
 import com.runetopic.cache.extension.decompress
 import java.util.zip.ZipException
 
@@ -19,7 +19,7 @@ class MapSquareTypeProvider @Inject constructor(
 ) : EntryTypeProvider<MapSquareEntry>() {
     private val logger = InlineLogger()
 
-    override fun loadTypeMap(): Map<Int, MapSquareEntry> = mapSquares.values.map(::loadMapEntry).associateBy(MapSquareEntry::id)
+    override fun loadTypeMap(): Map<Int, MapSquareEntry> = mapSquares.values.parallelStream().map(::loadMapEntry).toList().associateBy(MapSquareEntry::id)
 
     private fun loadMapEntry(square: MapSquare): MapSquareEntry {
         val entry = MapSquareEntry(square.id)
@@ -33,12 +33,10 @@ class MapSquareTypeProvider @Inject constructor(
 
         mapIndex.group("m${entry.regionX}_${entry.regionZ}")?.data?.let {
             val data = RSByteBuffer(it.decompress().buffer)
-            for (level in 0 until 4) {
-                for (x in 0 until 64) {
-                    for (z in 0 until 64) {
-                        entry.terrain[entry.pack(level, x, z)] = data.loadTerrain()
-                    }
-                }
+            val area = MapSquareEntry.AREA
+            repeat(4 * area) { index ->
+                val remaining = index % area
+                entry.terrain[entry.pack(index / area, remaining / 64, remaining % 64)] = data.loadTerrain().packed
             }
         }
 
@@ -60,11 +58,8 @@ class MapSquareTypeProvider @Inject constructor(
         collision: Int = 0,
         underlayId: Int = 0
     ): MapSquareTerrain = when (val opcode = readUShort()) {
-        0 -> MapSquareTerrain(collision)
-        1 -> {
-            discard(1) // Height
-            MapSquareTerrain(collision)
-        }
+        0 -> MapSquareTerrain(height, overlayId, overlayPath, overlayRotation, collision, underlayId)
+        1 -> MapSquareTerrain(readUByte(), overlayId, overlayPath, overlayRotation, collision, underlayId)
         else -> loadTerrain(
             height = height,
             overlayId = if (opcode in 2..49) readShort() else overlayId,
@@ -92,24 +87,11 @@ class MapSquareTypeProvider @Inject constructor(
         val packed = packedLocation + offset - 1
         val x = packed shr 6 and 0x3F
         val z = packed and 0x3F
-        val level = (packed shr 12).let {
-            // Check for bridges.
-            if (entry.terrain[entry.pack(1, x, z)]!!.collision and 0x2 == 2) it - 1 else it
-        }
-        // New adjusted packed location after adjusting for bridge.
-        val adjusted = entry.pack(level, x, z)
+        val level = (packed shr 12)
 
-        if (level >= 0) {
-            entry.locations[adjusted] = when (val size = entry.locations[adjusted]?.size ?: 0) {
-                0 -> Array(1) { MapSquareLocation(locId, x, z, level, shape, rotation) }
-                in 1 until 5 -> {
-                    entry.locations[adjusted]!!.copyOf(size + 1).also {
-                        it[size] = MapSquareLocation(locId, x, z, level, shape, rotation)
-                    }
-                }
-                else -> throw AssertionError("Size is too many. 5 capacity.")
-            }
-        }
+        val loc = MapSquareLocation(locId, x, z, level, shape, rotation)
+        require(!entry.locations.contains(loc.packed))
+        entry.locations.add(loc.packed)
         return loadLocationCollision(entry, locId, packed)
     }
 }

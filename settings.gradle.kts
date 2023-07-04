@@ -2,8 +2,8 @@ rootProject.name = "osrs-server"
 
 pluginManagement {
     plugins {
-        kotlin("jvm") version "1.8.22"
-        kotlin("plugin.serialization") version "1.8.22"
+        kotlin("jvm") version "1.9.0-RC"
+        kotlin("plugin.serialization") version "1.9.0-RC"
     }
 }
 

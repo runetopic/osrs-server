@@ -2,10 +2,12 @@ package com.osrs.game.world.map
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.osrs.cache.entry.config.location.LocationEntryProvider
-import com.osrs.cache.entry.map.MapSquareEntry
 import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.transform
+import com.osrs.cache.entry.config.location.LocationEntryProvider
+import com.osrs.cache.entry.map.MapSquareEntry
+import com.osrs.cache.entry.map.MapSquareLocation
+import com.osrs.cache.entry.map.MapSquareTerrain
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator
@@ -51,37 +53,39 @@ class CollisionMap @Inject constructor(
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, if (isNPC) BLOCK_NPCS else 0)
 
     fun applyCollision(entry: MapSquareEntry) {
-        for (level in 0 until 4) {
-            for (x in 0 until 64) {
-                for (z in 0 until 64) {
-                    if ((entry.terrain[entry.pack(level, x, z)]!!.collision and 0x1) != 0x1) continue
-                    val actualLevel = if ((entry.terrain[entry.pack(1, x, z)]!!.collision and 0x2) == 0x2) level - 1 else level
-                    if (actualLevel < 0) continue
-                    val baseX = entry.regionX shl 6
-                    val baseZ = entry.regionZ shl 6
-                    val location = Location(x + baseX, z + baseZ, level)
-                    addFloorCollision(location)
-                    ZoneManager[location.zoneLocation]
-                }
+        val area = MapSquareEntry.AREA
+        repeat(4 * area) { index ->
+            val remaining = index % area
+            val level = index / area
+            val x = remaining / 64
+            val z = remaining % 64
+            val terrain = MapSquareTerrain(entry.terrain[entry.pack(level, x, z)])
+            if ((terrain.collision and 0x1) != 0x1) {
+                return@repeat
             }
+            val actualLevel = if ((MapSquareTerrain(entry.terrain[entry.pack(1, x, z)]).collision and 0x2) == 0x2) level - 1 else level
+            if (actualLevel < 0) {
+                return@repeat
+            }
+            val baseX = entry.regionX shl 6
+            val baseZ = entry.regionZ shl 6
+            val location = Location(x + baseX, z + baseZ, actualLevel)
+            addFloorCollision(location)
+            ZoneManager[location.zoneLocation]
         }
 
-        for (level in 0 until 4) {
-            for (x in 0 until 64) {
-                for (z in 0 until 64) {
-                    val baseX = entry.regionX shl 6
-                    val baseZ = entry.regionZ shl 6
-
-                    entry.locations[entry.pack(level, x, z)]?.forEach {
-                        if (it == null) return@forEach
-                        val location = Location(it.x + baseX, it.z + baseZ, it.level)
-                        if (!locations.contains(it.id)) return@forEach
-                        val gameObject = GameObject(it.id, location, it.shape, it.rotation)
-                        addObjectCollision(gameObject)
-                        ZoneManager[location.zoneLocation].addStaticLoc(gameObject)
-                    }
-                }
-            }
+        for (packed in entry.locations) {
+            val loc = MapSquareLocation(packed)
+            // val terrain = MapSquareTerrain(entry.terrain[entry.pack(loc.level, loc.x, loc.z)])
+            // if ((terrain.collision and 0x1) != 0x1) continue
+            val actualLevel = if ((MapSquareTerrain(entry.terrain[entry.pack(1, loc.x, loc.z)]).collision and 0x2) == 0x2) loc.level - 1 else loc.level
+            if (actualLevel < 0) continue
+            val baseX = entry.regionX shl 6
+            val baseZ = entry.regionZ shl 6
+            val location = Location(loc.x + baseX, loc.z + baseZ, actualLevel)
+            val gameObject = GameObject(loc.id, location, loc.shape, loc.rotation)
+            addObjectCollision(gameObject)
+            ZoneManager[location.zoneLocation].addStaticLoc(gameObject)
         }
     }
 

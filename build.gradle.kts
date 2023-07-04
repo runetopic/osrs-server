@@ -32,12 +32,12 @@ allprojects {
 
     dependencies {
         // Kotlin standard-lib
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0-RC")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.2.0-SNAPSHOT")
         implementation("com.runetopic.cache:cache:2.0.0-SNAPSHOT")
-        // Pathfinder
-        implementation("com.github.blurite:pathfinder:2.4.2")
+        // Blurite Pathfinder - TODO Deprecated
+        implementation("com.github.blurite:pathfinder:2.4.3")
         // Logger
         implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
         implementation("org.slf4j:slf4j-simple:2.0.5")
@@ -47,7 +47,7 @@ allprojects {
         // https://mvnrepository.com/artifact/io.ktor/ktor-server-netty
         implementation("io.ktor:ktor-server-netty:2.3.1")
         // Kotlin-guice
-        implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.6.0")
+        implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:3.0.0")
         // Kotlin-guice assisted inject https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
         implementation("com.google.inject.extensions:guice-assistedinject:5.1.0")
         // Serialization: https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json

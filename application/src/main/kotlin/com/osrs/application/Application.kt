@@ -24,6 +24,8 @@ object Application {
 
         addShutDownHook(injector)
 
+        System.gc()
+
         injector.getInstance<Network>().bind(time)
     }
 
