@@ -11,6 +11,7 @@ import com.osrs.cache.entry.map.MapSquareTerrain
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator
+import org.rsmod.pathfinder.ZoneCoords
 import org.rsmod.pathfinder.ZoneFlags
 import org.rsmod.pathfinder.flag.CollisionFlag.BLOCK_NPCS
 import org.rsmod.pathfinder.flag.CollisionFlag.FLOOR
@@ -53,13 +54,18 @@ class CollisionMap @Inject constructor(
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, if (isNPC) BLOCK_NPCS else 0)
 
     fun applyCollision(entry: MapSquareEntry) {
+        val baseX = entry.regionX shl 6
+        val baseZ = entry.regionZ shl 6
         val area = MapSquareEntry.AREA
         repeat(4 * area) { index ->
             val remaining = index % area
             val level = index / area
             val x = remaining / 64
             val z = remaining % 64
+            val absoluteX = x + baseX
+            val absoluteZ = z + baseZ
             val terrain = MapSquareTerrain(entry.terrain[entry.pack(level, x, z)])
+            zoneFlags.alloc(ZoneCoords(absoluteX shr 3, absoluteZ shr 3, level))
             if ((terrain.collision and 0x1) != 0x1) {
                 return@repeat
             }
@@ -67,21 +73,14 @@ class CollisionMap @Inject constructor(
             if (actualLevel < 0) {
                 return@repeat
             }
-            val baseX = entry.regionX shl 6
-            val baseZ = entry.regionZ shl 6
-            val location = Location(x + baseX, z + baseZ, actualLevel)
+            val location = Location(absoluteX, absoluteZ, actualLevel)
             addFloorCollision(location)
-            ZoneManager[location.zoneLocation]
         }
 
         for (packed in entry.locations) {
             val loc = MapSquareLocation(packed)
-            // val terrain = MapSquareTerrain(entry.terrain[entry.pack(loc.level, loc.x, loc.z)])
-            // if ((terrain.collision and 0x1) != 0x1) continue
             val actualLevel = if ((MapSquareTerrain(entry.terrain[entry.pack(1, loc.x, loc.z)]).collision and 0x2) == 0x2) loc.level - 1 else loc.level
             if (actualLevel < 0) continue
-            val baseX = entry.regionX shl 6
-            val baseZ = entry.regionZ shl 6
             val location = Location(loc.x + baseX, loc.z + baseZ, actualLevel)
             val gameObject = GameObject(loc.id, location, loc.shape, loc.rotation)
             addObjectCollision(gameObject)

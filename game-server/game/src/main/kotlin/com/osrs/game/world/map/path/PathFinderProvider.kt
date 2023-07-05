@@ -13,7 +13,7 @@ class PathFinderProvider @Inject constructor(
 
     private val pathFinder = PathFinder(
         flags = zoneFlags.flags,
-        useRouteBlockerFlags = false
+        useRouteBlockerFlags = true
     )
 
     override fun get(): PathFinder = pathFinder
