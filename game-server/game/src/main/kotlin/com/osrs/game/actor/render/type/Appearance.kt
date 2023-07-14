@@ -33,8 +33,3 @@ data class Appearance(
     fun isMale(): Boolean = gender == Gender.MALE
     fun isFemale(): Boolean = gender == Gender.FEMALE
 }
-
-enum class Gender(val id: Int) {
-    MALE(0),
-    FEMALE(1)
-}

@@ -5,4 +5,5 @@ import com.osrs.game.ui.UserInterface
 
 interface InterfaceListener<out T : UserInterface> {
     fun onOpen(player: Player, userInterface: @UnsafeVariance T) {}
+    fun onClick(player: Player,  childId: Int, userInterface: @UnsafeVariance T) {}
 }

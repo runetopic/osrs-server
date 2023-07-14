@@ -17,7 +17,6 @@ import com.osrs.game.ui.Interfaces
 import com.osrs.game.ui.UserInterface.SetDisplayName
 import com.osrs.game.ui.UserInterface.TutorialIslandProgress
 import com.osrs.game.world.World
-import com.osrs.game.world.findNPC
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 
@@ -44,7 +43,7 @@ class Player(
     var rights = 0
     var appearance = Appearance(Gender.MALE, -1, -1, -1, false, displayName)
 
-    private var hasCompletedTutorial = true
+    private var hasCompletedTutorial = false
 
     fun initialize(
         interfaces: Interfaces,
@@ -65,8 +64,6 @@ class Player(
         refreshAppearance()
         updateStats()
         updateRunEnergy(runEnergy.toInt())
-
-        world.findNPC("gielinor_guide")
 
         if (!hasCompletedTutorial) {
             // TODO extract this all out into a system

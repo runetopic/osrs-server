@@ -18,4 +18,6 @@ class InterfaceInfoMap(
             InterfaceInfo::class
         ).associateBy { it.name }
     )
+
+    fun findById(id: Int): InterfaceInfo? = interfaceInfoMap.values.find { it.id == id }
 }

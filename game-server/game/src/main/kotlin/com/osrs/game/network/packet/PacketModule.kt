@@ -5,6 +5,10 @@ import com.osrs.game.network.packet.builder.impl.CameraResetPacketBuilder
 import com.osrs.game.network.packet.builder.impl.HintArrowPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenSubPacketBuilder
 import com.osrs.game.network.packet.builder.impl.IfOpenTopPacketBuilder
+import com.osrs.game.network.packet.builder.impl.IfSetEventsPacketBuilder
+import com.osrs.game.network.packet.builder.impl.IfSetHidePacketBuilder
+import com.osrs.game.network.packet.builder.impl.IfSetPositionPacketBuilder
+import com.osrs.game.network.packet.builder.impl.IfSetTextPacketBuilder
 import com.osrs.game.network.packet.builder.impl.LocAddPacketBuilder
 import com.osrs.game.network.packet.builder.impl.LocRemovePacketBuilder
 import com.osrs.game.network.packet.builder.impl.MapProjAnimPacketBuilder
@@ -65,6 +69,10 @@ import com.osrs.game.network.packet.type.server.ClientScriptPacket
 import com.osrs.game.network.packet.type.server.HintArrowPacket
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
+import com.osrs.game.network.packet.type.server.IfSetEventsPacket
+import com.osrs.game.network.packet.type.server.IfSetHidePacket
+import com.osrs.game.network.packet.type.server.IfSetPositionPacket
+import com.osrs.game.network.packet.type.server.IfSetTextPacket
 import com.osrs.game.network.packet.type.server.LocAddPacket
 import com.osrs.game.network.packet.type.server.LocRemovePacket
 import com.osrs.game.network.packet.type.server.MapProjAnimPacket
@@ -117,6 +125,10 @@ object PacketModule : KotlinModule() {
         builders.addBinding(LocAddPacket::class).to<LocAddPacketBuilder>().asEagerSingleton()
         builders.addBinding(LocRemovePacket::class).to<LocRemovePacketBuilder>().asEagerSingleton()
         builders.addBinding(NpcInfoPacket::class).to<NpcInfoSmallPacketBuilder>().asEagerSingleton()
+        builders.addBinding(IfSetTextPacket::class).to<IfSetTextPacketBuilder>().asEagerSingleton()
+        builders.addBinding(IfSetHidePacket::class).to<IfSetHidePacketBuilder>().asEagerSingleton()
+        builders.addBinding(IfSetPositionPacket::class).to<IfSetPositionPacketBuilder>().asEagerSingleton()
+        builders.addBinding(IfSetEventsPacket::class).to<IfSetEventsPacketBuilder>().asEagerSingleton()
 
         val readers = KotlinMultibinder.newSetBinder<PacketReader<Packet>>(kotlinBinder)
 

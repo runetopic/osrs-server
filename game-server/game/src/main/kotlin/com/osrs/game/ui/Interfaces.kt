@@ -41,10 +41,18 @@ class Interfaces constructor(
         )
     }
 
+    fun currentModal() : UserInterface? = findLast {
+        val info = interfaceInfoMap[it.name] ?: return@findLast false
+        val resizableChildId = info.resizableChildId
+        return@findLast resizableChildId == MODAL_CHILD_ID || resizableChildId == MODAL_CHILD_ID_EXTENDED
+    }
+
     private fun InterfaceInfo.isModal() = resizableChildId == MODAL_CHILD_ID || resizableChildId == MODAL_CHILD_ID_EXTENDED
 
     private fun Int.enumChildForLayout(layout: InterfaceLayout): Int =
         (enumEntryProvider[layout.enumId]?.params?.get(RESIZABLE.interfaceId.packInterface(this)) as? Int)?.and(0xffff) ?: 0
+
+    fun currentInterface(): UserInterface = this.open.last()
 
     companion object {
         const val MODAL_CHILD_ID = 16

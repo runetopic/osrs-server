@@ -65,7 +65,7 @@ class CollisionMap @Inject constructor(
             val absoluteX = x + baseX
             val absoluteZ = z + baseZ
             val terrain = MapSquareTerrain(entry.terrain[entry.pack(level, x, z)])
-            zoneFlags.alloc(ZoneCoords(absoluteX shr 3, absoluteZ shr 3, level))
+            allocateZoneFlags(Location(absoluteX, absoluteZ, level))
             if ((terrain.collision and 0x1) != 0x1) {
                 return@repeat
             }
@@ -390,4 +390,10 @@ class CollisionMap @Inject constructor(
     }
 
     private fun addFloorCollision(location: Location) = addCollisionFlag(location, FLOOR, true)
+
+    /**
+     * This is only here atm due to a weird edge case with the blurite pathfinder.
+     * (Toms version of the pathfinder may not have this, but need to confirm with Kris as to why some zones need to be allocated when they have no collision in the cache)
+     */
+    private fun allocateZoneFlags(location: Location) = zoneFlags.alloc(ZoneCoords(location.zoneX, location.zoneZ, location.level))
 }
