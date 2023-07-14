@@ -37,6 +37,9 @@
 - id: 239
   name: music_player
   resizableChildId: 88
+- id: 263
+  name: message_box
+  resizableChildId: 162
 - id: 320
   name: skills
   resizableChildId: 76

@@ -8,6 +8,7 @@ import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.game.actor.player.Player
 import com.osrs.game.container.Inventory
 import com.osrs.game.ui.Interfaces
+import com.osrs.game.ui.UserInterface
 import com.osrs.game.ui.listener.InterfaceListener
 import kotlin.reflect.KClass
 
@@ -16,7 +17,7 @@ class LoginService @Inject constructor(
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
     private val objEntryProvider: ObjEntryProvider,
-    private val interfaceListeners: Map<KClass<*>, InterfaceListener<*>>
+    private val interfaceListeners: Map<KClass<*>, InterfaceListener<UserInterface>>
 ) {
     fun login(player: Player) {
         player.initialize(

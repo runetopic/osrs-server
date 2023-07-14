@@ -37,6 +37,7 @@ import com.osrs.game.network.packet.handler.impl.MoveGamePacketHandler
 import com.osrs.game.network.packet.handler.impl.MoveMiniMapPacketHandler
 import com.osrs.game.network.packet.handler.impl.NoTimeoutPacketHandler
 import com.osrs.game.network.packet.handler.impl.PublicChatPacketHandler
+import com.osrs.game.network.packet.handler.impl.ResumeStringDialoguePacketHandler
 import com.osrs.game.network.packet.handler.impl.WindowStatusPacketHandler
 import com.osrs.game.network.packet.reader.PacketReader
 import com.osrs.game.network.packet.reader.impl.CheatPacketReader
@@ -55,6 +56,7 @@ import com.osrs.game.network.packet.reader.impl.MoveGamePacketReader
 import com.osrs.game.network.packet.reader.impl.MoveMiniMapPacketReader
 import com.osrs.game.network.packet.reader.impl.NoTimeoutPacketReader
 import com.osrs.game.network.packet.reader.impl.PublicChatPacketReader
+import com.osrs.game.network.packet.reader.impl.ResumeStringDialoguePacketReader
 import com.osrs.game.network.packet.reader.impl.WindowStatusPacketReader
 import com.osrs.game.network.packet.type.client.CheatPacket
 import com.osrs.game.network.packet.type.client.IdlePacket
@@ -63,6 +65,7 @@ import com.osrs.game.network.packet.type.client.MoveGamePacket
 import com.osrs.game.network.packet.type.client.MoveMiniMapPacket
 import com.osrs.game.network.packet.type.client.NoTimeoutPacket
 import com.osrs.game.network.packet.type.client.PublicChatPacket
+import com.osrs.game.network.packet.type.client.ResumeStringDialoguePacket
 import com.osrs.game.network.packet.type.client.WindowStatusPacket
 import com.osrs.game.network.packet.type.server.CameraReset
 import com.osrs.game.network.packet.type.server.ClientScriptPacket
@@ -149,6 +152,7 @@ object PacketModule : KotlinModule() {
         readers.addBinding().to<IfButton10PacketReader>().asEagerSingleton()
         readers.addBinding().to<CheatPacketReader>().asEagerSingleton()
         readers.addBinding().to<PublicChatPacketReader>().asEagerSingleton()
+        readers.addBinding().to<ResumeStringDialoguePacketReader>().asEagerSingleton()
 
         val handlers = KotlinMapBinder.newMapBinder<KClass<*>, PacketHandler<Packet>>(kotlinBinder)
 
@@ -160,5 +164,6 @@ object PacketModule : KotlinModule() {
         handlers.addBinding(NoTimeoutPacket::class).to<NoTimeoutPacketHandler>().asEagerSingleton()
         handlers.addBinding(CheatPacket::class).to<CheatPacketHandler>().asEagerSingleton()
         handlers.addBinding(PublicChatPacket::class).to<PublicChatPacketHandler>().asEagerSingleton()
+        handlers.addBinding(ResumeStringDialoguePacket::class).to<ResumeStringDialoguePacketHandler>().asEagerSingleton()
     }
 }

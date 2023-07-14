@@ -1,5 +1,6 @@
 package com.osrs.game.ui
 
+
 sealed class UserInterface(
     val name: String
 ) {
@@ -27,6 +28,7 @@ sealed class UserInterface(
     object AdvancedSettings : UserInterface("advanced_settings")
     object SetDisplayName : UserInterface("set_display_name")
     object TutorialIslandProgress : UserInterface("tutorial_island_progress")
+    object MessageBox : UserInterface("message_box")
 
     companion object {
         val GameInterfaces = setOf(

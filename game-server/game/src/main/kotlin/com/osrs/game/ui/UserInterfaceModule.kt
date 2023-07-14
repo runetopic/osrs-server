@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 
 object UserInterfaceModule : KotlinModule() {
     override fun configure() {
-        val interfaceListeners = KotlinMapBinder.newMapBinder<KClass<*>, InterfaceListener<*>>(kotlinBinder)
+        val interfaceListeners = KotlinMapBinder.newMapBinder<KClass<*>, InterfaceListener<UserInterface>>(kotlinBinder)
 
         interfaceListeners.addBinding(UserInterface.Inventory::class).to<InventoryInterfaceListener>().asEagerSingleton()
         interfaceListeners.addBinding(UserInterface.SetDisplayName::class).to<SetDisplayNameListener>().asEagerSingleton()
