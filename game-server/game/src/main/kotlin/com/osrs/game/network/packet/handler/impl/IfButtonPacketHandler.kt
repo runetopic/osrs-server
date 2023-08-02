@@ -22,7 +22,7 @@ class IfButtonPacketHandler @Inject constructor(
         val userInterface = player.interfaces.find { it.name == interfaceInfo.name } ?: return
         val listener = interfaceListeners[userInterface::class] ?: return
 
-        listener.onClick(
+        listener.clicked(
             player,
             packet.packedInterface.childId(),
             userInterface,

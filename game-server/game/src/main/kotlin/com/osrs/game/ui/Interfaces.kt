@@ -12,7 +12,7 @@ import com.osrs.game.ui.InterfaceLayout.RESIZABLE
 import com.osrs.game.ui.listener.InterfaceListener
 import kotlin.reflect.KClass
 
-class Interfaces constructor(
+class Interfaces(
     val player: Player,
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
@@ -20,6 +20,8 @@ class Interfaces constructor(
     private val open: MutableList<UserInterface> = mutableListOf()
 ) : MutableList<UserInterface> by open {
     var layout: InterfaceLayout = RESIZABLE
+
+    var resumeString: String = ""
 
     fun sendInterfaceLayout(layout: InterfaceLayout) = player.write(IfOpenTopPacket(layout.interfaceId))
 
@@ -30,7 +32,7 @@ class Interfaces constructor(
 
         open += userInterface
 
-        interfaceListeners[userInterface::class]?.onOpen(player, userInterface)
+        interfaceListeners[userInterface::class]?.opened(player, userInterface)
 
         player.write(
             IfOpenSubPacket(
@@ -52,10 +54,9 @@ class Interfaces constructor(
     private fun Int.enumChildForLayout(layout: InterfaceLayout): Int =
         (enumEntryProvider[layout.enumId]?.params?.get(RESIZABLE.interfaceId.packInterface(this)) as? Int)?.and(0xffff) ?: 0
 
-    fun currentInterface(): UserInterface = this.open.last()
-
     companion object {
         const val MODAL_CHILD_ID = 16
+        const val MESSAGE_BOX_CHILD = 558
         const val MODAL_CHILD_ID_EXTENDED = 17
         const val INVENTORY_CHILD_ID = 73
     }

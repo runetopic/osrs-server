@@ -1,5 +1,6 @@
 package com.osrs.game.ui.listener.impl
 
+import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Singleton
 import com.osrs.api.util.packInterface
 import com.osrs.game.actor.player.Player
@@ -11,17 +12,19 @@ import com.osrs.game.ui.listener.InterfaceListener
 
 @Singleton
 class SetDisplayNameListener : InterfaceListener<SetDisplayName> {
-    override fun onOpen(player: Player, userInterface: SetDisplayName) {
-        player.messageBox("Setting your name", SET_DISPLAY_NAME_MESSAGE)
+    private val logger = InlineLogger()
+
+    override fun opened(player: Player, userInterface: SetDisplayName) {
+        player.setSearchStatus(true)
     }
 
-    override fun onClick(player: Player, childId: Int, userInterface: SetDisplayName) {
-        when (childId) {
-            LOOK_UP_BUTTON_CHILD_ID -> player.setSearchStatus(true)
-            18 -> {
-                player.setSearchStatus(false)
-            }
+    override fun clicked(player: Player, childId: Int, userInterface: SetDisplayName) = when(childId) {
+        LOOK_UP_BUTTON_CHILD_ID -> {
+            val name = player.interfaces.resumeString
+            logger.info { "Searching for name $name" }
+            player.setSearchStatus(true)
         }
+        else -> logger.debug { "Unhandled childId clicked: $childId" }
     }
 
     private fun Player.setSearchStatus(enabled: Boolean) {
@@ -57,6 +60,9 @@ class SetDisplayNameListener : InterfaceListener<SetDisplayName> {
         private const val LOOK_UP_BUTTON_CHILD_ID = 7
         private const val SET_DISPLAY_NAME_SCRIPT = 1974
         private const val LOOK_UP_NAME_BUTTON_STATUS = 4139
-        private const val SET_DISPLAY_NAME_MESSAGE = "Before you get started, you'll need to set a display name. Please use the open interface to set one."
+    }
+
+    override fun resumeStringDialogue(player: Player, input: String) {
+        logger.info { "Input: $input" }
     }
 }

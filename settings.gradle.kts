@@ -10,12 +10,12 @@ pluginManagement {
 include(
     listOf(
         "application",
+        "cache",
         "http-server",
         "domain",
         "repository",
         "service",
         "game-server:api",
-        "game-server:cache",
         "game-server:game"
     )
 )
