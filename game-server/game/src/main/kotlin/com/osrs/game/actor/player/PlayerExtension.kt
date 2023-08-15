@@ -70,3 +70,5 @@ fun Player.message(string: String) {
 fun Player.write(packet: Packet) {
     session.write(packet)
 }
+
+fun Player.booleanVarp(name: String): Boolean = false

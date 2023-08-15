@@ -9,30 +9,30 @@ import com.osrs.game.actor.player.write
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
 import com.osrs.game.network.packet.type.server.IfOpenTopPacket
 import com.osrs.game.ui.InterfaceLayout.RESIZABLE
-import com.osrs.game.ui.listener.InterfaceListener
-import kotlin.reflect.KClass
 
 class Interfaces(
     val player: Player,
     private val interfaceInfoMap: InterfaceInfoMap,
     private val enumEntryProvider: EnumEntryProvider,
-    private val interfaceListeners: Map<KClass<*>, InterfaceListener<UserInterface>>,
+    private val interfaceListener: InterfaceListener,
     private val open: MutableList<UserInterface> = mutableListOf()
 ) : MutableList<UserInterface> by open {
     var layout: InterfaceLayout = RESIZABLE
 
-    var resumeString: String = ""
+    val listeners = mutableMapOf<Int, UserInterfaceListener>()
 
     fun sendInterfaceLayout(layout: InterfaceLayout) = player.write(IfOpenTopPacket(layout.interfaceId))
 
     operator fun plusAssign(userInterface: UserInterface) {
+        add(userInterface)
+
         val info = interfaceInfoMap[userInterface.name] ?: return
 
         val childId = info.resizableChildId.enumChildForLayout(layout)
 
-        open += userInterface
+        val listener = interfaceListener.createListener(userInterface, player)
 
-        interfaceListeners[userInterface::class]?.opened(player, userInterface)
+        listeners[info.id] = listener
 
         player.write(
             IfOpenSubPacket(
@@ -41,12 +41,12 @@ class Interfaces(
                 isModal = info.isModal()
             )
         )
-    }
 
-    fun currentModal() : UserInterface? = findLast {
-        val info = interfaceInfoMap[it.name] ?: return@findLast false
-        val resizableChildId = info.resizableChildId
-        return@findLast resizableChildId == MODAL_CHILD_ID || resizableChildId == MODAL_CHILD_ID_EXTENDED
+        listener.open(
+            UserInterfaceEvent.OpenEvent(
+                interfaceId = info.id
+            )
+        )
     }
 
     private fun InterfaceInfo.isModal() = resizableChildId == MODAL_CHILD_ID || resizableChildId == MODAL_CHILD_ID_EXTENDED

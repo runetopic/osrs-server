@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
@@ -9,6 +11,14 @@ allprojects {
 
     apply {
         plugin("org.jetbrains.kotlin.jvm")
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "17"
+            /* https://youtrack.jetbrains.com/issue/KT-52735/Ignore-scripts-in-source-roots-by-default */
+            freeCompilerArgs = listOf("-Xallow-any-scripts-in-source-roots")
+        }
     }
 
     kotlin {
@@ -33,14 +43,20 @@ allprojects {
     dependencies {
         // Kotlin standard-lib
         implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0-RC")
+        // Kotlin-script
+        implementation("org.jetbrains.kotlin:kotlin-scripting-common:1.9.0")
+        implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.2.0-SNAPSHOT")
-        implementation("com.runetopic.cache:cache:2.0.0-SNAPSHOT")
+        implementation("com.runetopic.cache:cache:2.0.0-SNAPSHOT") {
+            exclude("org.slf4j", "slf4j-simple")
+        }
         // Blurite Pathfinder - TODO Deprecated
         implementation("com.github.blurite:pathfinder:2.4.3")
         // Logger
         implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
-        implementation("org.slf4j:slf4j-simple:2.0.5")
+        // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+        implementation("ch.qos.logback:logback-classic:1.4.7")
         // Ktor
         // https://mvnrepository.com/artifact/io.ktor/ktor-server-core
         runtimeOnly("io.ktor:ktor-server-core:2.3.1")

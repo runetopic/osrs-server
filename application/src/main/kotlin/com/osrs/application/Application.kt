@@ -6,6 +6,7 @@ import com.google.inject.Injector
 import com.osrs.game.Game
 import com.osrs.game.network.Network
 import com.osrs.game.world.World
+import com.osrs.script.Scripts
 import dev.misfitlabs.kotlinguice4.getInstance
 import kotlin.system.measureTimeMillis
 
@@ -20,6 +21,7 @@ object Application {
             injector = Guice.createInjector(ApplicationModule(args))
             injector.getInstance<Game>().start()
             injector.getInstance<World>().start()
+            loadGameScripts(injector)
         }
 
         addShutDownHook(injector)
@@ -37,5 +39,10 @@ object Application {
                 injector.getInstance<Network>().shutdown()
             }
         )
+    }
+
+    private fun loadGameScripts(injector: Injector) {
+        val plugins = Scripts.loadContentScripts(injector)
+        logger.info { "Loaded ${plugins.size} kotlin script${if (plugins.size == 1) "" else "s"}." }
     }
 }

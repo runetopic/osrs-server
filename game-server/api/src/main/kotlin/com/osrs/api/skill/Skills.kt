@@ -34,7 +34,7 @@ class Skills(
             val levels = IntArray(MAX_SKILLS)
             val experience = DoubleArray(MAX_SKILLS)
 
-            Skill.values().forEach {
+            Skill.entries.forEach {
                 val (level, xp) = when (it) {
                     Skill.HITPOINTS -> DEFAULT_HITPOINTS_LEVEL to getXpForLevel(DEFAULT_HITPOINTS_LEVEL)
                     Skill.HERBLORE -> DEFAULT_HERBLORE_LEVEL to getXpForLevel(DEFAULT_HERBLORE_LEVEL)
