@@ -4,8 +4,8 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.api.map.location.Location
-import com.osrs.database.dto.UpdateAccountRequest
-import com.osrs.database.entity.Account
+import com.osrs.domain.dto.UpdateAccountRequest
+import com.osrs.domain.entity.Account
 import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

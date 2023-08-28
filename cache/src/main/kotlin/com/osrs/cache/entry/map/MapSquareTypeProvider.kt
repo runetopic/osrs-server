@@ -9,7 +9,6 @@ import com.osrs.api.map.MapSquares
 import com.osrs.cache.Cache
 import com.osrs.cache.CacheModule.MAP_INDEX
 import com.osrs.cache.entry.EntryTypeProvider
-import com.runetopic.cache.extension.decompress
 import java.util.zip.ZipException
 
 @Singleton
@@ -32,17 +31,17 @@ class MapSquareTypeProvider @Inject constructor(
         val mapIndex = cache.index(MAP_INDEX)
 
         mapIndex.group("m${entry.regionX}_${entry.regionZ}")?.data?.let {
-            val data = RSByteBuffer(it.decompress().buffer)
-            val area = MapSquareEntry.AREA
-            repeat(4 * area) { index ->
-                val remaining = index % area
-                entry.terrain[entry.pack(index / area, remaining / 64, remaining % 64)] = data.loadTerrain().packed
-            }
+//            val data = RSByteBuffer(it.decompress().buffer)
+//            val area = MapSquareEntry.AREA
+//            repeat(4 * area) { index ->
+//                val remaining = index % area
+//                entry.terrain[entry.pack(index / area, remaining / 64, remaining % 64)] = data.loadTerrain().packed
+//            }
         }
 
         mapIndex.group("l${entry.regionX}_${entry.regionZ}")?.data?.let {
             try {
-                RSByteBuffer(it.decompress(square.key).buffer).loadLocs(entry)
+               // RSByteBuffer(it.decompress(square.key).buffer).loadLocs(entry)
             } catch (exception: ZipException) {
                 logger.warn { "Could not decompress and load locations from the cache. Perhaps the keys are incorrect. MapSquare=${square.id}." }
             }

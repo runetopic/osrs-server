@@ -1,7 +1,7 @@
 package com.osrs.repository.account
 
-import com.osrs.database.dto.UpdateAccountRequest
-import com.osrs.database.entity.Account
+import com.osrs.domain.dto.UpdateAccountRequest
+import com.osrs.domain.entity.Account
 
 interface AccountRepository {
     fun findAccountByUsername(username: String): Account?

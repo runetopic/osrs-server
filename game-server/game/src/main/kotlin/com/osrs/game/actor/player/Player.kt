@@ -2,7 +2,7 @@ package com.osrs.game.actor.player
 
 import com.osrs.api.item.FloorItem
 import com.osrs.api.skill.Skill
-import com.osrs.database.entity.Account
+import com.osrs.domain.entity.Account
 import com.osrs.game.actor.Actor
 import com.osrs.game.actor.movement.MovementType
 import com.osrs.game.actor.movement.MovementType.WALK

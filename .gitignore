@@ -1,7 +1,7 @@
 .idea/
 .gradle/
 .*
-application.conf
+application/src/main/resources/application.conf
 main_file_cache.*
 browsercontrol_0.jar
 browsercontrol_1.jar

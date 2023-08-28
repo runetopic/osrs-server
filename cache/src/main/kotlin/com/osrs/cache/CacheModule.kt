@@ -7,12 +7,16 @@ import com.osrs.cache.entry.config.obj.ObjEntryProvider
 import com.osrs.cache.entry.config.varbit.VarBitEntryProvider
 import com.osrs.cache.entry.config.varp.VarpEntryProvider
 import com.osrs.cache.entry.map.MapSquareTypeProvider
+import com.osrs.cache.entry.ui.InterfaceEntryProvider
+import com.osrs.cache.js5.Js5MasterIndexProvider
 import com.runetopic.cache.store.Js5Store
 import dev.misfitlabs.kotlinguice4.KotlinModule
+import org.openrs2.cache.Js5MasterIndex
 
 object CacheModule : KotlinModule() {
 
     override fun configure() {
+        bind<Js5MasterIndex>().toProvider<Js5MasterIndexProvider>().asEagerSingleton()
         bind<Cache>().asEagerSingleton()
         bind<Js5Store>().toProvider<Js5StoreProvider>().asEagerSingleton()
         bind<MapSquareTypeProvider>().asEagerSingleton()
@@ -22,6 +26,7 @@ object CacheModule : KotlinModule() {
         bind<VarpEntryProvider>().asEagerSingleton()
         bind<ObjEntryProvider>().asEagerSingleton()
         bind<HuffmanEntryProvider>().asEagerSingleton()
+        bind<InterfaceEntryProvider>().asEagerSingleton()
     }
 
     // Indexes.

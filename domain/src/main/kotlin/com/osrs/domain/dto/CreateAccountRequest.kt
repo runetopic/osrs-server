@@ -1,4 +1,4 @@
-package com.osrs.database.dto
+package com.osrs.domain.dto
 
 import kotlinx.serialization.Serializable
 

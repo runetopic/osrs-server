@@ -1,6 +1,8 @@
 package com.osrs.game.ui
 
 import com.osrs.game.actor.player.Player
+import com.osrs.game.actor.player.write
+import com.osrs.game.network.packet.Packet
 
 /**
  * @author Tyler Telis
@@ -22,21 +24,25 @@ open class UserInterfaceListener(
         this.onOpenEvent?.invoke(player, openEvent)
     }
 
-    fun click(buttonClickEvent: UserInterfaceEvent.ButtonClickEvent) {
+    fun ifButton(buttonClickEvent: UserInterfaceEvent.ButtonClickEvent) {
         this.onButtonClickEvent?.invoke(player, buttonClickEvent)
         this.children[buttonClickEvent.childId]?.invoke(player, buttonClickEvent)
         this.actions[buttonClickEvent.action]?.invoke(player, buttonClickEvent)
     }
 
-    fun click(onButtonClickEvent: OnButtonClickEvent) {
+    fun ifButton(onButtonClickEvent: OnButtonClickEvent) {
         this.onButtonClickEvent = onButtonClickEvent
     }
 
-    fun click(childId: Int, onButtonClickEvent: OnButtonClickEvent) {
+    fun ifButton(childId: Int, onButtonClickEvent: OnButtonClickEvent) {
         this.children[childId] = onButtonClickEvent
     }
 
-    fun click(action: String, onButtonClickEvent: OnButtonClickEvent) {
+    fun ifButton(action: String, onButtonClickEvent: OnButtonClickEvent) {
         this.actions[action] = onButtonClickEvent
+    }
+
+    fun write(packet: Packet) {
+        player.write(packet)
     }
 }

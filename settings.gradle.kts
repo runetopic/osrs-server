@@ -10,6 +10,7 @@ pluginManagement {
     }
 }
 
+
 include(
     listOf(
         "application",
@@ -20,6 +21,7 @@ include(
         "service",
         "game-server:api",
         "game-server:game",
+        "game-server:config",
         "game-server:content",
         "game-server:script",
     )

@@ -7,7 +7,7 @@ import kotlin.math.min
  * @author Jordan Abraham
  */
 class RSByteBuffer(
-    private val buffer: ByteBuffer
+    private val buffer: ByteBuffer,
 ) {
     constructor(array: ByteArray) : this(ByteBuffer.wrap(array))
 
@@ -66,6 +66,11 @@ class RSByteBuffer(
     fun readU24BitInt(): Int {
         checkAccessingBytes()
         return (buffer.get().toInt() and 0xFF shl 16) or (buffer.short.toInt() and 0xFFFF)
+    }
+
+    fun readMedium(): Int {
+        checkAccessingBytes()
+        return (readUByte() shl 16) or readUShort()
     }
 
     fun readInt(): Int {
@@ -365,5 +370,10 @@ class RSByteBuffer(
     private fun checkAccessingBits() {
         if (accessBitsIndex != -1) return
         throw IllegalAccessException("Buffer must be in bits access.")
+    }
+
+    fun remaining(): Int {
+        val rem: Int = buffer.limit() - buffer.position()
+        return if (rem > 0) rem else 0
     }
 }

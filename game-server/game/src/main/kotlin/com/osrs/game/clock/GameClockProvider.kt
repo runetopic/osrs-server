@@ -1,4 +1,4 @@
-package com.osrs.game.tick
+package com.osrs.game.clock
 
 import com.google.inject.Inject
 import com.google.inject.Provider
@@ -10,15 +10,15 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 @Singleton
-class GameTickProvider @Inject constructor(
+class GameClockProvider @Inject constructor(
     private val world: World,
     private val playerUpdateBlocks: PlayerUpdateBlocks,
     private val npcUpdateBlocks: NPCUpdateBlocks
-) : Provider<GameTick> {
+) : Provider<GameClock> {
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 
-    override fun get(): GameTick {
-        val gameTick = GameTick(world, playerUpdateBlocks, npcUpdateBlocks)
+    override fun get(): GameClock {
+        val gameTick = GameClock(world, playerUpdateBlocks, npcUpdateBlocks)
         executorService.scheduleAtFixedRate(gameTick, 600, 600, TimeUnit.MILLISECONDS)
         return gameTick
     }

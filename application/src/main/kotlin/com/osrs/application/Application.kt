@@ -21,13 +21,11 @@ object Application {
             injector = Guice.createInjector(ApplicationModule(args))
             injector.getInstance<Game>().start()
             injector.getInstance<World>().start()
-            loadGameScripts(injector)
         }
 
+        loadContentScripts(injector)
         addShutDownHook(injector)
-
         System.gc()
-
         injector.getInstance<Network>().bind(time)
     }
 
@@ -41,8 +39,11 @@ object Application {
         )
     }
 
-    private fun loadGameScripts(injector: Injector) {
+    private fun loadContentScripts(injector: Injector) {
         val plugins = Scripts.loadContentScripts(injector)
         logger.info { "Loaded ${plugins.size} kotlin script${if (plugins.size == 1) "" else "s"}." }
     }
+
 }
+
+

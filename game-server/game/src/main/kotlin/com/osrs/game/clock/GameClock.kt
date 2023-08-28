@@ -1,13 +1,13 @@
-package com.osrs.game.tick
+package com.osrs.game.clock
 
 import com.github.michaelbull.logging.InlineLogger
 import com.osrs.game.network.packet.builder.impl.render.NPCUpdateBlocks
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
-import com.osrs.game.tick.task.WorldSyncTask
+import com.osrs.game.clock.task.WorldSyncTask
 import com.osrs.game.world.World
 import kotlin.system.measureTimeMillis
 
-class GameTick(
+class GameClock(
     private val world: World,
     playerUpdateBlocks: PlayerUpdateBlocks,
     npcUpdateBlocks: NPCUpdateBlocks
@@ -40,4 +40,6 @@ class GameTick(
             logger.error(exception) { "Error occurred during game tick #$tick" }
         }
     }
+
+    fun current() = tick
 }

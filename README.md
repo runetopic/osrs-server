@@ -51,7 +51,6 @@ _This project uses ktor for the networking, therefore the application is powered
   game {
       local = true
       benchmarking = false
-      cores = 4
       build {
           major = 211
           minor = 1

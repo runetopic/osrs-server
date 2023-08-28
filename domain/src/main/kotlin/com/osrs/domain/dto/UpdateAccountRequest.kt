@@ -1,4 +1,4 @@
-package com.osrs.database.dto
+package com.osrs.domain.dto
 
 import com.osrs.api.item.FloorItem
 import com.osrs.api.map.location.Location

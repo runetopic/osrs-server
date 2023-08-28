@@ -3,8 +3,8 @@ package com.osrs.game
 import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
-import com.osrs.game.tick.GameTick
-import com.osrs.game.tick.GameTickProvider
+import com.osrs.game.clock.GameClock
+import com.osrs.game.clock.GameClockProvider
 import com.osrs.game.ui.UserInterfaceModule
 import com.osrs.game.world.World
 import com.osrs.game.world.WorldProvider
@@ -31,6 +31,6 @@ object GameModule : KotlinModule() {
         bind<PlayerUpdateBlocks>().asEagerSingleton()
         bind<LoginService>().asEagerSingleton()
         bind<PlayerSerializationService>().asEagerSingleton()
-        bind<GameTick>().toProvider<GameTickProvider>().asEagerSingleton()
+        bind<GameClock>().toProvider<GameClockProvider>().asEagerSingleton()
     }
 }

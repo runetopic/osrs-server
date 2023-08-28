@@ -4,6 +4,5 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":game-server:config"))
     implementation(project(":game-server:api"))
 }

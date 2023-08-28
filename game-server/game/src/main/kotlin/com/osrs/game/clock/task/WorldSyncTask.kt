@@ -1,4 +1,4 @@
-package com.osrs.game.tick.task
+package com.osrs.game.clock.task
 
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList

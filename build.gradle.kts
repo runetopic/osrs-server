@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+
 allprojects {
     group = "com.osrs"
     version = "1.0.0-SNAPSHOT"
@@ -37,6 +38,7 @@ allprojects {
         mavenCentral()
         maven("https://jitpack.io")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        maven(url = "https://repo.openrs2.org/repository/openrs2-snapshots")
         maven("https://plugins.gradle.org/m2/")
     }
 
@@ -48,7 +50,7 @@ allprojects {
         implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.2.0-SNAPSHOT")
-        implementation("com.runetopic.cache:cache:2.0.0-SNAPSHOT") {
+        implementation("com.runetopic.cache:cache:1.4.24-SNAPSHOT") {
             exclude("org.slf4j", "slf4j-simple")
         }
         // Blurite Pathfinder - TODO Deprecated
@@ -70,6 +72,8 @@ allprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
         implementation("org.litote.kmongo:kmongo-id-serialization:4.8.0")
         implementation("org.litote.kmongo:kmongo-serialization:4.8.0")
+        // OpenRS2
+        implementation("org.openrs2:openrs2-cache:0.1.0-SNAPSHOT")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-server-content-negotiation:2.2.1")
         // Bcrypt
