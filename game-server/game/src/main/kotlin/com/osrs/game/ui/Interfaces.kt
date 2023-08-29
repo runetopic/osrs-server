@@ -3,7 +3,7 @@ package com.osrs.game.ui
 import com.osrs.api.ui.InterfaceInfo
 import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.api.util.packInterface
-import com.osrs.cache.entry.config.enum.EnumEntryProvider
+//import com.osrs.cache.entry.config.enum.EnumEntryProvider
 import com.osrs.game.actor.player.Player
 import com.osrs.game.actor.player.write
 import com.osrs.game.network.packet.type.server.IfOpenSubPacket
@@ -13,7 +13,7 @@ import com.osrs.game.ui.InterfaceLayout.RESIZABLE
 class Interfaces(
     val player: Player,
     private val interfaceInfoMap: InterfaceInfoMap,
-    private val enumEntryProvider: EnumEntryProvider,
+//    private val enumEntryProvider: EnumEntryProvider,
     private val interfaceListener: InterfaceListener,
     private val open: MutableList<UserInterface> = mutableListOf()
 ) : MutableList<UserInterface> by open {
@@ -51,8 +51,8 @@ class Interfaces(
 
     private fun InterfaceInfo.isModal() = resizableChildId == MODAL_CHILD_ID || resizableChildId == MODAL_CHILD_ID_EXTENDED
 
-    private fun Int.enumChildForLayout(layout: InterfaceLayout): Int =
-        (enumEntryProvider[layout.enumId]?.params?.get(RESIZABLE.interfaceId.packInterface(this)) as? Int)?.and(0xffff) ?: 0
+    private fun Int.enumChildForLayout(layout: InterfaceLayout): Int = 0
+     /*   (enumEntryProvider[layout.enumId]?.params?.get(RESIZABLE.interfaceId.packInterface(this)) as? Int)?.and(0xffff) ?: 0*/
 
     companion object {
         const val MODAL_CHILD_ID = 16

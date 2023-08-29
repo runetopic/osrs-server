@@ -9,7 +9,6 @@ import com.osrs.game.actor.movement.MovementType.WALK
 import com.osrs.game.actor.render.type.Appearance
 import com.osrs.game.actor.render.type.Gender
 import com.osrs.game.actor.render.type.MovementSpeed
-import com.osrs.game.container.Inventory
 import com.osrs.game.network.Session
 import com.osrs.game.network.packet.PacketGroup
 import com.osrs.game.network.packet.type.server.RebuildNormalPacket
@@ -28,8 +27,8 @@ class Player(
     // Late initialized properties.
     lateinit var interfaces: Interfaces
         private set
-    lateinit var inventory: Inventory
-        private set
+//    lateinit var inventory: Inventory
+//        private set
 
     // Immutable properties.
     val username get() = account.userName
@@ -47,13 +46,13 @@ class Player(
 
     fun initialize(
         interfaces: Interfaces,
-        inventory: Inventory
+//        inventory: Inventory
     ) {
         super.initialize(account.location)
         this.session.player = this
         this.rights = account.rights
         this.interfaces = interfaces
-        this.inventory = inventory
+//        this.inventory = inventory
         this.objs += account.objs
     }
 

@@ -4,10 +4,10 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.transform
-import com.osrs.cache.entry.config.location.LocationEntryProvider
-import com.osrs.cache.entry.map.MapSquareEntry
-import com.osrs.cache.entry.map.MapSquareLocation
-import com.osrs.cache.entry.map.MapSquareTerrain
+//import com.osrs.cache.entry.config.location.LocationEntryProvider
+//import com.osrs.cache.entry.map.MapSquareEntry
+//import com.osrs.cache.entry.map.MapSquareLocation
+//import com.osrs.cache.entry.map.MapSquareTerrain
 import com.osrs.game.actor.movement.Direction
 import com.osrs.game.world.map.zone.ZoneManager
 import org.rsmod.pathfinder.StepValidator
@@ -46,14 +46,14 @@ import org.rsmod.pathfinder.flag.CollisionFlag.WALL_WEST_ROUTE_BLOCKER
 
 @Singleton
 class CollisionMap @Inject constructor(
-    private val locations: LocationEntryProvider,
+//    private val locations: LocationEntryProvider,
     private val zoneFlags: ZoneFlags,
     private val stepValidator: StepValidator
 ) {
     fun canTravel(location: Location, direction: Direction, isNPC: Boolean): Boolean =
         stepValidator.canTravel(location.level, location.x, location.z, direction.getDeltaX(), direction.getDeltaZ(), 1, if (isNPC) BLOCK_NPCS else 0)
 
-    fun applyCollision(entry: MapSquareEntry) {
+    /*fun applyCollision(entry: MapSquareEntry) {
         val baseX = entry.regionX shl 6
         val baseZ = entry.regionZ shl 6
         val area = MapSquareEntry.AREA
@@ -86,7 +86,7 @@ class CollisionMap @Inject constructor(
             addObjectCollision(gameObject)
             ZoneManager[location.zoneLocation].addStaticLoc(gameObject)
         }
-    }
+    }*/
 
     fun addActorCollision(location: Location) {
         addCollisionFlag(location, BLOCK_NPCS, true)
@@ -101,7 +101,7 @@ class CollisionMap @Inject constructor(
     fun removeObjectCollision(obj: GameObject) = changeNormalCollision(obj, false)
 
     private fun changeNormalCollision(obj: GameObject, add: Boolean) {
-        val entry = locations[obj.id] ?: return
+       /* val entry = locations[obj.id] ?: return
         val shape = obj.shape
         val location = obj.location
         val rotation = obj.rotation
@@ -137,7 +137,7 @@ class CollisionMap @Inject constructor(
                 )
             }
             shape in GameObjectShape.GROUND_DECOR_SHAPES && interactType == 1 -> changeFloorDecor(location, add)
-        }
+        }*/
     }
 
     private fun changeNormalCollision(

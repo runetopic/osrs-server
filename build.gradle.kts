@@ -16,7 +16,7 @@ allprojects {
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "11"
             /* https://youtrack.jetbrains.com/issue/KT-52735/Ignore-scripts-in-source-roots-by-default */
             freeCompilerArgs = listOf("-Xallow-any-scripts-in-source-roots")
         }
@@ -24,13 +24,13 @@ allprojects {
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_11.majorVersion))
         }
     }
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
+            languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_11.majorVersion))
         }
     }
 
@@ -38,6 +38,7 @@ allprojects {
         mavenCentral()
         maven("https://jitpack.io")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        maven(url = "https://repo.openrs2.org/repository/openrs2")
         maven(url = "https://repo.openrs2.org/repository/openrs2-snapshots")
         maven("https://plugins.gradle.org/m2/")
     }
@@ -50,9 +51,6 @@ allprojects {
         implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0")
         // Runetopic
         implementation("com.runetopic.cryptography:cryptography:1.2.0-SNAPSHOT")
-        implementation("com.runetopic.cache:cache:1.4.24-SNAPSHOT") {
-            exclude("org.slf4j", "slf4j-simple")
-        }
         // Blurite Pathfinder - TODO Deprecated
         implementation("com.github.blurite:pathfinder:2.4.3")
         // Logger
@@ -74,6 +72,10 @@ allprojects {
         implementation("org.litote.kmongo:kmongo-serialization:4.8.0")
         // OpenRS2
         implementation("org.openrs2:openrs2-cache:0.1.0-SNAPSHOT")
+        // OpenRS2
+        implementation("org.openrs2:openrs2-buffer:0.1.0-SNAPSHOT")
+        // OpenRS2
+        implementation("org.openrs2:openrs2-crypto:0.1.0-SNAPSHOT")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-server-content-negotiation:2.2.1")
         // Bcrypt

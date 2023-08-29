@@ -3,7 +3,7 @@ package com.osrs.game.world
 import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.ZoneLocation
 import com.osrs.cache.Cache
-import com.osrs.cache.entry.map.MapSquareTypeProvider
+//import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
 import com.osrs.game.actor.npc.NPC
@@ -22,7 +22,7 @@ data class World(
     val cache: Cache,
     val loginService: LoginService,
     val playerSerializationService: PlayerSerializationService,
-    val maps: MapSquareTypeProvider,
+//    val maps: MapSquareTypeProvider,
     val collisionMap: CollisionMap,
     val stepValidator: StepValidator
 ) {
@@ -36,7 +36,7 @@ data class World(
     var isOnline = false
 
     fun start() {
-        maps.entries.forEach(collisionMap::applyCollision)
+//        maps.entries.forEach(collisionMap::applyCollision)
         playerSerializationService.start(this)
     }
 

@@ -15,6 +15,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.nio.channels.ClosedChannelException
 import kotlin.reflect.KClass
 
 class Network @Inject constructor(
@@ -43,8 +44,11 @@ class Network @Inject constructor(
     }
 
     fun shutdown() {
-        world.isOnline = false
-        server.close()
-        logger.info { "Network has been shutdown." }
+        try {
+            world.isOnline = false
+            logger.info { "Network has been shutdown." }
+        } catch (exception: ClosedChannelException) {
+            logger.info { "Channel has already been closed." }
+        }
     }
 }

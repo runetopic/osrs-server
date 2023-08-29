@@ -7,7 +7,7 @@ import io.ktor.server.application.ApplicationEnvironment
 
 @Singleton
 class NPCSpawns(
-    private val spawns: List<NPCSpawnsResource> = mutableListOf<NPCSpawnsResource>()
+    private val spawns: List<NPCSpawnsResource> = mutableListOf()
 ) : List<NPCSpawnsResource> by spawns {
     @Inject
     constructor(environment: ApplicationEnvironment) : this(

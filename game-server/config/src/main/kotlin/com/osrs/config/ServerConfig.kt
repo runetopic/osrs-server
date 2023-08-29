@@ -1,5 +1,7 @@
 package com.osrs.config
 
+import java.nio.file.Path
+
 data class BuildConfig(
     val major: Int,
     val minor: Int,
@@ -7,17 +9,14 @@ data class BuildConfig(
 )
 
 data class CacheConfig(
-    val path: String,
-    val parallel: Boolean
+    val vanilla: Path,
+    val game: Path,
+    val js5: Path,
 )
 
 data class GameConfig(
-    val local: Boolean,
-    val benchmarking: Boolean,
+    val local: Boolean = false,
+    val benchmarking: Boolean = false,
     val build: BuildConfig,
-    val cache: CacheConfig
-)
-
-data class GameConfiguration(
-    val game: GameConfig,
+    val cache: CacheConfig,
 )

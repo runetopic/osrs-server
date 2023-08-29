@@ -7,6 +7,7 @@ import com.osrs.game.Game
 import com.osrs.game.network.Network
 import com.osrs.game.world.World
 import com.osrs.script.Scripts
+import com.osrs.script.content.ContentScript
 import dev.misfitlabs.kotlinguice4.getInstance
 import kotlin.system.measureTimeMillis
 
@@ -23,11 +24,16 @@ object Application {
             injector.getInstance<World>().start()
         }
 
-        loadContentScripts(injector)
+        loadContentScripts(injector).let {
+            logger.info { "Loaded ${it.size} kotlin script${if (it.size == 1) "" else "s"}." }
+        }
+
         addShutDownHook(injector)
         System.gc()
         injector.getInstance<Network>().bind(time)
     }
+
+    private fun loadContentScripts(injector: Injector): List<ContentScript> = Scripts.loadContentScripts(injector)
 
     private fun addShutDownHook(injector: Injector) {
         Runtime.getRuntime().addShutdownHook(
@@ -38,12 +44,6 @@ object Application {
             }
         )
     }
-
-    private fun loadContentScripts(injector: Injector) {
-        val plugins = Scripts.loadContentScripts(injector)
-        logger.info { "Loaded ${plugins.size} kotlin script${if (plugins.size == 1) "" else "s"}." }
-    }
-
 }
 
 

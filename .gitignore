@@ -18,3 +18,4 @@ application/players/*
 interface_editor.log
 recent_paths.dat
 !.editorconfig
+/application/data/cache/*

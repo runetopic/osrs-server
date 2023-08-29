@@ -6,7 +6,6 @@ import com.google.inject.Singleton
 import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.api.util.interfaceId
 import com.osrs.api.util.childId
-import com.osrs.cache.entry.ui.InterfaceEntryProvider
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.packet.handler.PacketHandler
 import com.osrs.game.network.packet.type.client.IfButtonPacket
@@ -15,7 +14,7 @@ import com.osrs.game.ui.UserInterfaceEvent
 @Singleton
 class IfButtonPacketHandler @Inject constructor(
     private val interfaceInfoMap: InterfaceInfoMap,
-    private val interfaceEntryProvider: InterfaceEntryProvider
+//    private val interfaceEntryProvider: InterfaceEntryProvider
 ) : PacketHandler<IfButtonPacket>() {
 
     private val logger = InlineLogger()
@@ -42,7 +41,7 @@ class IfButtonPacketHandler @Inject constructor(
 
         logger.info { "Listener $listener" }
 
-        logger.info { "Cache info ${interfaceEntryProvider[info.id]}" }
+//        logger.info { "Cache info ${interfaceEntryProvider[info.id]}" }
 
         logger.info { player.interfaces.listeners }
 

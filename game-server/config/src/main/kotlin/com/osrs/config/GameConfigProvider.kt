@@ -3,19 +3,23 @@ package com.osrs.config
 import com.google.inject.Inject
 import com.google.inject.Provider
 import io.ktor.server.config.ApplicationConfig
-import kotlin.reflect.KClass
+import java.nio.file.Path
 
-class ServerConfigProvider @Inject constructor(
+class GameConfigProvider @Inject constructor(
     val config: ApplicationConfig
 ) : Provider<GameConfig> {
-    override fun get(): GameConfig = mapToObject(config.config("game").toMap(), GameConfig::class)
-
-    private fun <T : Any> mapToObject(map: Map<String, Any?>, clazz: KClass<T>) : T {
-        val constructor = clazz.constructors.first()
-
-        val args = constructor
-            .parameters.associateWith { map[it.name] }
-
-        return constructor.callBy(args)
-    }
+    override fun get(): GameConfig = GameConfig(
+        local = config.property("game.local").getString().toBoolean(),
+        benchmarking = config.property("game.benchmarking").getString().toBoolean(),
+        build = BuildConfig(
+            major = config.property("game.build.major").getString().toInt(),
+            minor = config.property("game.build.major").getString().toInt(),
+            token = config.property("game.build.token").getString()
+        ),
+        cache =  CacheConfig(
+            vanilla = Path.of(config.property("game.cache.vanilla").getString()),
+            game = Path.of(config.property("game.cache.game").getString()),
+            js5 = Path.of(config.property("game.cache.js5").getString())
+        )
+    )
 }

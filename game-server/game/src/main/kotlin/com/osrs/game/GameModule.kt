@@ -1,5 +1,7 @@
 package com.osrs.game
 
+import com.osrs.api.map.MapSquares
+import com.osrs.api.map.NPCConfigList
 import com.osrs.api.ui.InterfaceInfoMap
 import com.osrs.game.command.CommandModule
 import com.osrs.game.network.packet.builder.impl.render.PlayerUpdateBlocks
@@ -22,6 +24,8 @@ object GameModule : KotlinModule() {
     override fun configure() {
         install(CommandModule)
         install(UserInterfaceModule)
+        bind<MapSquares>().asEagerSingleton()
+        bind<NPCConfigList>().asEagerSingleton()
         bind<InterfaceInfoMap>().asEagerSingleton()
         bind<ZoneFlags>().toInstance(ZoneFlags())
         bind<PathFinder>().toProvider<PathFinderProvider>().asEagerSingleton()
