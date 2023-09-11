@@ -4,9 +4,9 @@ import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.osrs.api.map.location.Location
+import com.osrs.config.ServerConfig
 import com.osrs.domain.dto.UpdateAccountRequest
 import com.osrs.domain.entity.Account
-import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -20,14 +20,16 @@ import kotlin.io.path.outputStream
 @Singleton
 @OptIn(ExperimentalSerializationApi::class)
 class AccountDiskRepository @Inject constructor(
-    environment: ApplicationEnvironment,
-    private val json: Json
+    serverConfig: ServerConfig,
+    private val json: Json,
 ) : AccountRepository {
-    private val playerSaveDirectory = environment.config.propertyOrNull("game.configuration.players")?.getString() ?: "./application/players/"
+    private val playerSaveDirectory = serverConfig.resources.players
 
     private val logger = InlineLogger()
 
     init {
+        if (!playerSaveDirectory.exists()) playerSaveDirectory.toFile().mkdirs()
+
         if (findAccountByUsername("admin") == null) {
             createAccount(
                 Account(

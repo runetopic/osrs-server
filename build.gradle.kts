@@ -76,6 +76,7 @@ allprojects {
         implementation("org.openrs2:openrs2-buffer:0.1.0-SNAPSHOT")
         // OpenRS2
         implementation("org.openrs2:openrs2-crypto:0.1.0-SNAPSHOT")
+        implementation("org.openrs2:openrs2-util:0.1.0-SNAPSHOT")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-server-content-negotiation:2.2.1")
         // Bcrypt
@@ -84,6 +85,7 @@ allprojects {
         implementation("com.charleskorn.kaml:kaml:0.54.0")
         // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
         implementation("io.github.classgraph:classgraph:4.8.157")
+        implementation("me.tongfei:progressbar:0.10.0")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
     }
 }

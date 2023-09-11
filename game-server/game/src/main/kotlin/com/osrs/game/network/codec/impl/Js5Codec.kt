@@ -1,7 +1,6 @@
 package com.osrs.game.network.codec.impl
 
 import com.google.inject.Inject
-import com.osrs.cache.Cache
 import com.osrs.api.buffer.readU24BitInt
 import com.osrs.game.network.Session
 import com.osrs.game.network.SessionRequestOpcode.JS5_ENCRYPTION_OPCODE
@@ -17,7 +16,7 @@ import kotlinx.coroutines.isActive
 import java.nio.ByteBuffer
 
 class Js5Codec @Inject constructor(
-    private val cache: Cache
+
 ) : CodecChannelHandler {
 
     override suspend fun handle(session: Session, readChannel: ByteReadChannel, writeChannel: ByteWriteChannel) = coroutineScope {
@@ -28,13 +27,13 @@ class Js5Codec @Inject constructor(
                         val uid = readChannel.readU24BitInt()
                         val indexId = uid shr 16
                         val groupId = uid and 0xFFFF
-                        val masterRequest = indexId == 0xFF && groupId == 0xFF
-                        ByteBuffer.wrap(if (masterRequest) cache.checksums else cache.groupReferenceTable(indexId, groupId)).apply {
-                            if (capacity() == 0 || limit() == 0) return@coroutineScope
-                            val compression = if (masterRequest) 0 else get().toInt() and 0xff
-                            val size = if (masterRequest) cache.checksums.size else int
-                            writeChannel.writeJs5ResponseAndFlush(indexId, groupId, compression, size, this)
-                        }
+//                        val masterRequest = indexId == 0xFF && groupId == 0xFF
+//                        ByteBuffer.wrap(if (masterRequest) cache.checksums else cache.groupReferenceTable(indexId, groupId)).apply {
+//                            if (capacity() == 0 || limit() == 0) return@coroutineScope
+//                            val compression = if (masterRequest) 0 else get().toInt() and 0xff
+//                            val size = if (masterRequest) cache.checksums.size else int
+//                            writeChannel.writeJs5ResponseAndFlush(indexId, groupId, compression, size, this)
+//                        }
                     }
                     JS5_ENCRYPTION_OPCODE, JS5_SWITCH_OPCODE, JS5_LOGGED_IN_OPCODE -> readChannel.discard(3)
                     else -> throw IllegalStateException("Unhandled Js5 opcode. Opcode: $opcode")

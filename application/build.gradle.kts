@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":cache"))
+    implementation(project(":cache-osrs"))
     implementation(project(":repository"))
     implementation(project(":service"))
     implementation(project(":http-server"))

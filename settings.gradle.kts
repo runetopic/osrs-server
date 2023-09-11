@@ -10,11 +10,10 @@ pluginManagement {
     }
 }
 
-
 include(
     listOf(
         "application",
-        "cache",
+        "cache-osrs",
         "http-server",
         "domain",
         "repository",
@@ -24,6 +23,7 @@ include(
         "game-server:config",
         "game-server:content",
         "game-server:script",
+        "game-server:network",
     )
 )
 

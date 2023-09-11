@@ -7,6 +7,7 @@ import org.openrs2.cache.MasterIndexFormat
 import org.openrs2.cache.Store
 
 class Js5MasterIndexProvider @Inject constructor(
+    @Js5Cache
     private val store: Store
 ) : Provider<Js5MasterIndex> {
     override fun get(): Js5MasterIndex {

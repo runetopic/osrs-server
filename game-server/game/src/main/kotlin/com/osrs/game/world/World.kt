@@ -2,7 +2,6 @@ package com.osrs.game.world
 
 import com.osrs.api.map.location.Location
 import com.osrs.api.map.location.ZoneLocation
-import com.osrs.cache.Cache
 //import com.osrs.cache.entry.map.MapSquareTypeProvider
 import com.osrs.game.actor.NPCList
 import com.osrs.game.actor.PlayerList
@@ -19,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 data class World(
     val worldId: Int,
-    val cache: Cache,
+//    val cache: Cache,
     val loginService: LoginService,
     val playerSerializationService: PlayerSerializationService,
 //    val maps: MapSquareTypeProvider,

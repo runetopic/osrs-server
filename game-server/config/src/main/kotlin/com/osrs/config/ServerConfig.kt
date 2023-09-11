@@ -14,9 +14,17 @@ data class CacheConfig(
     val js5: Path,
 )
 
-data class GameConfig(
+data class GameResources(
+    val players: Path,
+    val npcs: Path,
+    val ui: Path,
+    val xteas: Path
+)
+
+data class ServerConfig(
     val local: Boolean = false,
     val benchmarking: Boolean = false,
     val build: BuildConfig,
     val cache: CacheConfig,
+    val resources: GameResources
 )

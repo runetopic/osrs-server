@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":cache"))
+    implementation(project(":cache-osrs"))
     implementation(project(":game-server:game"))
 }

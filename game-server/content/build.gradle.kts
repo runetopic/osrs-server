@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     dependencies {
-        implementation(project(":cache"))
+        implementation(project(":cache-osrs"))
         implementation(project(":game-server:api"))
         implementation(project(":game-server:game"))
         implementation(project(":game-server:script"))

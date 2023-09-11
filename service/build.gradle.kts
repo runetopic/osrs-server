@@ -5,6 +5,6 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":repository"))
-    implementation(project(":cache"))
+    implementation(project(":cache-osrs"))
     implementation(project(":game-server:api"))
 }

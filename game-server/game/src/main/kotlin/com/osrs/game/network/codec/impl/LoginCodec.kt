@@ -2,7 +2,6 @@ package com.osrs.game.network.codec.impl
 
 import com.github.michaelbull.logging.InlineLogger
 import com.google.inject.Inject
-import com.osrs.cache.Cache
 import com.osrs.api.buffer.RSByteBuffer
 import com.osrs.game.actor.player.Player
 import com.osrs.game.network.Session
@@ -23,7 +22,7 @@ import io.ktor.utils.io.ByteWriteChannel
 import java.math.BigInteger
 
 class LoginCodec @Inject constructor(
-    private val cache: Cache,
+//    private val cache: Cache,
     environment: ApplicationEnvironment,
     val world: World,
     private val accountService: AccountService
@@ -273,35 +272,35 @@ class LoginCodec @Inject constructor(
     }
 
     private suspend fun validateClientCRCs(session: Session, xteaBuffer: RSByteBuffer) {
-        val clientCRCs = IntArray(cache.validIndexCount()) { -1 }
-        clientCRCs[12] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[2] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[10] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[11] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[5] = xteaBuffer.readIntMiddleEndian()
-        xteaBuffer.readIntLittleEndian() // Always 0
-        clientCRCs[14] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[19] = xteaBuffer.readInt()
-        clientCRCs[18] = xteaBuffer.readIntMiddleEndian()
-        clientCRCs[20] = xteaBuffer.readInt()
-        clientCRCs[0] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[3] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[8] = xteaBuffer.readIntMiddleEndian()
-        clientCRCs[13] = xteaBuffer.readInt()
-        clientCRCs[6] = xteaBuffer.readIntMiddleEndian()
-        clientCRCs[15] = xteaBuffer.readIntMiddleEndian()
-        clientCRCs[9] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[7] = xteaBuffer.readIntLittleMiddleEndian()
-        clientCRCs[17] = xteaBuffer.readIntLittleEndian()
-        clientCRCs[4] = xteaBuffer.readInt()
-        clientCRCs[1] = xteaBuffer.readIntLittleEndian()
-        cache.crcs.forEachIndexed { index, i ->
-            if (index == 16 || index == 21) return@forEachIndexed // Client is skipping index 16 and 21
-            if (clientCRCs[index] != i) {
-                logger.info { "Client crc $index ${clientCRCs[index]} != ${cache.crcs[index]}" }
-                session.writeAndFlush(CLIENT_OUTDATED_OPCODE)
-                return session.disconnect("Bad Session. Client and cache crc are mismatched.")
-            }
-        }
+//        val clientCRCs = IntArray(cache.validIndexCount()) { -1 }
+//        clientCRCs[12] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[2] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[10] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[11] = xteaBuffer.readIntLittleEndian()
+//        clientCRCs[5] = xteaBuffer.readIntMiddleEndian()
+//        xteaBuffer.readIntLittleEndian() // Always 0
+//        clientCRCs[14] = xteaBuffer.readIntLittleEndian()
+//        clientCRCs[19] = xteaBuffer.readInt()
+//        clientCRCs[18] = xteaBuffer.readIntMiddleEndian()
+//        clientCRCs[20] = xteaBuffer.readInt()
+//        clientCRCs[0] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[3] = xteaBuffer.readIntLittleEndian()
+//        clientCRCs[8] = xteaBuffer.readIntMiddleEndian()
+//        clientCRCs[13] = xteaBuffer.readInt()
+//        clientCRCs[6] = xteaBuffer.readIntMiddleEndian()
+//        clientCRCs[15] = xteaBuffer.readIntMiddleEndian()
+//        clientCRCs[9] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[7] = xteaBuffer.readIntLittleMiddleEndian()
+//        clientCRCs[17] = xteaBuffer.readIntLittleEndian()
+//        clientCRCs[4] = xteaBuffer.readInt()
+//        clientCRCs[1] = xteaBuffer.readIntLittleEndian()
+//        cache.crcs.forEachIndexed { index, i ->
+//            if (index == 16 || index == 21) return@forEachIndexed // Client is skipping index 16 and 21
+//            if (clientCRCs[index] != i) {
+//                logger.info { "Client crc $index ${clientCRCs[index]} != ${cache.crcs[index]}" }
+//                session.writeAndFlush(CLIENT_OUTDATED_OPCODE)
+//                return session.disconnect("Bad Session. Client and cache crc are mismatched.")
+//            }
+//        }
     }
 }
