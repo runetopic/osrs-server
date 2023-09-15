@@ -9,9 +9,8 @@ data class BuildConfig(
 )
 
 data class CacheConfig(
-    val vanilla: Path,
-    val game: Path,
-    val js5: Path,
+    val server: Path,
+    val client: Path,
 )
 
 data class GameResources(
